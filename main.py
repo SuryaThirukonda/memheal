@@ -6,6 +6,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from memheal.store import MemoryStore
 load_dotenv()
+load_dotenv(".env.local")
 
 client = OpenAI()                  # reads OPENAI_API_KEY from env
 MODEL = "gpt-5.4-mini"             # economical model; check your account's model list
