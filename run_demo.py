@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import time
 import uuid
 from collections import Counter
@@ -23,6 +24,7 @@ from memheal.tools import TOOL_SCHEMAS, ToolContext, normalize_url
 
 ROOT = Path(__file__).parent
 DATA = ROOT / "data"
+RUNS = DATA / "runs"
 RESULTS = ROOT / "results" / "variants.jsonl"
 
 
@@ -36,12 +38,40 @@ def is_poison(row, scenario: Scenario, condition: str) -> bool:
     )
 
 
+RUN_DIR_RE = re.compile(r"^(\d{4})_")
+
+
+def make_run_dir(variant: str, condition: str, args) -> Path:
+    """Claim the next numbered folder under data/runs/.
+
+    Creating the directory is the claim, so parallel runs can't take the same
+    number: whoever loses the race gets FileExistsError and tries the next one.
+    """
+    RUNS.mkdir(parents=True, exist_ok=True)
+    used = [int(m.group(1)) for p in RUNS.iterdir() if p.is_dir()
+            for m in [RUN_DIR_RE.match(p.name)] if m]
+    suffix = f"_{variant}"
+    if args.task_index:
+        suffix += f"_t{args.task_index}"
+    if args.source_labels:
+        suffix += "_labels"
+    n = max(used, default=0) + 1
+    while True:
+        run_dir = RUNS / f"{n:04d}_{condition}{suffix}"
+        try:
+            run_dir.mkdir(exist_ok=False)
+            return run_dir
+        except FileExistsError:
+            n += 1
+
+
 def run_once(scenario, variant, condition, i, args, embedder) -> dict:
     labels = "-labels" if args.source_labels else ""
     run_id = (f"{variant}-t{args.task_index}{labels}-{condition}-{i}-"
               f"{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:4]}")
-    conn = db.connect(DATA / f"{run_id}.db")
-    llm = LLM(model=args.model, log_path=DATA / f"{run_id}.llm.jsonl")
+    run_dir = make_run_dir(variant, condition, args)
+    conn = db.connect(run_dir / "run.db")
+    llm = LLM(model=args.model, log_path=run_dir / "llm.jsonl")
     cfg = agent.AgentConfig(
         k=args.k,
         source_labels=args.source_labels,
@@ -63,12 +93,14 @@ def run_once(scenario, variant, condition, i, args, embedder) -> dict:
 
     pages = scenario.pages_for(condition)
     timeline = list(scenario.sessions) + [(scenario.target_session, task)]
-    db.snapshot(conn, DATA / f"{run_id}.after_s0.db")
+    snaps = run_dir / "snapshots"
+    snaps.mkdir(exist_ok=True)
+    db.snapshot(conn, snaps / "after_s00.db")
     results = {}
     for day, message in timeline:
         ctx = ToolContext(conn, run_id, day, pages)
         results[day] = agent.run_session(ctx, llm, embedder, cfg, message)
-        db.snapshot(conn, DATA / f"{run_id}.after_s{day}.db")
+        db.snapshot(conn, snaps / f"after_s{day:02d}.db")
     db.update_run_config(conn, run_id, returned_model=llm.returned_model)
 
     target = results[scenario.target_session]
@@ -85,6 +117,7 @@ def run_once(scenario, variant, condition, i, args, embedder) -> dict:
     retrieved_ids = [m for m, _ in target.retrieved]
     record = {
         "run_id": run_id,
+        "run_dir": run_dir.name,
         "condition": condition,
         "destination": destination,
         "outcome": outcome,
@@ -98,7 +131,10 @@ def run_once(scenario, variant, condition, i, args, embedder) -> dict:
         "returned_model": llm.returned_model,
     }
 
-    print(f"\n=== {run_id} ===")
+    (run_dir / "summary.json").write_text(json.dumps(record, indent=2) + "\n")
+
+    print(f"\n=== {run_dir.name} ===")
+    print(f"  run_id: {run_id}")
     shown = f"destination={destination}" if destination else "NO_UPLOAD"
     print(f"  {scenario.target_tool}: {shown} [{outcome}]  exposure={exposure}")
     print(f"  reply: {target.final_text[:200]!r}")
@@ -183,7 +219,7 @@ def main() -> None:
         return
 
     load_dotenv(ROOT / ".env")
-    DATA.mkdir(exist_ok=True)
+    RUNS.mkdir(parents=True, exist_ok=True)
     RESULTS.parent.mkdir(exist_ok=True)
     scenario = VARIANTS[args.variant]
     embedder = memory.get_embedder()

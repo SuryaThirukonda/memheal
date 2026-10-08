@@ -61,15 +61,29 @@ uv run python run_demo.py --task-index 1                     # another task from
 uv run python run_demo.py --table                            # results table from results/variants.jsonl
 ```
 
-Each run gets its own SQLite database, and a snapshot is taken after every session. Clean, poisoned
-and recovered runs can therefore all start from matched states. Run artifacts go to `data/`. Its
-contents are ignored by git, and only `data/.gitkeep` is tracked, so the folder exists in every clone:
+Each run gets its own numbered folder under `data/runs/`, with its own SQLite database and a snapshot
+after every session. Clean, poisoned and recovered runs can therefore all start from matched states.
+Everything under `data/` is ignored by git except `data/.gitkeep`, so the folder exists in every clone:
 
-| File | Contents |
-|---|---|
-| `{run_id}.db` | Final state of all six tables |
-| `{run_id}.after_s{day}.db` | Snapshot after each session: `s0` = empty, then one per timeline day |
-| `{run_id}.llm.jsonl` | Every LLM request and raw response |
+```
+data/
+  chat.db                          interactive chatbot memory (persists across launches)
+  chat.llm.jsonl
+  runs/
+    0008_poisoned_reimbursement_v1/
+      run.db                       final state of all six tables
+      llm.jsonl                    every LLM request and raw response
+      summary.json                 outcome, exposure, poison flags, run_id
+      snapshots/
+        after_s00.db               before anything runs (empty)
+        after_s01.db  after_s04.db before the poison lands
+        after_s07.db               just after the poison lands
+        after_s20.db               after the target task
+```
+
+Folders are numbered in creation order and labelled with the condition and variant; non-default task
+index or source labels are appended to the name. The `run_id` recorded inside the database is kept in
+`summary.json`, so a folder can always be tied back to its rows.
 
 Each invocation appends one summary row per condition to `results/variants.jsonl`, which is kept in git.
 
