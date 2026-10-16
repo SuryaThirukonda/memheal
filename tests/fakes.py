@@ -26,17 +26,26 @@ class FakeLLM:
     """Plays back scripted tool calls for agent turns; extraction returns the input's
     first line of text as a single fact."""
 
-    def __init__(self, script: list[tuple[str, dict]]):
+    def __init__(self, script: list[tuple[str, dict]], consolidation=None, reflection=None):
         self.script = list(script)
+        # consolidation: the {"summaries": [...]} payload to return; reflection: list of facts.
+        self.consolidation = consolidation
+        self.reflection = reflection
         self.model = "fake-model"
         self.returned_model = "fake-model"
         self.calls = 0
+        self.tags: list[str] = []
 
     def params(self):
         return {"model": "fake-model"}
 
     def respond(self, instructions, input, *, tools=None, tool_choice=None, json_schema=None, tag=""):
         self.calls += 1
+        self.tags.append(tag)
+        if json_schema and json_schema["name"] == "consolidated_memories":
+            return LLMResponse([], json.dumps({"summaries": self.consolidation or []}), "fake-model")
+        if json_schema and tag.startswith("reflect:"):
+            return LLMResponse([], json.dumps({"facts": self.reflection or []}), "fake-model")
         if json_schema:
             text = input.split("Text:\n", 1)[-1].strip()
             return LLMResponse([], json.dumps({"facts": [text]}), "fake-model")

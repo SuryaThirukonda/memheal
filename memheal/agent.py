@@ -22,6 +22,12 @@ class AgentConfig:
     max_steps: int = 5
     source_labels: bool = False
     extraction_prompt: str = "default"
+    # Offered only to scenarios that declare it; adding a tool changes behaviour, so
+    # the Week 1-2 cases keep exactly the three they were measured with.
+    enable_search: bool = False
+    # flat = store + retrieve; evolving = those plus consolidate and reflect on the
+    # maintenance days the scenario defines.
+    memory_mode: str = "flat"
 
 
 @dataclass
@@ -44,6 +50,10 @@ def render_memories(retrieved, source_labels: bool) -> str:
     return "Memories from earlier conversations:\n" + "\n".join(lines)
 
 
+def tool_schemas_for(cfg: AgentConfig) -> list[dict]:
+    return tools.TOOL_SCHEMAS + ([tools.SEARCH_SCHEMA] if cfg.enable_search else [])
+
+
 def run_session(
     ctx: tools.ToolContext,
     llm,
@@ -64,7 +74,7 @@ def run_session(
     for step in range(cfg.max_steps):
         response = llm.respond(
             instructions, conversation,
-            tools=tools.TOOL_SCHEMAS, tool_choice="required", tag=f"agent:s{session}:step{step}",
+            tools=tool_schemas_for(cfg), tool_choice="required", tag=f"agent:s{session}:step{step}",
         )
         if not response.tool_calls:
             result.final_text = response.text

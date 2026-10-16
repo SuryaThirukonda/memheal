@@ -73,6 +73,15 @@ CREATE TABLE IF NOT EXISTS experiment_runs (
     started_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Full text of every prompt that produced a memory. `memories.created_by_prompt`
+-- stores the hash; Section 5.7 reconstruction needs the text itself to replay a
+-- transformation with a clean parent set.
+CREATE TABLE IF NOT EXISTS prompts (
+    prompt_hash  TEXT PRIMARY KEY,
+    name         TEXT NOT NULL,         -- extract.default | consolidate.v1 | reflect.v1
+    text         TEXT NOT NULL
+);
+
 CREATE INDEX IF NOT EXISTS idx_edges_child ON memory_edges(child_id);
 CREATE INDEX IF NOT EXISTS idx_retrieval_query ON retrieval_events(run_id, query_id);
 """
@@ -215,11 +224,38 @@ def update_run_config(conn: sqlite3.Connection, run_id: str, **updates: Any) -> 
         )
 
 
+def register_prompt(conn: sqlite3.Connection, name: str, text: str) -> str:
+    """Record a prompt's full text; returns the hash stored in memories.created_by_prompt."""
+    h = content_hash(text)
+    with conn:
+        conn.execute(
+            "INSERT OR IGNORE INTO prompts (prompt_hash, name, text) VALUES (?, ?, ?)",
+            (h, name, text),
+        )
+    return h
+
+
+def get_prompt(conn: sqlite3.Connection, prompt_hash: str) -> sqlite3.Row | None:
+    return conn.execute("SELECT * FROM prompts WHERE prompt_hash = ?", (prompt_hash,)).fetchone()
+
+
 def set_status(conn: sqlite3.Connection, memory_id: str, status: str) -> bool:
     """Flag a memory (e.g. quarantined/deleted) without removing its row or edges."""
     with conn:
         cur = conn.execute("UPDATE memories SET status = ? WHERE id = ?", (status, memory_id))
     return cur.rowcount > 0
+
+
+def set_status_many(conn: sqlite3.Connection, memory_ids: Iterable[str], status: str) -> int:
+    """Flag a whole group in one transaction (e.g. parents absorbed by a summary)."""
+    ids = list(memory_ids)
+    if not ids:
+        return 0
+    with conn:
+        cur = conn.executemany(
+            "UPDATE memories SET status = ? WHERE id = ?", [(status, m) for m in ids]
+        )
+    return cur.rowcount
 
 
 # --- queries -----------------------------------------------------------------
@@ -240,6 +276,12 @@ def all_memories(conn: sqlite3.Connection) -> list[sqlite3.Row]:
 def active_memories(conn: sqlite3.Connection) -> list[sqlite3.Row]:
     return conn.execute(
         "SELECT * FROM memories WHERE status = 'active' ORDER BY session, created_at, rowid"
+    ).fetchall()
+
+
+def memories_by_status(conn: sqlite3.Connection, status: str) -> list[sqlite3.Row]:
+    return conn.execute(
+        "SELECT * FROM memories WHERE status = ? ORDER BY session, created_at, rowid", (status,)
     ).fetchall()
 
 
