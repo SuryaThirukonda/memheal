@@ -9,12 +9,19 @@ so tests can substitute a scripted fake.
 from __future__ import annotations
 
 import json
+import random
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 DEFAULT_MODEL = "gpt-5.4-mini"
+
+# A sweep is hundreds of sequential calls, so a transient network blip is close to
+# certain over a full catalogue run. Without this one of them aborts the variant and
+# silently loses every run in it.
+MAX_ATTEMPTS = 5
+BACKOFF_BASE = 2.0
 
 
 @dataclass
@@ -53,6 +60,7 @@ class LLM:
         self.reasoning_effort = reasoning_effort
         self.log_path = Path(log_path) if log_path else None
         self.returned_model: str | None = None
+        self.retries = 0
 
     def params(self) -> dict[str, Any]:
         return {
@@ -89,7 +97,7 @@ class LLM:
         if json_schema:
             request["text"] = {"format": {"type": "json_schema", "strict": True, **json_schema}}
 
-        response = self.client.responses.create(**request)
+        response = self._create_with_retry(request, tag)
         self.returned_model = response.model
 
         calls: list[ToolCall] = []
@@ -109,6 +117,25 @@ class LLM:
 
         self._log(tag, request, response)
         return LLMResponse(calls, text, response.model, history)
+
+    def _create_with_retry(self, request: dict[str, Any], tag: str) -> Any:
+        """Retry the transient failures; let a genuine bad request surface immediately."""
+        import openai
+
+        transient = (openai.APIConnectionError, openai.APITimeoutError,
+                     openai.RateLimitError, openai.InternalServerError)
+        for attempt in range(1, MAX_ATTEMPTS + 1):
+            try:
+                return self.client.responses.create(**request)
+            except transient as exc:
+                self.retries += 1
+                if attempt == MAX_ATTEMPTS:
+                    raise
+                # Jitter so parallel workers do not all come back at the same moment.
+                delay = BACKOFF_BASE ** (attempt - 1) * (1 + random.random() * 0.3)
+                print(f"    [retry {attempt}/{MAX_ATTEMPTS - 1} after "
+                      f"{type(exc).__name__} on {tag}; sleeping {delay:.1f}s]", flush=True)
+                time.sleep(delay)
 
     def _log(self, tag: str, request: dict[str, Any], response: Any) -> None:
         if not self.log_path:

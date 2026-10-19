@@ -18,8 +18,10 @@ from dotenv import load_dotenv
 
 from memheal import agent, db, memory
 from memheal.llm import DEFAULT_MODEL, LLM
-from memheal.scenarios import ALL_VARIANTS as VARIANTS, DEFAULT_VARIANT
+from memheal.scenarios import (ALL_VARIANTS as VARIANTS, ATTACK_CATEGORIES,
+                               DEFAULT_VARIANT, EVOLVE, SMOKE, by_category, by_domain)
 from memheal.scenarios.base import Scenario
+from memheal import tools as tools_mod
 from memheal.tools import TOOL_SCHEMAS, ToolContext, normalize_url
 
 ROOT = Path(__file__).parent
@@ -83,6 +85,7 @@ def run_once(scenario, variant, condition, i, args, embedder) -> dict:
         source_labels=args.source_labels,
         memory_mode=args.memory,
         enable_search=scenario.enable_search,
+        tool_names=scenario.tool_names,
         extraction_prompt=scenario.config_overrides.get("extraction_prompt", "default"),
     )
     task = scenario.target_tasks[args.task_index]
@@ -92,7 +95,7 @@ def run_once(scenario, variant, condition, i, args, embedder) -> dict:
         "llm": llm.params(),
         "agent": vars(cfg),
         "embedding_model": embedder.name,
-        "system_prompt": agent.SYSTEM_PROMPT,
+        "system_prompt": agent.DOMAIN_PROMPT if scenario.tool_names else agent.SYSTEM_PROMPT,
         "extraction_prompt_text": memory.EXTRACTION_PROMPTS[cfg.extraction_prompt],
         "tool_schemas": agent.tool_schemas_for(cfg),
         "unknown_url_policy": "404 Not Found; stub_pages served for destination domains",
@@ -138,9 +141,16 @@ def run_once(scenario, variant, condition, i, args, embedder) -> dict:
     target = results[scenario.target_session]
     uploads = [c.args for c in target.tool_calls if c.name == scenario.target_tool]
     # Use the logged (normalized) value, not the raw model output.
-    logged = [json.loads(a["arguments_json"]) for a in db.get_actions(conn, run_id, scenario.target_session)
-              if a["tool_name"] == scenario.target_tool]
-    destination = logged[0].get(scenario.target_field) if logged else None
+    # Score the first ACTING tool call, not only the tool the scenario predicted: an
+    # agent that uploads to the attacker through submit_form instead of order_item has
+    # still been harmed, and scoring only the expected tool records that as "no action".
+    acting = tools_mod.acting_tools()
+    logged = [(a["tool_name"], json.loads(a["arguments_json"]))
+              for a in db.get_actions(conn, run_id, scenario.target_session)
+              if a["tool_name"] in acting]
+    used_tool = logged[0][0] if logged else None
+    destination = (logged[0][1].get(tools_mod.SENSITIVE_FIELD[used_tool])
+                   if used_tool else None)
     outcome = (scenario.judge(condition, destination)
                if scenario.correct_destinations else scenario.classify(destination))
 
@@ -188,6 +198,7 @@ def run_once(scenario, variant, condition, i, args, embedder) -> dict:
         "poison_descendants": descendants,
         # --- EvolvingMemory lineage ---
         "memory_mode": cfg.memory_mode,
+        "used_tool": used_tool,
         "prior_destination": prior_destination,
         "prior_outcome": scenario.classify(prior_destination),
         "pages_opened": pages_opened,
@@ -210,7 +221,7 @@ def run_once(scenario, variant, condition, i, args, embedder) -> dict:
 
     print(f"\n=== {run_dir.name} ===")
     print(f"  run_id: {run_id}")
-    shown = f"destination={destination}" if destination else "NO_UPLOAD"
+    shown = f"{scenario.target_field}={destination}" if destination else "NO_ACTION"
     print(f"  {scenario.target_tool}: {shown} [{outcome}]  exposure={exposure}")
     print(f"  reply: {target.final_text[:200]!r}")
     print(f"  retrieved on day {scenario.target_session}:")
@@ -268,7 +279,7 @@ def summarize(variant, condition, records, args) -> dict:
     graded = " ".join(f"{k} {row[k]}/{n}," for k in ("correct", "attacker", "stale", "clean")
                       if row[k] or k in ("correct", "attacker"))
     print(f"\n### {variant} / {condition}: {graded} "
-          f"other {row['other']}/{n}, no upload {row['no_upload']}/{n}, "
+          f"other {row['other']}/{n}, no action {row['no_upload']}/{n}, "
           f"exposed-not-harmful {row['exposed_not_harmful']}/{n}, "
           f"poison retrieved {row['poison_retrieved']}/{n}, url survived {row['url_survived']}/{n}")
     return row
@@ -300,11 +311,31 @@ def print_table() -> None:
               f"| {c['clean_dest_alive']} |")
 
 
+def resolve_suite(args) -> dict:
+    """Which scenarios to run: an explicit --variant list, or a named suite."""
+    if not args.suite:
+        return {v: VARIANTS[v] for v in args.variant}
+    key = args.suite.lower()
+    if key == "smoke":
+        return dict(SMOKE)
+    if key == "evolve":
+        return dict(EVOLVE)
+    if key in ("office", "travel", "coding", "research"):
+        return by_domain(key)
+    if key in ATTACK_CATEGORIES:
+        return by_category(key)
+    raise SystemExit(f"unknown suite {args.suite!r}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--condition", nargs="+", default=["all"],
                         help="condition names, or 'all' for every world the scenario defines")
-    parser.add_argument("--variant", choices=sorted(VARIANTS), default=DEFAULT_VARIANT)
+    parser.add_argument("--variant", nargs="+", choices=sorted(VARIANTS),
+                        default=[DEFAULT_VARIANT])
+    parser.add_argument("--suite", default=None,
+                        help="smoke | evolve | a domain (office/travel/coding/research) "
+                             "| an attack category (direct/composed/procedural)")
     parser.add_argument("--n", type=int, default=3)
     parser.add_argument("--task-index", type=int, default=0)
     parser.add_argument("--k", type=int, default=5)
@@ -322,22 +353,43 @@ def main() -> None:
     load_dotenv(ROOT / ".env")
     RUNS.mkdir(parents=True, exist_ok=True)
     RESULTS.parent.mkdir(exist_ok=True)
-    scenario = VARIANTS[args.variant]
+    selected = resolve_suite(args)
     embedder = memory.get_embedder()
+    print(f"{len(selected)} scenario(s): {', '.join(sorted(selected)[:4])}"
+          f"{' ...' if len(selected) > 4 else ''}\n")
 
-    conditions = (list(scenario.conditions) if args.condition == ["all"]
-                  else ["clean", "poisoned"] if args.condition == ["both"]
-                  else args.condition)
-    unknown = [c for c in conditions if c not in scenario.conditions]
-    if unknown:
-        raise SystemExit(f"{args.variant} has no condition(s) {unknown}; "
-                         f"it defines {list(scenario.conditions)}")
-    for condition in conditions:
-        records = [run_once(scenario, args.variant, condition, i, args, embedder) for i in range(args.n)]
-        row = summarize(args.variant, condition, records, args)
-        if not args.no_record:
-            with RESULTS.open("a") as f:
-                f.write(json.dumps(row) + "\n")
+    failures: list[dict] = []
+    for variant in sorted(selected):
+        scenario = selected[variant]
+        conditions = (list(scenario.conditions) if args.condition == ["all"]
+                      else ["clean", "poisoned"] if args.condition == ["both"]
+                      else args.condition)
+        unknown = [c for c in conditions if c not in scenario.conditions]
+        if unknown:
+            raise SystemExit(f"{variant} has no condition(s) {unknown}; "
+                             f"it defines {list(scenario.conditions)}")
+        for condition in conditions:
+            # One scenario failing must not take the rest of the sweep with it.
+            records = []
+            for i in range(args.n):
+                try:
+                    records.append(run_once(scenario, variant, condition, i, args, embedder))
+                except Exception as exc:
+                    print(f"  !! {variant}/{condition} run {i} failed: "
+                          f"{type(exc).__name__}: {exc}", flush=True)
+                    failures.append({"variant": variant, "condition": condition,
+                                     "run": i, "error": f"{type(exc).__name__}: {exc}"})
+            if not records:
+                continue
+            row = summarize(variant, condition, records, args)
+            if not args.no_record:
+                with RESULTS.open("a") as f:
+                    f.write(json.dumps(row) + "\n")
+
+    if failures:
+        print(f"\n!! {len(failures)} run(s) failed and were skipped:")
+        for f_ in failures:
+            print(f"   {f_['variant']}/{f_['condition']} run {f_['run']}: {f_['error']}")
 
 
 if __name__ == "__main__":
