@@ -45,6 +45,11 @@ class Scenario:
     tool_names: tuple[str, ...] = ()   # which tools this domain offers; () = default three
     # Benign questions whose answers must survive recovery (Section 8.6; MemSecBench F2).
     benign_probes: tuple[tuple[str, str], ...] = ()
+    # Human names of the two systems and the task family, so a descendant that says
+    # "Quick Expense" without its domain can still be recognised (Section 7.8 labels).
+    subject: str = ""
+    legacy_label: str = ""
+    attacker_label: str = ""
     conditions: tuple[str, ...] = CONDITIONS
     condition_pages: dict[str, dict[str, str]] = field(default_factory=dict)
     correct_destinations: dict[str, frozenset[str]] = field(default_factory=dict)
@@ -148,4 +153,6 @@ def candidate_domains(destination: str) -> list[str]:
 
 
 def _domain_pattern(domain: str) -> re.Pattern[str]:
-    return re.compile(r"(?<![a-z0-9-])" + re.escape(domain) + r"(?![a-z0-9-])", re.IGNORECASE)
+    # `quick-expense.example.org` is a different host; a sentence-ending full stop is not.
+    return re.compile(r"(?<![a-z0-9-])" + re.escape(domain) + r"(?![a-z0-9-]|\.[a-z0-9])",
+                      re.IGNORECASE)

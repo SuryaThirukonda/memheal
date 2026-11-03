@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import random
+import threading
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -17,11 +18,22 @@ from typing import Any
 
 DEFAULT_MODEL = "gpt-5.4-mini"
 
+# Models without a reasoning setting reject `reasoning.effort` outright (400). The
+# cross-model cell (Section 8.11) uses one, so the effort is dropped for it, and
+# params() records that it was not sent.
+NO_REASONING_PREFIXES = ("gpt-4.1", "gpt-4o")
+
 # A sweep is hundreds of sequential calls, so a transient network blip is close to
 # certain over a full catalogue run. Without this one of them aborts the variant and
 # silently loses every run in it.
 MAX_ATTEMPTS = 5
 BACKOFF_BASE = 2.0
+
+# Counterfactual replays can run concurrently (influence.frozen_ablation(workers=...))
+# and share one LLM and one log file. A large entry is written in several chunks, so
+# two unguarded appends can interleave and leave a log line that is not valid JSON.
+# Module-wide rather than per instance: two LLM objects may log to the same file.
+_LOG_LOCK = threading.Lock()
 
 
 @dataclass
@@ -57,6 +69,8 @@ class LLM:
         self.client = client
         self.model = model
         self.temperature = temperature
+        if model.startswith(NO_REASONING_PREFIXES):
+            reasoning_effort = None
         self.reasoning_effort = reasoning_effort
         self.log_path = Path(log_path) if log_path else None
         self.returned_model: str | None = None
@@ -148,5 +162,6 @@ class LLM:
             "output": [item.model_dump(exclude_none=True) for item in response.output],
             "usage": response.usage.model_dump() if response.usage else None,
         }
-        with self.log_path.open("a") as f:
-            f.write(json.dumps(entry, default=str) + "\n")
+        line = json.dumps(entry, default=str) + "\n"
+        with _LOG_LOCK, self.log_path.open("a") as f:
+            f.write(line)

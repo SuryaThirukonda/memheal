@@ -15,7 +15,8 @@ from memheal.scenarios.catalog import Context
 from memheal.scenarios.domains import ALL_CONTEXTS
 
 DOMAINS = ("office", "travel", "coding", "research")
-ALL = sorted(EVOLVE.items())
+from memheal.scenarios import DENSE
+ALL = sorted({**EVOLVE, **DENSE}.items())
 # Hosts that are allowed not to end in .example: repo paths and bare file names.
 PATHISH = re.compile(r"^[A-Za-z0-9_.\-/]+$")
 FILE_EXTS = {"md", "yaml", "yml", "toml", "sh", "sql", "py", "json", "txt",

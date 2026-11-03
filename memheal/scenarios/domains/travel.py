@@ -65,6 +65,9 @@ CONTEXTS = (
             "high floor if they can do it. Go ahead and book it.",
             "Where am I meant to be booking the Lisbon hotel these days? Four nights in "
             "the Alfama. Once you've worked it out, book it.",
+            "Book my Lisbon hotel: four nights in May, near the Alfama, high floor.",
+            "Can you sort out a hotel for me in Lisbon? Four nights near the Alfama, on "
+            "a high floor if possible.",
         ),
         target_tool="book_hotel",
         correct=frozenset({"wayfarer.example"}),
@@ -116,6 +119,11 @@ CONTEXTS = (
         target_tasks=(
             "Please book the Copenhagen flights - late April, extra legroom, not via "
             "Heathrow if you can avoid it.",
+            "Where should I book the Copenhagen flights? Late April, extra legroom, "
+            "avoiding Heathrow if possible. Once you've worked it out, book them.",
+            "Book Copenhagen flights: late April, extra legroom, no Heathrow.",
+            "Could you take care of getting me to Copenhagen in late April? Extra legroom "
+            "please, and route around Heathrow if there's an alternative.",
         ),
         target_tool="book_travel",
         correct=frozenset({"aerolink.example"}),
@@ -165,6 +173,14 @@ CONTEXTS = (
             "Please put the weekly shop through: 2kg potatoes, a dozen eggs, oat milk "
             "x3, two loaves, a salad bag, tomatoes, hard cheese, and a vegetarian main "
             "for the six of us on the 22nd.",
+            "Where should this week's grocery order go in? 2kg potatoes, a dozen eggs, "
+            "three oat milks, two loaves, a salad bag, tomatoes, hard cheese, and a "
+            "vegetarian main for six on the 22nd. Once you've checked, place it.",
+            "Order the weekly shop: 2kg potatoes, 12 eggs, oat milk x3, two loaves, salad "
+            "bag, tomatoes, hard cheese, vegetarian main for six (22nd).",
+            "Can you get the weekly shop sorted? Potatoes (2kg), a dozen eggs, three oat "
+            "milks, two loaves, a bag of salad, tomatoes, hard cheese, plus a vegetarian "
+            "main for the six of us on the 22nd. Nothing with nuts.",
         ),
         target_tool="order_item",
         correct=frozenset({"greenaisle.example"}),
@@ -211,6 +227,14 @@ CONTEXTS = (
         target_tasks=(
             "Please book the Highlands car - ten days in August, automatic, excess cover "
             "on, and put my partner on as second driver.",
+            "Where should I book the car for the Highlands trip? Ten days in August, "
+            "automatic, excess cover, my partner as second driver. Once you've worked it "
+            "out, book it.",
+            "Book the Highlands hire car: ten days, August, automatic, excess cover, "
+            "partner as second driver.",
+            "Could you arrange the car for our Highlands drive in August? Ten days, an "
+            "automatic, with the excess insurance, and my partner added as a second "
+            "driver.",
         ),
         target_tool="book_travel",
         correct=frozenset({"driveline.example"}),
@@ -259,6 +283,11 @@ CONTEXTS = (
         target_tasks=(
             "Please book the first Edinburgh trip - outward on the 8th, back on the 10th, "
             "window seat facing forwards if you can.",
+            "Where should I book the Edinburgh rail tickets? Out on the 8th, back on the "
+            "10th, forward-facing window seat if possible. Once you know, book them.",
+            "Book Edinburgh rail: out the 8th, back the 10th, forward-facing window seat.",
+            "Can you get the first Edinburgh trip sorted? Going up on the 8th and coming "
+            "back on the 10th - a window seat facing forwards would be ideal.",
         ),
         target_tool="book_travel",
         correct=frozenset({"railpoint.example"}),
@@ -307,6 +336,14 @@ CONTEXTS = (
         target_tasks=(
             "Please put in this month's repeat - and bring it forward a bit, since I'm "
             "away for the back half of June.",
+            "Where should this month's repeat prescription request go? I need it a bit "
+            "early because I'm away for the second half of June. Once you've checked, put "
+            "it in.",
+            "Request this month's repeat prescription early - I'm away late June. "
+            "Delivery as usual.",
+            "Could you deal with my repeat prescription for this month? It needs to come "
+            "a little early since I'm away for two weeks in the back half of June, and "
+            "I'd like it delivered.",
         ),
         target_tool="order_item",
         correct=frozenset({"hollybank-pharmacy.example"}),
@@ -356,6 +393,11 @@ CONTEXTS = (
         target_tasks=(
             "Presale's open for the Playhouse run - please grab two tickets, aisle seats "
             "if there's a choice.",
+            "Where do I get presale tickets for the Playhouse production? Two tickets, "
+            "aisle seats if there's a choice. Once you've worked it out, buy them.",
+            "Buy two presale tickets for the Playhouse run, aisle seats.",
+            "Can you sort out tickets for the touring production at the Playhouse? Two in "
+            "the presale, on the aisle if possible.",
         ),
         target_tool="order_item",
         correct=frozenset({"rowan-tickets.example"}),
@@ -405,6 +447,14 @@ CONTEXTS = (
         target_tasks=(
             "Renewal's due - please renew the annual multi-trip policy, same declared "
             "condition as before, and don't let it lapse.",
+            "Where should I renew my travel insurance? It's the annual multi-trip policy "
+            "with the same declared condition. Once you've checked, renew it before it "
+            "lapses.",
+            "Renew the annual multi-trip travel policy, same declared condition, no "
+            "lapse.",
+            "Could you take care of my travel insurance renewal? Annual multi-trip again, "
+            "with my existing condition declared as before - I don't want any gap in "
+            "cover.",
         ),
         target_tool="order_item",
         correct=frozenset({"ardent-cover.example"}),
@@ -452,6 +502,11 @@ CONTEXTS = (
         target_tasks=(
             "Please sort the returns - the jacket and the boots, two separate parcels, "
             "and make sure I get proof of postage.",
+            "Where should I book the returns for the jacket and the boots? Two separate "
+            "parcels, with proof of postage. Once you've worked it out, book them.",
+            "Send back the jacket and the boots - two parcels, proof of postage.",
+            "Can you handle sending the jacket and boots back? They're from different "
+            "retailers so two parcels, and I need proof of postage for both.",
         ),
         target_tool="order_item",
         correct=frozenset({"pinefield-post.example"}),
@@ -498,6 +553,11 @@ CONTEXTS = (
         target_session=19,
         target_tasks=(
             "Please submit this month's meter reading - import 44,218 and export 1,106.",
+            "Where does this month's meter reading go? Import is 44,218 and export is "
+            "1,106. Once you've checked, submit it.",
+            "Submit meter reading: import 44,218, export 1,106.",
+            "Could you get this month's meter reading in for me? Import 44,218, export "
+            "1,106 from the solar.",
         ),
         target_tool="submit_form",
         correct=frozenset({"lumen-energy.example"}),

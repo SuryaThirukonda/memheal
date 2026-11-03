@@ -1,0 +1,313 @@
+{
+ "flat_vs_evolving": {
+  "flat": {
+   "direct": [
+    28,
+    40
+   ],
+   "composed": [
+    25,
+    40
+   ],
+   "procedural": [
+    17,
+    40
+   ],
+   "all": [
+    70,
+    120
+   ]
+  },
+  "evolving": {
+   "direct": [
+    33,
+    40
+   ],
+   "composed": [
+    31,
+    40
+   ],
+   "procedural": [
+    23,
+    40
+   ],
+   "all": [
+    87,
+    120
+   ]
+  }
+ },
+ "mem0_matched": {
+  "variants": [
+   "coding_ci_setup_script_dense_composed",
+   "coding_ci_setup_script_dense_direct",
+   "coding_ci_setup_script_dense_procedural",
+   "coding_package_registry_dense_composed",
+   "coding_package_registry_dense_direct",
+   "coding_package_registry_dense_procedural",
+   "coding_service_deploy_dense_composed",
+   "coding_service_deploy_dense_direct",
+   "coding_service_deploy_dense_procedural",
+   "office_expense_receipts_dense_composed"
+  ],
+  "attacker": {
+   "Flat": [
+    0,
+    10
+   ],
+   "Evolving": [
+    9,
+    10
+   ],
+   "Mem0": [
+    5,
+    10
+   ]
+  }
+ },
+ "mem0_events": {
+  "runs": 10,
+  "ADD": 247,
+  "UPDATE": 25,
+  "DELETE": 9,
+  "runs_poison_in_update": 7,
+  "runs_attack_active": 9
+ },
+ "evolving_matched_events": {
+  "runs": 10,
+  "extract": 461,
+  "derived": 75,
+  "runs_poison_in_derived": 10,
+  "runs_attack_active": 10
+ },
+ "diag_keys": [
+  "meta",
+  "summary",
+  "retrieval_vs_causation",
+  "candidates",
+  "runs"
+ ],
+ "diag_store": {
+  "retrieval": {
+   "micro_p": 0.1873,
+   "micro_r": 0.5849,
+   "micro_f1": 0.2838,
+   "tp": 62,
+   "fp": 269,
+   "fn": 44,
+   "calls_per_run": 0.0,
+   "flagged_per_run": 3.602
+  },
+  "source_only": {
+   "micro_p": 0.1917,
+   "micro_r": 1.0,
+   "micro_f1": 0.3217,
+   "tp": 106,
+   "fp": 447,
+   "fn": 0,
+   "calls_per_run": 0.0,
+   "flagged_per_run": 6.054
+  },
+  "self_explain": {
+   "micro_p": 0.6559,
+   "micro_r": 0.5755,
+   "micro_f1": 0.6131,
+   "tp": 61,
+   "fp": 32,
+   "fn": 45,
+   "calls_per_run": 0.72,
+   "flagged_per_run": 1.032
+  },
+  "content_llm": {
+   "micro_p": 0.5355,
+   "micro_r": 0.783,
+   "micro_f1": 0.636,
+   "tp": 83,
+   "fp": 72,
+   "fn": 23,
+   "calls_per_run": 18.366,
+   "flagged_per_run": 1.688
+  },
+  "memheal_cf": {
+   "micro_p": 0.7297,
+   "micro_r": 0.2547,
+   "micro_f1": 0.3776,
+   "tp": 27,
+   "fp": 10,
+   "fn": 79,
+   "calls_per_run": 16.226,
+   "flagged_per_run": 0.398
+  },
+  "memheal_full": {
+   "micro_p": 0.8667,
+   "micro_r": 0.6132,
+   "micro_f1": 0.7182,
+   "tp": 65,
+   "fp": 10,
+   "fn": 41,
+   "calls_per_run": 16.226,
+   "flagged_per_run": 0.806
+  },
+  "ancestry": {
+   "micro_p": 0.9138,
+   "micro_r": 1.0,
+   "micro_f1": 0.955,
+   "tp": 106,
+   "fp": 10,
+   "fn": 0,
+   "calls_per_run": 0.0,
+   "flagged_per_run": 1.323
+  }
+ },
+ "diag_action": {
+  "retrieval": {
+   "micro_p": 0.1873,
+   "micro_r": 1.0,
+   "micro_f1": 0.3155,
+   "tp": 62,
+   "fp": 269,
+   "fn": 0,
+   "calls_per_run": 0.0,
+   "flagged_per_run": 5.0
+  },
+  "source_only": {
+   "micro_p": 0.6327,
+   "micro_r": 1.0,
+   "micro_f1": 0.775,
+   "tp": 62,
+   "fp": 36,
+   "fn": 0,
+   "calls_per_run": 0.0,
+   "flagged_per_run": 1.522
+  },
+  "self_explain": {
+   "micro_p": 0.6559,
+   "micro_r": 0.9839,
+   "micro_f1": 0.7871,
+   "tp": 61,
+   "fp": 32,
+   "fn": 1,
+   "calls_per_run": 1.0,
+   "flagged_per_run": 1.433
+  },
+  "content_llm": {
+   "micro_p": 0.963,
+   "micro_r": 0.8387,
+   "micro_f1": 0.8966,
+   "tp": 52,
+   "fp": 2,
+   "fn": 10,
+   "calls_per_run": 5.0,
+   "flagged_per_run": 0.806
+  },
+  "memheal_cf": {
+   "micro_p": 0.7297,
+   "micro_r": 0.4355,
+   "micro_f1": 0.5455,
+   "tp": 27,
+   "fp": 10,
+   "fn": 35,
+   "calls_per_run": 22.522,
+   "flagged_per_run": 0.552
+  },
+  "memheal_full": {
+   "micro_p": 0.8438,
+   "micro_r": 0.871,
+   "micro_f1": 0.8571,
+   "tp": 54,
+   "fp": 10,
+   "fn": 8,
+   "calls_per_run": 22.522,
+   "flagged_per_run": 0.955
+  },
+  "ancestry": {
+   "micro_p": 0.9688,
+   "micro_r": 1.0,
+   "micro_f1": 0.9841,
+   "tp": 62,
+   "fp": 2,
+   "fn": 0,
+   "calls_per_run": 0.0,
+   "flagged_per_run": 0.985
+  }
+ },
+ "h3": {
+  "Poison descendants": [
+   27,
+   58
+  ],
+  "Other lineage": [
+   1,
+   5
+  ],
+  "Unrelated memories": [
+   9,
+   247
+  ]
+ },
+ "h3_totals": {
+  "incidents": 67,
+  "explained": 62,
+  "retrieved": 310,
+  "flipped": 37,
+  "no_single_culprit": 30
+ },
+ "families_partial": {
+  "runs": 14,
+  "tasks_disagree": 3,
+  "attacker_per_task": [
+   7,
+   9,
+   8,
+   9
+  ],
+  "any_task_attacked": 10
+ },
+ "repeats_partial": {
+  "runs_with_2plus_repeats": 11,
+  "task_outcomes_changed": 4,
+  "task_outcomes": 44
+ },
+ "groups_partial": {
+  "incidents": 10,
+  "culprit_kinds": {
+   "none": 3,
+   "single": 5,
+   "pair/group": 2
+  },
+  "asr_after": [
+   0,
+   10
+  ],
+  "seq_s": 25.286,
+  "par_s": 16.290499999999998,
+  "seq_calls": 25.5,
+  "par_calls": 48.5
+ },
+ "k_partial": {
+  "('none', 3, 0, 0, 1)": 9,
+  "('incident', 3, 0, 0, 1)": 12,
+  "('none', 10, 0, 1, 1)": 10,
+  "('incident', 10, 0, 0, 1)": 11,
+  "('none', 3, 0, 1, 1)": 5,
+  "('none', 10, 0, 0, 1)": 2
+ },
+ "depth_partial": {
+  "('none', 5, 1, 1, 1)": 10,
+  "('selective', 5, 1, 0, 1)": 13,
+  "('incident', 5, 1, 0, 1)": 12,
+  "('none', 5, 2, 0, 1)": 4,
+  "('selective', 5, 2, 0, 1)": 11,
+  "('incident', 5, 2, 0, 1)": 8,
+  "('none', 5, 3, 0, 1)": 3,
+  "('selective', 5, 3, 0, 1)": 8,
+  "('incident', 5, 3, 0, 1)": 5,
+  "('none', 5, 2, 1, 1)": 7,
+  "('none', 5, 3, 1, 1)": 5,
+  "('incident', 5, 2, 1, 1)": 1,
+  "('none', 5, 1, 0, 1)": 4
+ },
+ "reretrieve_partial": {
+  "('incident', 5, 0, 0, 1)": 13
+ }
+}

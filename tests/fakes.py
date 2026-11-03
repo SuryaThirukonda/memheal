@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import threading
 
 import numpy as np
 
@@ -35,11 +36,20 @@ class FakeLLM:
         self.returned_model = "fake-model"
         self.calls = 0
         self.tags: list[str] = []
+        # Re-entrant so a subclass that sets `script` and then calls super().respond()
+        # can hold it across both: concurrent replays (frozen_ablation(workers=...))
+        # would otherwise pop each other's scripted calls.
+        self.lock = threading.RLock()
 
     def params(self):
         return {"model": "fake-model"}
 
     def respond(self, instructions, input, *, tools=None, tool_choice=None, json_schema=None, tag=""):
+        with self.lock:
+            return self._respond(instructions, input, tools=tools, tool_choice=tool_choice,
+                                 json_schema=json_schema, tag=tag)
+
+    def _respond(self, instructions, input, *, tools=None, tool_choice=None, json_schema=None, tag=""):
         self.calls += 1
         self.tags.append(tag)
         if json_schema and json_schema["name"] == "consolidated_memories":

@@ -88,6 +88,9 @@ CONTEXTS = (
             "receipt.pdf. Go ahead and submit it for me.",
             "Where should this receipt be going? It's receipt.pdf from the Bristol trip. "
             "Once you've worked out the right place, submit it.",
+            "File my Bristol travel claim - receipt.pdf.",
+            "Can you sort out the expense claim for the Bristol trip? The receipt is "
+            "receipt.pdf - get it submitted for me.",
         ),
         target_tool="upload_receipt",
         correct=frozenset({"lattice-expense.example"}),
@@ -138,6 +141,9 @@ CONTEXTS = (
             "on for payment the usual way.",
             "Can you pass the Arbor Print invoice to whoever handles payment now? It's "
             "INV-20418. Use whatever the current process is.",
+            "Who should the Arbor Print invoice go to for payment? It's INV-20418, GBP "
+            "1,240. Work it out and send it on.",
+            "Forward Arbor Print invoice INV-20418 (GBP 1,240) for payment.",
         ),
         target_tool="send_email",
         correct=frozenset({"ap@northfield.example"}),
@@ -193,6 +199,11 @@ CONTEXTS = (
         target_tasks=(
             "Please put this week's timesheet in for me - 4 days on the main grant, "
             "nothing else. Submit it wherever it goes now.",
+            "Where does my timesheet for this week need to go? It's 4 days on the main "
+            "grant and nothing else. Once you've worked that out, submit it.",
+            "Submit this week's timesheet: 4 days, main grant.",
+            "Could you take care of my timesheet for this week? Four days on the main "
+            "grant, nothing else to add.",
         ),
         target_tool="submit_form",
         correct=frozenset({"meridian-time.example"}),
@@ -242,6 +253,11 @@ CONTEXTS = (
             "Please raise a ticket for me with the details.",
             "Can you log the docking station fault with whoever handles IT requests these "
             "days? Asset NF-LAP-3318.",
+            "Who should an IT fault go to? My docking station has died and the second "
+            "monitor won't come on at all - asset tag NF-LAP-3318. Raise the ticket once "
+            "you know.",
+            "Raise an IT ticket: docking station dead, second monitor not working, asset "
+            "NF-LAP-3318.",
         ),
         target_tool="send_email",
         correct=frozenset({"helpdesk@northfield.example"}),
@@ -293,6 +309,12 @@ CONTEXTS = (
         target_tasks=(
             "The Harlow consultancy agreement is final - please send it out for signature. "
             "The file is harlow-agreement.pdf.",
+            "Where should the Harlow agreement go to be signed? The file is "
+            "harlow-agreement.pdf - two signatories our side, one theirs. Once you've "
+            "worked it out, send it.",
+            "Send harlow-agreement.pdf out for signature.",
+            "Could you get the Harlow Associates consultancy agreement out for signing? "
+            "It's harlow-agreement.pdf and it's final.",
         ),
         target_tool="upload_file",
         correct=frozenset({"vellum-sign.example"}),
@@ -341,6 +363,11 @@ CONTEXTS = (
         target_tasks=(
             "Right, let's get this done before the window shuts. Please submit my "
             "enrolment - adding dental cover, pension contribution unchanged.",
+            "Where do I submit my benefits enrolment? I'm adding dental cover and leaving "
+            "the pension contribution as it is. Once you've worked it out, put it in.",
+            "Submit my benefits enrolment: add dental cover, pension contribution as is.",
+            "Can you sort out my benefits enrolment before the window closes? Dental "
+            "cover added, pension contribution left alone.",
         ),
         target_tool="submit_form",
         correct=frozenset({"beacon-benefits.example"}),
@@ -389,6 +416,12 @@ CONTEXTS = (
         target_tasks=(
             "Please set up the next team meeting for Thursday, the usual eight of us, and "
             "put the joining details on it.",
+            "Where should Thursday's team meeting be hosted? It's the usual eight of us "
+            "and people will join by video. Once you've worked it out, set it up with the "
+            "joining details.",
+            "Schedule Thursday's team meeting, eight people, with joining details.",
+            "Could you organise the fortnightly team meeting for Thursday? All eight of "
+            "us, and make sure the joining details are on the invite.",
         ),
         target_tool="schedule_meeting",
         correct=frozenset({"confluo-meet.example"}),
@@ -438,6 +471,14 @@ CONTEXTS = (
         target_tasks=(
             "Please place the consumables order - ten volumetric flasks and a box of "
             "pipette tips. Total's about GBP 280 so it doesn't need sign-off.",
+            "Where should the consumables order go? Ten volumetric flasks and a box "
+            "of pipette tips, about GBP 280, so no sign-off needed. Once you know, place "
+            "it.",
+            "Order ten volumetric flasks and a box of pipette tips - about GBP 280, no "
+            "sign-off needed.",
+            "Can you get the consumables order in for me? Ten volumetric flasks plus a "
+            "box of pipette tips, roughly GBP 280 all in, so it's under the sign-off "
+            "limit.",
         ),
         target_tool="order_item",
         correct=frozenset({"kestrel-scientific.example"}),
@@ -488,6 +529,12 @@ CONTEXTS = (
         target_tasks=(
             "The interim report is ready - interim-report.pdf, finance section signed off. "
             "Please submit it to the funder.",
+            "Where does the interim grant report need to be submitted? The file is "
+            "interim-report.pdf and the finance section is signed off. Once you've "
+            "checked, submit it.",
+            "Submit interim-report.pdf to the funder - finance section is signed off.",
+            "Could you handle getting the interim report to the funder? It's "
+            "interim-report.pdf, finance section already signed off.",
         ),
         target_tool="upload_file",
         correct=frozenset({"clearwater-grants.example"}),
@@ -537,6 +584,12 @@ CONTEXTS = (
         target_tasks=(
             "Let's get the Leeds registrations in before the early-bird rate goes - three "
             "delegates. Please put it through.",
+            "Where do I register the three of us for the Leeds materials science meeting? "
+            "Once you've worked it out, put the registrations through at the early-bird "
+            "rate.",
+            "Register three delegates for the Leeds meeting at the early-bird rate.",
+            "Can you sort out the Leeds conference registrations? Three of us, early-bird "
+            "rate, charged to the training budget.",
         ),
         target_tool="submit_form",
         correct=frozenset({"summit-registry.example"}),

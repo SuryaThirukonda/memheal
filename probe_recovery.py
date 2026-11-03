@@ -1,87 +1,58 @@
 """Replay a completed run's target task after removing memories (proposal Section 5.6).
 
-Takes a finished run, rewinds to its last snapshot before the target task, applies a
-recovery mode, and replays only that task. Everything else about the run is held fixed,
-so the difference in the logged destination is attributable to what was removed.
+Superseded by recover.py, which adds the Weeks 11-12 modes, verdicts, the full task
+family, probes and reinfection. This keeps the original single-task probe and its
+output (probes/<mode>.db, probes/results.json) for the early reimbursement runs, now
+on top of memheal/recovery.py: removal is quarantine rather than 'deleted' (retrieval
+sees active memories only, so the replay is the same), and the run.db is opened
+read-only.
 
     python probe_recovery.py --run data/runs/0021_poisoned_reimbursement_long_evolving
     python probe_recovery.py --run <dir> --mode none root descendants full
 
-Modes (Section 5.6):
-    none         baseline: change nothing, just replay
-    root         delete the poisoned memories themselves
-    descendants  delete every memory derived from them, but not the roots
-    full         root + all descendants (conservative cleanup)
-    reset        delete all memory (maximum suppression, maximum utility loss)
+Modes (Section 5.6), and the recovery mode each now maps to:
+    none         baseline: change nothing, just replay              -> none
+    root         remove the poisoned memories themselves            -> root
+    descendants  remove every memory derived from them, not roots   (local: no recover.py twin)
+    full         root + all descendants (conservative cleanup)      -> ancestry
+    reset        remove all memory (maximum suppression)            -> reset
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import re
 import shutil
 from pathlib import Path
 
 from dotenv import load_dotenv
 
-from memheal import agent, db, memory
-from memheal.llm import LLM
-from memheal.scenarios.reimbursement import VARIANTS
+from memheal import agent, db, lineage, memory, recovery
+from memheal.scenarios import ALL_VARIANTS as VARIANTS
 from memheal.tools import ToolContext
-from run_demo import is_poison
+from recover import load_run, pre_target_snapshot  # noqa: F401  (re-exported for old callers)
 
 ROOT = Path(__file__).parent
 MODES = ("none", "root", "descendants", "full", "reset")
-STAGE_ORDER = {"": 0, "_reflect": 1, "_consolidate": 2}
-
-
-def pre_target_snapshot(run_dir: Path, target_day: int) -> Path:
-    """The last snapshot taken before the target task ran."""
-    best, best_key = None, None
-    for p in (run_dir / "snapshots").glob("after_s*.db"):
-        m = re.match(r"after_s(\d+)(_reflect|_consolidate)?\.db$", p.name)
-        if not m:
-            continue
-        day = int(m.group(1))
-        if day >= target_day:
-            continue
-        key = (day, STAGE_ORDER[m.group(2) or ""])
-        if best_key is None or key > best_key:
-            best, best_key = p, key
-    if best is None:
-        raise SystemExit(f"no pre-target snapshot in {run_dir}")
-    return best
-
-
-def load_run(run_dir: Path) -> dict:
-    conn = db.connect(run_dir / "run.db")
-    row = conn.execute("SELECT * FROM experiment_runs LIMIT 1").fetchone()
-    cfg = json.loads(row["config_json"])
-    conn.close()
-    return {"run_id": row["run_id"], "condition": row["condition"],
-            "model": row["model"], "config": cfg}
+RECOVERY_MODE = {"none": "none", "root": "root", "full": "ancestry", "reset": "reset"}
 
 
 def apply_mode(conn, scenario, condition, mode: str) -> dict:
-    roots = [r["id"] for r in db.all_memories(conn) if is_poison(r, scenario, condition)]
-    descendants = sorted(set().union(*(db.get_descendants(conn, m) for m in roots))
-                         if roots else set())
-    if mode == "none":
-        removed = []
-    elif mode == "root":
-        removed = roots
-    elif mode == "descendants":
-        removed = descendants
-    elif mode == "full":
-        removed = sorted(set(roots) | set(descendants))
-    else:  # reset
-        removed = [r["id"] for r in db.active_memories(conn)]
-    db.set_status_many(conn, removed, "deleted")
-    return {"roots": roots, "descendants": descendants, "removed": removed}
+    roots, descendants = lineage.poison_lineage(conn, scenario, condition)
+    if mode == "descendants":
+        # The one probe mode with no recovery.py equivalent: it spares the roots on
+        # purpose, to show what consolidation alone carried forward.
+        p = recovery.RecoveryPlan("descendants", quarantine=set(descendants),
+                                  reasons={d: "descendant" for d in descendants})
+    else:
+        p = recovery.plan(conn, scenario, condition, RECOVERY_MODE[mode],
+                          roots=roots, descendants=descendants)
+    recovery.apply(conn, p, None, None, f"probe:{mode}")
+    return {"roots": roots, "descendants": sorted(descendants),
+            "removed": [r["id"] for r in db.all_memories(conn) if r["id"] in p.quarantine]}
 
 
-def probe(run_dir: Path, mode: str, variant: str | None, embedder) -> dict:
+def probe(run_dir: Path, mode: str, variant: str | None, embedder, llm=None) -> dict:
     meta = load_run(run_dir)
     variant = variant or meta["config"]["variant"]
     scenario = VARIANTS[variant]
@@ -91,6 +62,8 @@ def probe(run_dir: Path, mode: str, variant: str | None, embedder) -> dict:
         k=agent_cfg.get("k", 5),
         source_labels=agent_cfg.get("source_labels", False),
         extraction_prompt=agent_cfg.get("extraction_prompt", "default"),
+        enable_search=agent_cfg.get("enable_search", scenario.enable_search),
+        tool_names=tuple(scenario.tool_names),
         memory_mode="flat",      # the probe replays one task; no maintenance
     )
 
@@ -104,7 +77,9 @@ def probe(run_dir: Path, mode: str, variant: str | None, embedder) -> dict:
     active_before = len(db.active_memories(conn))
 
     run_id = f"probe-{mode}-{meta['run_id']}"
-    llm = LLM(model=meta["model"], log_path=out_dir / f"{mode}.llm.jsonl")
+    if llm is None:
+        from memheal.llm import LLM
+        llm = LLM(model=meta["model"], log_path=out_dir / f"{mode}.llm.jsonl")
     ctx = ToolContext(conn, run_id, scenario.target_session,
                       scenario.pages_for(meta["condition"]))
     result = agent.run_session(ctx, llm, embedder, cfg, task)
@@ -139,9 +114,10 @@ def main() -> None:
     load_dotenv(ROOT / ".env")
     run_dir = Path(args.run)
     embedder = memory.get_embedder()
+    variant = args.variant or load_run(run_dir)["config"]["variant"]
 
     print(f"run: {run_dir.name}")
-    print(f"snapshot: {pre_target_snapshot(run_dir, VARIANTS[load_run(run_dir)['config']['variant']].target_session).name}\n")
+    print(f"snapshot: {pre_target_snapshot(run_dir, VARIANTS[variant].target_session).name}\n")
     records = []
     for mode in args.mode:
         r = probe(run_dir, mode, args.variant, embedder)

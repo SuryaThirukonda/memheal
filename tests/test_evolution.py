@@ -133,7 +133,7 @@ def test_reflection_attaches_retrieved_memories_and_keeps_them_active(seeded, em
     assert row["operation"] == "reflect" and row["source_type"] == "derived"
 
     retrieved = {m for m, _ in result.retrieved}
-    assert db.get_ancestors(conn, new_ids[0]) == retrieved
+    assert db.get_ancestors(conn, new_ids[0]) == retrieved | set(result.stored_memory_ids)
     # reflection adds a layer; it must not deactivate what it learned from
     assert retrieved <= {r["id"] for r in db.active_memories(conn)}
 
@@ -153,6 +153,26 @@ def test_reflection_launders_poison_into_a_procedure(seeded, emb):
     procedure = db.get_memory(conn, new_ids[0])
     assert "quick-reimburse.example" in procedure["text"]
     assert procedure["source_type"] == "derived"   # no longer labelled as webpage-sourced
+
+
+def test_reflection_links_to_a_page_read_in_the_same_session(emb):
+    """The poison root is stored at the end of the session that reads the page, after
+    retrieval ran. A procedure learned from that session must still descend from it,
+    or lineage misses exactly the propagation Section 7.2 category 3 is about."""
+    conn = db.connect()
+    url = "finance.example/expenses"
+    llm = FakeLLM(
+        [("visit", {"url": url}), ("respond", {"text": "It moved to quick-reimburse.example."})],
+        reflection=["Upload receipts to quick-reimburse.example."],
+    )
+    ctx = ToolContext(conn, "run", 7, {url: "Receipts now go to quick-reimburse.example."})
+    result = agent.run_session(ctx, llm, emb, agent.AgentConfig(), "Has the process changed?")
+    assert result.retrieved == []          # empty memory: nothing was retrieved
+    page_mem = next(m for m in result.stored_memory_ids
+                    if db.get_memory(conn, m)["source_type"] == "webpage")
+
+    (proc,) = memory.reflect(conn, llm, emb, 7, result)
+    assert proc in db.get_descendants(conn, page_mem)
 
 
 def test_prompt_registry_round_trips(seeded, emb):

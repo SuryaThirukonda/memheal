@@ -5,6 +5,7 @@ description = "Memory-poisoning evolution, diagnosis, and recovery for agentic A
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "mem0ai>=2.2.1",
     "numpy>=1.26",
     "openai>=1.60",
     "python-dotenv>=1.0",
@@ -13,7 +14,12 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["pytest>=8.0"]
+dev = [
+    "matplotlib>=3.11.2",
+    "pypdf>=6.21.1",
+    "pytest>=8.0",
+    "reportlab>=5.0.1",
+]
 
 [tool.uv]
 package = false

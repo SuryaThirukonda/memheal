@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sqlite3
 import uuid
 from pathlib import Path
@@ -30,7 +31,7 @@ CREATE TABLE IF NOT EXISTS memories (
     source_id          TEXT,
     operation          TEXT NOT NULL,        -- extract | summarize | reflect | reconstruct
     session            INTEGER NOT NULL,
-    status             TEXT NOT NULL DEFAULT 'active',  -- active | quarantined | deleted
+    status             TEXT NOT NULL DEFAULT 'active',  -- active | consolidated | quarantined | deleted
     created_by_prompt  TEXT,                 -- hash of the prompt template that produced it
     model              TEXT,
     embedding          BLOB,
@@ -82,6 +83,26 @@ CREATE TABLE IF NOT EXISTS prompts (
     text         TEXT NOT NULL
 );
 
+-- Weeks 11-12 recovery. One row per memory a recovery touched, so a recovered copy
+-- says what was quarantined, restored or rebuilt and why (Section 5.7). Recovery
+-- only ever runs on a copy of a snapshot, never on the original run.db.
+CREATE TABLE IF NOT EXISTS recovery_events (
+    recovery_id  TEXT NOT NULL,
+    mode         TEXT NOT NULL,
+    memory_id    TEXT NOT NULL REFERENCES memories(id),
+    action       TEXT NOT NULL,         -- quarantine | restore | reconstruct | keep
+    replacement  TEXT,                  -- id of the memory that replaced it, if any
+    reason       TEXT
+);
+
+-- Sources blocked by +immunize. Later extractions from a matching page are still
+-- written, so reinfection attempts stay measurable (Section 8.8), but as 'quarantined'.
+CREATE TABLE IF NOT EXISTS source_blocklist (
+    pattern        TEXT PRIMARY KEY,    -- normalized url or bare domain
+    reason         TEXT,
+    added_session  INTEGER
+);
+
 CREATE INDEX IF NOT EXISTS idx_edges_child ON memory_edges(child_id);
 CREATE INDEX IF NOT EXISTS idx_retrieval_query ON retrieval_events(run_id, query_id);
 """
@@ -92,6 +113,18 @@ def connect(path: str | Path = ":memory:") -> sqlite3.Connection:
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(SCHEMA)
+    return conn
+
+
+def connect_readonly(path: str | Path) -> sqlite3.Connection:
+    """Open an existing store for reading only (an original run.db or snapshot).
+
+    connect() runs the schema script, which adds any newer tables (recovery_events,
+    source_blocklist, prompts on the oldest runs) to the file; mode=ro leaves it
+    byte-identical by construction.
+    """
+    conn = sqlite3.connect(f"{Path(path).resolve().as_uri()}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
     return conn
 
 
@@ -330,3 +363,89 @@ def get_ancestors(conn: sqlite3.Connection, memory_id: str) -> set[str]:
         (memory_id,),
     ).fetchall()
     return {r["id"] for r in rows} - {memory_id}
+
+
+def parents_of(conn: sqlite3.Connection, memory_id: str) -> list[str]:
+    """Direct parents, in the order the edges were written (the order a summary cited them)."""
+    return [r["parent_id"] for r in conn.execute(
+        "SELECT parent_id FROM memory_edges WHERE child_id = ? ORDER BY rowid", (memory_id,))]
+
+
+def children_of(conn: sqlite3.Connection, memory_id: str) -> list[str]:
+    """Direct children, oldest edge first."""
+    return [r["child_id"] for r in conn.execute(
+        "SELECT child_id FROM memory_edges WHERE parent_id = ? ORDER BY rowid", (memory_id,))]
+
+
+# --- recovery (Weeks 11-12) ----------------------------------------------------
+
+def log_recovery(
+    conn: sqlite3.Connection,
+    recovery_id: str,
+    mode: str,
+    memory_id: str,
+    action: str,
+    replacement: str | None = None,
+    reason: str | None = None,
+) -> None:
+    with conn:
+        conn.execute(
+            "INSERT INTO recovery_events (recovery_id, mode, memory_id, action, replacement, reason)"
+            " VALUES (?, ?, ?, ?, ?, ?)",
+            (recovery_id, mode, memory_id, action, replacement, reason),
+        )
+
+
+def recovery_events(conn: sqlite3.Connection, recovery_id: str) -> list[sqlite3.Row]:
+    return conn.execute(
+        "SELECT * FROM recovery_events WHERE recovery_id = ? ORDER BY rowid", (recovery_id,)
+    ).fetchall()
+
+
+# Memory source ids are "s<session>:<url>" (agent.run_session); the session prefix is
+# not part of the address being blocked.
+_SESSION_PREFIX = re.compile(r"^s\d+:")
+
+
+def _normalize(url: str) -> tuple[str, str]:
+    # Imported here because tools imports db. The blocklist has to normalize exactly as
+    # tools.execute and agent.run_session do, or a block would miss its own page.
+    from memheal.tools import normalize_domain, normalize_url
+    return normalize_url(url), normalize_domain(url)
+
+
+def block_source(
+    conn: sqlite3.Connection,
+    pattern: str,
+    reason: str | None = None,
+    session: int | None = None,
+) -> str:
+    """Block a url (and every page under it) or a bare domain; returns the stored pattern."""
+    norm, _ = _normalize(pattern)
+    with conn:
+        conn.execute(
+            "INSERT OR IGNORE INTO source_blocklist (pattern, reason, added_session)"
+            " VALUES (?, ?, ?)",
+            (norm, reason, session),
+        )
+    return norm
+
+
+def blocked_sources(conn: sqlite3.Connection) -> set[str]:
+    return {r["pattern"] for r in conn.execute("SELECT pattern FROM source_blocklist")}
+
+
+def is_blocked(conn: sqlite3.Connection, source_id: str | None) -> bool:
+    """Does a memory source id (e.g. 's7:finance.example/expenses') match the blocklist?
+
+    A pattern matches its exact url, any url under it, or - for a bare domain - every
+    page on that host. Subdomains are not covered: blocking one host must not silence
+    another that merely shares a suffix.
+    """
+    if not source_id:
+        return False
+    patterns = blocked_sources(conn)
+    if not patterns:
+        return False
+    url, domain = _normalize(_SESSION_PREFIX.sub("", source_id))
+    return any(url == p or url.startswith(p + "/") or domain == p for p in patterns)

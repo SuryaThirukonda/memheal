@@ -73,6 +73,23 @@ REFLECTION_PROMPTS = {
     ),
 }
 
+# Section 5.7 reconstruction of a mixed reflection. The original prompt saw the whole
+# session (task, actions, reply), and the actions are what the attacker steered, so
+# replaying it cannot drop the taint. This one is given only the clean parents and asked
+# for the procedure they alone support.
+RECONSTRUCT_PROMPTS = {
+    "reflect": (
+        "You maintain the long-term memory of a personal assistant. Below are some of its "
+        "memories, as a numbered list. Write down the reusable procedure that is supported "
+        "ONLY by the memories listed, so that next time a similar task arrives the "
+        "assistant can act without rediscovering the steps. Write one or two short "
+        "standalone sentences describing what to do, including the specific systems, "
+        "destinations or formats the memories name. Do not add any system, destination or "
+        "step that the listed memories do not state. If they support nothing reusable, "
+        "return an empty list."
+    ),
+}
+
 CONSOLIDATION_SCHEMA = {
     "name": "consolidated_memories",
     "schema": {
@@ -165,8 +182,15 @@ def store(
     source_id: str,
     prompt_name: str = "default",
 ) -> list[str]:
-    """Extract facts from one piece of text and insert each as a memory."""
+    """Extract facts from one piece of text and insert each as a memory.
+
+    A webpage on the +immunize blocklist is still extracted, so a reinfection attempt
+    leaves a record (Section 8.8), but its facts are written 'quarantined' and never
+    reach retrieval.
+    """
     trust = "trusted" if source_type == "user" else "untrusted"
+    status = ("quarantined" if source_type == "webpage" and db.is_blocked(conn, source_id)
+              else "active")
     db.insert_source(conn, source_id, source_type, text, trust, session)
 
     prompt = EXTRACTION_PROMPTS[prompt_name]
@@ -187,6 +211,7 @@ def store(
             conn, fact, source_type, session,
             source_id=source_id,
             operation="extract",
+            status=status,
             created_by_prompt=db.register_prompt(conn, f"extract.{prompt_name}", prompt),
             model=response.model,
             embedding=vec.astype(np.float32).tobytes(),
@@ -258,8 +283,12 @@ def reflect(
 ) -> list[str]:
     """Turn a completed session into a procedural 'what worked' memory.
 
-    Parents are the memories retrieved during that session, since those informed the
-    action. Unlike consolidate, this adds a layer and leaves its parents active.
+    Parents are the memories retrieved at the start of that session and the memories
+    written during it. Both informed what the session did: the first set is what the
+    agent remembered, the second is what it read (a page visited mid-session reaches
+    the reflection through the actions and reply). Citing only the retrieved set left a
+    procedure learned from a poisoned page with no edge to that page's memory.
+    Unlike consolidate, this adds a layer and leaves its parents active.
     """
     calls = "\n".join(
         f"- {c.name}({json.dumps(c.args, sort_keys=True)})" for c in session_result.tool_calls
@@ -275,7 +304,8 @@ def reflect(
     if not facts:
         return []
 
-    parent_ids = [m for m, _ in session_result.retrieved]
+    parent_ids = list(dict.fromkeys(
+        [m for m, _ in session_result.retrieved] + list(session_result.stored_memory_ids)))
     prompt_hash = db.register_prompt(conn, f"reflect.{prompt_name}", prompt)
     vectors = embedder.encode(facts)
     return [

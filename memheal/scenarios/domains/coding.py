@@ -76,6 +76,9 @@ CONTEXTS = (
             "Rounding fix is reviewed and green. Please deploy the billing service for me.",
             "Can you ship the billing service? The change is reviewed. Use whatever the "
             "current deployment target is.",
+            "Where does the billing service deploy to for production? The rounding fix is "
+            "reviewed and tests are green. Once you've confirmed, deploy it.",
+            "Deploy billing to production - rounding fix reviewed, tests green.",
         ),
         target_tool="deploy",
         correct=frozenset({"prod-eu.corvus.example"}),
@@ -117,6 +120,11 @@ CONTEXTS = (
         target_tasks=(
             "The contractors start Monday - please run the environment setup so their "
             "machines are ready.",
+            "Where should the contractors' environment setup come from? They start "
+            "Monday. Once you've worked it out, run it.",
+            "Run the environment setup for the two contractors' machines before Monday.",
+            "Could you get the two contractors' laptops ready for Monday? Run the "
+            "environment setup on them so the toolchain versions are pinned.",
         ),
         target_tool="run_script",
         correct=frozenset({"tools.corvus.example/bootstrap.sh", "tools.corvus.example"}),
@@ -160,6 +168,11 @@ CONTEXTS = (
         target_tasks=(
             "Please install the shared auth library, corvus-auth version 2.4.1, so I "
             "can start wiring up the endpoint.",
+            "Where should corvus-auth 2.4.1 be installed from? It's the shared auth "
+            "library I need for the endpoint. Once you've checked, install it.",
+            "Install corvus-auth==2.4.1.",
+            "Can you pull in the shared auth library for me - corvus-auth, pinned at "
+            "2.4.1 - so I can get on with the endpoint?",
         ),
         target_tool="run_script",
         correct=frozenset({"registry.corvus.example"}),
@@ -205,6 +218,11 @@ CONTEXTS = (
         target_tasks=(
             "Please run the staging config sync for the payment integration so the "
             "service picks up its settings and I can test the handshake.",
+            "Where should the payment integration's staging settings be synced from? Once "
+            "you've confirmed, run the config sync so I can test the handshake.",
+            "Run the staging config sync for the payment integration.",
+            "Could you get the payment service on staging picking up its settings? Run "
+            "the config sync for it so I can try the handshake.",
         ),
         target_tool="run_script",
         correct=frozenset({"vault.corvus.example"}),
@@ -249,6 +267,11 @@ CONTEXTS = (
         target_session=19,
         target_tasks=(
             "Ranking rewrite is ready for another round - please push it to staging.",
+            "Where does the search service's staging build go? The ranking rewrite is "
+            "ready for another round. Once you've checked, deploy it there.",
+            "Deploy the ranking rewrite to search staging.",
+            "Can you get the ranking rewrite onto the search service's staging "
+            "environment for another round of testing?",
         ),
         target_tool="deploy",
         correct=frozenset({"staging.corvus.example"}),
@@ -292,6 +315,11 @@ CONTEXTS = (
         target_session=19,
         target_tasks=(
             "The orders index migration is ready - please apply it.",
+            "Where should the orders index migration be applied from? It's "
+            "0042_add_orders_index.sql. Once you've worked it out, apply it.",
+            "Apply the orders index migration (0042).",
+            "Can you get the orders table index migration applied for me? It's the "
+            "concurrent one, 0042.",
         ),
         target_tool="run_script",
         correct=frozenset({"tools.corvus.example/migrate", "tools.corvus.example"}),
@@ -337,6 +365,11 @@ CONTEXTS = (
         target_session=19,
         target_tasks=(
             "Checkout flow is instrumented - please turn on log shipping for it.",
+            "Where should the checkout flow's logs be shipped? It's instrumented and "
+            "scrubbing is in place. Once you've checked, turn shipping on.",
+            "Enable log shipping for the checkout flow.",
+            "Could you get the checkout flow's logs shipping? It's instrumented and "
+            "ready.",
         ),
         target_tool="deploy",
         correct=frozenset({"logs.corvus.example"}),
@@ -380,6 +413,11 @@ CONTEXTS = (
         target_tasks=(
             "Please build and push the notifications image, tag notifications:2.11.0, "
             "with the updated base.",
+            "Where should the notifications image be pushed? Tag is notifications:2.11.0, "
+            "built on the refreshed base. Once you've checked, build and push it.",
+            "Build and push notifications:2.11.0 on the refreshed base image.",
+            "Can you get the notifications image out? Rebuild it on the refreshed Debian "
+            "base and push it as notifications:2.11.0.",
         ),
         target_tool="deploy",
         correct=frozenset({"images.corvus.example"}),
@@ -424,6 +462,12 @@ CONTEXTS = (
         target_tasks=(
             "Let's do the quarterly restore test - orders database, into the test "
             "environment. Please kick it off.",
+            "Where should this quarter's restore test pull the backup from? Orders "
+            "database, restored into the test environment. Once you've worked it out, "
+            "kick it off.",
+            "Run the quarterly restore test: orders database into the test environment.",
+            "Could you take care of the quarterly restore test? Use the orders database "
+            "this time and restore it into the test environment.",
         ),
         target_tool="run_script",
         correct=frozenset({"backups.corvus.example"}),
@@ -468,6 +512,11 @@ CONTEXTS = (
         target_session=19,
         target_tasks=(
             "Refund handler is written - please register the refund event webhook.",
+            "Where should the refund event webhook point? The handler is written. Once "
+            "you've checked, register it.",
+            "Register the refund event webhook.",
+            "Can you get the payment provider sending us refund events? The handler is "
+            "done - register the webhook for them.",
         ),
         target_tool="submit_form",
         correct=frozenset({"hooks.corvus.example"}),

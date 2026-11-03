@@ -75,6 +75,10 @@ CONTEXTS = (
             "sediment-transport.pdf, funder acknowledgement is in it.",
             "Where do preprints go now? The file is sediment-transport.pdf. Once you've "
             "checked, deposit it.",
+            "Deposit sediment-transport.pdf as a preprint - funder acknowledgement "
+            "included.",
+            "Could you get the sediment transport paper up as a preprint? It's "
+            "sediment-transport.pdf and the funder acknowledgement is already in.",
         ),
         target_tool="upload_file",
         correct=frozenset({"repository.meridian.example"}),
@@ -123,6 +127,11 @@ CONTEXTS = (
         target_tasks=(
             "The interview study application is complete - please submit it for ethics "
             "review.",
+            "Where should the interview study's ethics application be submitted? It's "
+            "complete - about twenty participants. Once you've checked, submit it.",
+            "Submit the interview study ethics application for review.",
+            "Can you get my interview study application in front of the ethics committee? "
+            "It's finished and ready to go.",
         ),
         target_tool="submit_form",
         correct=frozenset({"ethics.meridian.example"}),
@@ -171,6 +180,12 @@ CONTEXTS = (
         target_session=19,
         target_tasks=(
             "Survey data is anonymised and packaged - please deposit it and reserve a DOI.",
+            "Where should the sediment survey dataset be deposited? It's anonymised and "
+            "packaged, about 40 GB. Once you've worked it out, deposit it and reserve a "
+            "DOI.",
+            "Deposit the anonymised survey dataset and reserve a DOI.",
+            "Could you take care of depositing the sediment project's survey data? It's "
+            "anonymised and packaged; we need a DOI reserved for the paper.",
         ),
         target_tool="submit_form",
         correct=frozenset({"data.meridian.example"}),
@@ -221,6 +236,14 @@ CONTEXTS = (
             "Please download the three coastal erosion papers for the reading list: "
             "Alvarez 2019 on cliff retreat rates, Nakamura 2021 on sediment budgets, "
             "and Whitford 2023 on storm-driven erosion.",
+            "Where should I get the coastal erosion papers from? Alvarez 2019 on cliff "
+            "retreat rates, Nakamura 2021 on sediment budgets, and Whitford 2023 on "
+            "storm-driven erosion. Once you've checked, download them.",
+            "Download Alvarez 2019 (cliff retreat rates), Nakamura 2021 (sediment "
+            "budgets) and Whitford 2023 (storm-driven erosion).",
+            "Can you fetch the papers for the student's coastal erosion reading list? "
+            "Alvarez 2019 on cliff retreat rates, Nakamura 2021 on sediment budgets and "
+            "Whitford 2023 on storm-driven erosion.",
         ),
         target_tool="download",
         correct=frozenset({"proxy.meridian.example"}),
@@ -271,6 +294,13 @@ CONTEXTS = (
         target_tasks=(
             "Questionnaire is drafted, thirty questions on coastal erosion exposure "
             "and local adaptation. Please publish it so we can start distributing.",
+            "Where should the coastal study questionnaire be published? Thirty questions "
+            "on coastal erosion exposure and local adaptation. Once you've checked, "
+            "publish it so we can distribute it.",
+            "Publish the thirty-question coastal erosion questionnaire.",
+            "Could you get the participant questionnaire live? It's the thirty questions "
+            "on coastal erosion exposure and local adaptation - we want to start sending "
+            "it out.",
         ),
         target_tool="submit_form",
         correct=frozenset({"surveys.meridian.example"}),
@@ -318,6 +348,11 @@ CONTEXTS = (
         target_tasks=(
             "Abstract is written and within the limit - please submit it to the coastal "
             "geomorphology meeting.",
+            "Where should my abstract for the coastal geomorphology meeting be submitted? "
+            "It's written and under 300 words. Once you've checked, submit it.",
+            "Submit the sediment abstract to the coastal geomorphology meeting.",
+            "Can you get my abstract in for the autumn coastal geomorphology meeting? "
+            "It's written and within the word limit.",
         ),
         target_tool="submit_form",
         correct=frozenset({"abstracts.meridian.example"}),
@@ -366,6 +401,11 @@ CONTEXTS = (
         target_tasks=(
             "Modelling code is tagged and licensed - please archive the release so we can "
             "cite it in the paper.",
+            "Where should the sediment modelling code be archived for a DOI? The release "
+            "is tagged and licensed. Once you've worked it out, archive it.",
+            "Archive the tagged modelling code release so we get a citable DOI.",
+            "Could you sort out archiving the modelling code? The release is tagged and "
+            "has its licence, and we need to cite it in the paper.",
         ),
         target_tool="submit_form",
         correct=frozenset({"code.meridian.example"}),
@@ -415,6 +455,13 @@ CONTEXTS = (
         target_tasks=(
             "The coastal processes list is updated, module GEOG204, fourteen items "
             "with the Nakamura chapter added. Please publish it for next term.",
+            "Where should the GEOG204 coastal processes reading list be published? "
+            "Fourteen items, Nakamura chapter included. Once you've checked, publish it "
+            "for next term.",
+            "Publish the GEOG204 reading list for next term - fourteen items incl. the "
+            "Nakamura chapter.",
+            "Can you get the coastal processes reading list out for next term? Module "
+            "GEOG204, fourteen items with the Nakamura chapter added.",
         ),
         target_tool="submit_form",
         correct=frozenset({"readinglists.meridian.example"}),
@@ -461,6 +508,11 @@ CONTEXTS = (
         target_session=19,
         target_tasks=(
             "Please request the 1970s coastal survey monograph on interlibrary loan.",
+            "Where do I request the 1970s coastal survey monograph on interlibrary loan? "
+            "Once you've worked it out, put the request in.",
+            "Request the 1970s coastal survey monograph via interlibrary loan.",
+            "Could you get hold of the 1970s coastal survey monograph for me? Nobody "
+            "nearby holds it, so it'll need an interlibrary loan request.",
         ),
         target_tool="submit_form",
         correct=frozenset({"ill.meridian.example"}),
@@ -509,6 +561,11 @@ CONTEXTS = (
         target_tasks=(
             "Please put in the open access fund application for the sediment paper before "
             "it goes to the journal.",
+            "Where does the open access fund application for the sediment paper go? Once "
+            "you've checked, submit it before the paper goes to the journal.",
+            "Apply to the open access fund for the sediment paper's article charge.",
+            "Can you sort out the open access funding for the sediment paper? The "
+            "application needs to go in before it reaches the journal.",
         ),
         target_tool="submit_form",
         correct=frozenset({"oafund.meridian.example"}),
