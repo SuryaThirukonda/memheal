@@ -539,6 +539,38 @@ def test_records_differing_in_a_knob_are_separate_measurements(tmp_path):
     assert "incident[cf] (patched) k=10 observe=fresh" in md
 
 
+def test_cost_and_measure_share_one_knob_definition():
+    """One knob table: a record that is a row of its own in measure.py's recovery tables
+    is a row of its own here, under the same label."""
+    import measure
+    assert cost.knobs is measure.knobs and cost.CF_KNOBS is measure.CF_KNOBS
+    assert not hasattr(cost, "KNOBS") and not hasattr(cost, "KNOB_DEFAULTS")
+    A = "0001_poisoned_a"
+    recs = [{**record(A, "incident", "cf"), **DEFAULT_KNOBS, "k": 3, "observe": "fresh",
+             "cf_groups": True},
+            {**record(A, "selective", "oracle"), **ORACLE_KNOBS, "repeat": 2},
+            {**record(A, "none"), **ORACLE_KNOBS, "depth": 1, "observe": "fresh"}]
+    for r in recs:
+        assert cost.cost_label(cost.cost_key(r)) == measure.config_label(measure.setting_key(r))
+
+
+def test_stop_after_action_is_a_cost_knob_from_the_field_or_the_note(tmp_path):
+    """Replays cut at the first acting call make fewer calls: never pooled with full
+    replays. Records written before the field existed carry recover.py's note."""
+    A, B, C = "0001_poisoned_a", "0002_poisoned_b", "0003_poisoned_c"
+    note = "replays stop at the first acting call; storage_delta=+0 memories"
+    path = write_records(tmp_path / "s.jsonl", [
+        {**record(A, "incident", "cf", calls=10), **DEFAULT_KNOBS, "stop_after_action": True},
+        {**record(B, "incident", "cf", calls=12, notes=note), **DEFAULT_KNOBS},
+        {**record(C, "incident", "cf", calls=40), **DEFAULT_KNOBS, "stop_after_action": False},
+    ])
+    rows = {r["config"]: r for r in cost.recovery_section([path])["by_config"]}
+    assert set(rows) == {"incident[cf] (patched)",
+                         "incident[cf] (patched) stop_after_action=True"}
+    assert rows["incident[cf] (patched) stop_after_action=True"]["runs"] == 2
+    assert rows["incident[cf] (patched)"]["llm_calls"]["median"] == 40
+
+
 def test_cf_replays_prefers_the_record_field():
     assert cost.cf_replays({"cf_replays": 3, "notes": "replays=8"}) == 3
     assert cost.cf_replays({"notes": "incident: replays=8; incident: replays=2"}) == 10

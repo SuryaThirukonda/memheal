@@ -4,7 +4,7 @@ import pytest
 
 from memheal import db, tools
 from memheal.scenarios import ALL_VARIANTS
-from memheal.scenarios.expense_migration import ATTACKER, CONCUR, NEW_PORTAL, POLICY, STATUS
+from memheal.scenarios.expense_migration import POLICY, STATUS
 
 S = ALL_VARIANTS["expense_migration"]
 

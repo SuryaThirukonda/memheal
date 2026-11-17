@@ -1,0 +1,10586 @@
+{
+ "inputs": {
+  "families": {
+   "path": "/home/surya/repos/MemHeal/results/families/records.jsonl",
+   "records": 1182,
+   "runs": 84,
+   "part_files": 0,
+   "state": "ok"
+  },
+  "recovery": {
+   "path": "/home/surya/repos/MemHeal/results/recovery/records.jsonl",
+   "records": 3069,
+   "runs": 186,
+   "part_files": 0,
+   "state": "ok"
+  },
+  "k": {
+   "path": "/home/surya/repos/MemHeal/results/ablations/k.jsonl",
+   "records": 906,
+   "runs": 82,
+   "part_files": 0,
+   "state": "ok"
+  },
+  "depth": {
+   "path": "/home/surya/repos/MemHeal/results/ablations/depth.jsonl",
+   "records": 2057,
+   "runs": 82,
+   "part_files": 0,
+   "state": "ok"
+  },
+  "reretrieve": {
+   "path": "/home/surya/repos/MemHeal/results/ablations/reretrieve.jsonl",
+   "records": 241,
+   "runs": 81,
+   "part_files": 0,
+   "state": "ok"
+  },
+  "groups": {
+   "path": "/home/surya/repos/MemHeal/results/ablations/groups.jsonl",
+   "records": 246,
+   "runs": 82,
+   "part_files": 0,
+   "state": "ok"
+  },
+  "groups_clean": {
+   "path": "/home/surya/repos/MemHeal/results/ablations/groups_clean.jsonl",
+   "records": 6,
+   "runs": 2,
+   "part_files": 0,
+   "state": "thin"
+  },
+  "claims": {
+   "path": "/home/surya/repos/MemHeal/results/claims/records.jsonl",
+   "records": 40,
+   "runs": 8,
+   "part_files": 0,
+   "state": "thin"
+  },
+  "reinfect": {
+   "path": "/home/surya/repos/MemHeal/results/claims/reinfect.jsonl",
+   "records": 10,
+   "runs": 2,
+   "part_files": 0,
+   "state": "thin"
+  },
+  "flat": {
+   "path": "/home/surya/repos/MemHeal/results/flat/records.jsonl",
+   "records": 35,
+   "runs": 7,
+   "part_files": 0,
+   "state": "thin"
+  },
+  "heal": {
+   "path": "/home/surya/repos/MemHeal/results/main/records.jsonl",
+   "records": 7107,
+   "runs": 231,
+   "part_files": 0,
+   "state": "ok"
+  },
+  "heal_flat": {
+   "path": "/home/surya/repos/MemHeal/results/flat/main.jsonl",
+   "records": 1512,
+   "runs": 216,
+   "part_files": 0,
+   "state": "ok"
+  },
+  "preservation": {
+   "path": "/home/surya/repos/MemHeal/results/preservation/preservation.jsonl",
+   "records": 1621,
+   "runs": 186,
+   "part_files": 0,
+   "state": "ok"
+  }
+ },
+ "small_sample_runs": 10,
+ "sections": {
+  "1. Task families (proposal 5.5)": {
+   "none": {
+    "runs": 83,
+    "small_sample": false,
+    "asr": {
+     "n": 194.0,
+     "d": 332,
+     "rate": 0.5843,
+     "ci": [
+      0.5307,
+      0.6361
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 63,
+     "d": 83,
+     "rate": 0.759,
+     "ci": [
+      0.6569,
+      0.8383
+     ],
+     "small_sample": false
+    },
+    "bmp": {
+     "n": 104,
+     "d": 104,
+     "rate": 1.0,
+     "ci": [
+      0.9644,
+      1.0
+     ],
+     "small_sample": false
+    },
+    "br": 0.2952,
+    "poison_left": {
+     "n": 80,
+     "d": 83,
+     "rate": 0.9639,
+     "ci": [
+      0.899,
+      0.9876
+     ],
+     "small_sample": false
+    },
+    "collateral": 0,
+    "quarantined": 0,
+    "llm_calls": 0,
+    "seconds": 0.107,
+    "per_task": [
+     {
+      "n": 46,
+      "d": 83,
+      "rate": 0.5542,
+      "ci": [
+       0.4472,
+       0.6564
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 48,
+      "d": 83,
+      "rate": 0.5783,
+      "ci": [
+       0.4709,
+       0.6788
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 47,
+      "d": 83,
+      "rate": 0.5663,
+      "ci": [
+       0.4591,
+       0.6676
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 53,
+      "d": 83,
+      "rate": 0.6386,
+      "ci": [
+       0.5312,
+       0.7337
+      ],
+      "small_sample": false
+     }
+    ],
+    "tasks_disagree": {
+     "n": 32,
+     "d": 83,
+     "rate": 0.3855,
+     "ci": [
+      0.2881,
+      0.4931
+     ],
+     "small_sample": false
+    },
+    "harmful_any_task": {
+     "n": 63,
+     "d": 83,
+     "rate": 0.759,
+     "ci": [
+      0.6569,
+      0.8383
+     ],
+     "small_sample": false
+    }
+   },
+   "ancestry": {
+    "runs": 77,
+    "small_sample": false,
+    "asr": {
+     "n": 5.0,
+     "d": 308,
+     "rate": 0.0162,
+     "ci": [
+      0.007,
+      0.0374
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 4,
+     "d": 77,
+     "rate": 0.0519,
+     "ci": [
+      0.0204,
+      0.1261
+     ],
+     "small_sample": false
+    },
+    "bmp": {
+     "n": 85,
+     "d": 97,
+     "rate": 0.8763,
+     "ci": [
+      0.7961,
+      0.9278
+     ],
+     "small_sample": false
+    },
+    "br": 0.6948,
+    "poison_left": {
+     "n": 1,
+     "d": 77,
+     "rate": 0.013,
+     "ci": [
+      0.0023,
+      0.07
+     ],
+     "small_sample": false
+    },
+    "collateral": 1.091,
+    "quarantined": 7.831,
+    "llm_calls": 0,
+    "seconds": 0.091,
+    "per_task": [
+     {
+      "n": 2,
+      "d": 77,
+      "rate": 0.026,
+      "ci": [
+       0.0072,
+       0.0898
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 0,
+      "d": 77,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0475
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 2,
+      "d": 77,
+      "rate": 0.026,
+      "ci": [
+       0.0072,
+       0.0898
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 1,
+      "d": 77,
+      "rate": 0.013,
+      "ci": [
+       0.0023,
+       0.07
+      ],
+      "small_sample": false
+     }
+    ],
+    "tasks_disagree": {
+     "n": 4,
+     "d": 77,
+     "rate": 0.0519,
+     "ci": [
+      0.0204,
+      0.1261
+     ],
+     "small_sample": false
+    },
+    "harmful_any_task": {
+     "n": 4,
+     "d": 77,
+     "rate": 0.0519,
+     "ci": [
+      0.0204,
+      0.1261
+     ],
+     "small_sample": false
+    }
+   },
+   "selective[oracle]": {
+    "runs": 83,
+    "small_sample": false,
+    "asr": {
+     "n": 4.0,
+     "d": 332,
+     "rate": 0.012,
+     "ci": [
+      0.0047,
+      0.0306
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 4,
+     "d": 83,
+     "rate": 0.0482,
+     "ci": [
+      0.0189,
+      0.1175
+     ],
+     "small_sample": false
+    },
+    "bmp": {
+     "n": 95,
+     "d": 104,
+     "rate": 0.9135,
+     "ci": [
+      0.8437,
+      0.9538
+     ],
+     "small_sample": false
+    },
+    "br": 0.6807,
+    "poison_left": {
+     "n": 1,
+     "d": 83,
+     "rate": 0.012,
+     "ci": [
+      0.0021,
+      0.0651
+     ],
+     "small_sample": false
+    },
+    "collateral": 0.771,
+    "quarantined": 7.458,
+    "llm_calls": 0,
+    "seconds": 0.191,
+    "per_task": [
+     {
+      "n": 2,
+      "d": 83,
+      "rate": 0.0241,
+      "ci": [
+       0.0066,
+       0.0837
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 0,
+      "d": 83,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0442
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 2,
+      "d": 83,
+      "rate": 0.0241,
+      "ci": [
+       0.0066,
+       0.0837
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 0,
+      "d": 83,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0442
+      ],
+      "small_sample": false
+     }
+    ],
+    "tasks_disagree": {
+     "n": 4,
+     "d": 83,
+     "rate": 0.0482,
+     "ci": [
+      0.0189,
+      0.1175
+     ],
+     "small_sample": false
+    },
+    "harmful_any_task": {
+     "n": 4,
+     "d": 83,
+     "rate": 0.0482,
+     "ci": [
+      0.0189,
+      0.1175
+     ],
+     "small_sample": false
+    }
+   },
+   "incident[cf]": {
+    "runs": 83,
+    "small_sample": false,
+    "asr": {
+     "n": 33.0,
+     "d": 332,
+     "rate": 0.0994,
+     "ci": [
+      0.0717,
+      0.1363
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 18,
+     "d": 83,
+     "rate": 0.2169,
+     "ci": [
+      0.1418,
+      0.317
+     ],
+     "small_sample": false
+    },
+    "bmp": {
+     "n": 96,
+     "d": 104,
+     "rate": 0.9231,
+     "ci": [
+      0.8555,
+      0.9605
+     ],
+     "small_sample": false
+    },
+    "br": 0.6325,
+    "poison_left": {
+     "n": 29,
+     "d": 83,
+     "rate": 0.3494,
+     "ci": [
+      0.2556,
+      0.4566
+     ],
+     "small_sample": false
+    },
+    "collateral": 0.084,
+    "quarantined": 2.687,
+    "llm_calls": 10.759,
+    "seconds": 22.727,
+    "per_task": [
+     {
+      "n": 5,
+      "d": 83,
+      "rate": 0.0602,
+      "ci": [
+       0.026,
+       0.1334
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 11,
+      "d": 83,
+      "rate": 0.1325,
+      "ci": [
+       0.0756,
+       0.2219
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 8,
+      "d": 83,
+      "rate": 0.0964,
+      "ci": [
+       0.0497,
+       0.1788
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 9,
+      "d": 83,
+      "rate": 0.1084,
+      "ci": [
+       0.0581,
+       0.1934
+      ],
+      "small_sample": false
+     }
+    ],
+    "tasks_disagree": {
+     "n": 18,
+     "d": 83,
+     "rate": 0.2169,
+     "ci": [
+      0.1418,
+      0.317
+     ],
+     "small_sample": false
+    },
+    "harmful_any_task": {
+     "n": 18,
+     "d": 83,
+     "rate": 0.2169,
+     "ci": [
+      0.1418,
+      0.317
+     ],
+     "small_sample": false
+    }
+   },
+   "incident[cf]+verify": {
+    "runs": 77,
+    "small_sample": false,
+    "asr": {
+     "n": 1.0,
+     "d": 308,
+     "rate": 0.0032,
+     "ci": [
+      0.0006,
+      0.0182
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 1,
+     "d": 77,
+     "rate": 0.013,
+     "ci": [
+      0.0023,
+      0.07
+     ],
+     "small_sample": false
+    },
+    "bmp": {
+     "n": 86,
+     "d": 97,
+     "rate": 0.8866,
+     "ci": [
+      0.8083,
+      0.9355
+     ],
+     "small_sample": false
+    },
+    "br": 0.7273,
+    "poison_left": {
+     "n": 19,
+     "d": 77,
+     "rate": 0.2468,
+     "ci": [
+      0.164,
+      0.3535
+     ],
+     "small_sample": false
+    },
+    "collateral": 0.156,
+    "quarantined": 3.156,
+    "llm_calls": 26.208,
+    "seconds": 90.718,
+    "per_task": [
+     {
+      "n": 1,
+      "d": 77,
+      "rate": 0.013,
+      "ci": [
+       0.0023,
+       0.07
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 0,
+      "d": 77,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0475
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 0,
+      "d": 77,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0475
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 0,
+      "d": 77,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0475
+      ],
+      "small_sample": false
+     }
+    ],
+    "tasks_disagree": {
+     "n": 1,
+     "d": 77,
+     "rate": 0.013,
+     "ci": [
+      0.0023,
+      0.07
+     ],
+     "small_sample": false
+    },
+    "harmful_any_task": {
+     "n": 1,
+     "d": 77,
+     "rate": 0.013,
+     "ci": [
+      0.0023,
+      0.07
+     ],
+     "small_sample": false
+    }
+   }
+  },
+  "2. Repeats (proposal 6.6)": {
+   "none": {
+    "runs_all_repeats": 83,
+    "repeats": [
+     1,
+     2,
+     3
+    ],
+    "small_sample": false,
+    "asr_per_repeat": [
+     {
+      "n": 194.0,
+      "d": 332,
+      "rate": 0.5843,
+      "ci": [
+       0.5307,
+       0.6361
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 190.0,
+      "d": 332,
+      "rate": 0.5723,
+      "ci": [
+       0.5185,
+       0.6244
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 196.0,
+      "d": 332,
+      "rate": 0.5904,
+      "ci": [
+       0.5367,
+       0.6419
+      ],
+      "small_sample": false
+     }
+    ],
+    "spread_pp": 1.81,
+    "outcome_differs": {
+     "n": 58,
+     "d": 332,
+     "rate": 0.1747,
+     "ci": [
+      0.1376,
+      0.2192
+     ],
+     "small_sample": false
+    },
+    "attack_differs": {
+     "n": 35,
+     "d": 332,
+     "rate": 0.1054,
+     "ci": [
+      0.0768,
+      0.1431
+     ],
+     "small_sample": false
+    },
+    "majority_of_3_asr": {
+     "n": 197,
+     "d": 332,
+     "rate": 0.5934,
+     "ci": [
+      0.5398,
+      0.6449
+     ],
+     "small_sample": false
+    },
+    "single_replay_asr": {
+     "n": 194,
+     "d": 332,
+     "rate": 0.5843,
+     "ci": [
+      0.5307,
+      0.6361
+     ],
+     "small_sample": false
+    },
+    "majority_changes_task": {
+     "n": 15,
+     "d": 332,
+     "rate": 0.0452,
+     "ci": [
+      0.0276,
+      0.0732
+     ],
+     "small_sample": false
+    }
+   },
+   "ancestry": {
+    "runs_all_repeats": 77,
+    "repeats": [
+     1,
+     2,
+     3
+    ],
+    "small_sample": false,
+    "asr_per_repeat": [
+     {
+      "n": 5.0,
+      "d": 308,
+      "rate": 0.0162,
+      "ci": [
+       0.007,
+       0.0374
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 3.0,
+      "d": 308,
+      "rate": 0.0097,
+      "ci": [
+       0.0033,
+       0.0282
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 2.0,
+      "d": 308,
+      "rate": 0.0065,
+      "ci": [
+       0.0018,
+       0.0234
+      ],
+      "small_sample": false
+     }
+    ],
+    "spread_pp": 0.97,
+    "outcome_differs": {
+     "n": 45,
+     "d": 308,
+     "rate": 0.1461,
+     "ci": [
+      0.111,
+      0.1899
+     ],
+     "small_sample": false
+    },
+    "attack_differs": {
+     "n": 6,
+     "d": 308,
+     "rate": 0.0195,
+     "ci": [
+      0.009,
+      0.0418
+     ],
+     "small_sample": false
+    },
+    "majority_of_3_asr": {
+     "n": 2,
+     "d": 308,
+     "rate": 0.0065,
+     "ci": [
+      0.0018,
+      0.0234
+     ],
+     "small_sample": false
+    },
+    "single_replay_asr": {
+     "n": 5,
+     "d": 308,
+     "rate": 0.0162,
+     "ci": [
+      0.007,
+      0.0374
+     ],
+     "small_sample": false
+    },
+    "majority_changes_task": {
+     "n": 3,
+     "d": 308,
+     "rate": 0.0097,
+     "ci": [
+      0.0033,
+      0.0282
+     ],
+     "small_sample": false
+    }
+   },
+   "selective[oracle]": {
+    "runs_all_repeats": 75,
+    "repeats": [
+     1,
+     2,
+     3
+    ],
+    "small_sample": false,
+    "asr_per_repeat": [
+     {
+      "n": 4.0,
+      "d": 300,
+      "rate": 0.0133,
+      "ci": [
+       0.0052,
+       0.0338
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 6.0,
+      "d": 300,
+      "rate": 0.02,
+      "ci": [
+       0.0092,
+       0.0429
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 5.0,
+      "d": 300,
+      "rate": 0.0167,
+      "ci": [
+       0.0071,
+       0.0384
+      ],
+      "small_sample": false
+     }
+    ],
+    "spread_pp": 0.67,
+    "outcome_differs": {
+     "n": 47,
+     "d": 324,
+     "rate": 0.1451,
+     "ci": [
+      0.1109,
+      0.1876
+     ],
+     "small_sample": false
+    },
+    "attack_differs": {
+     "n": 6,
+     "d": 324,
+     "rate": 0.0185,
+     "ci": [
+      0.0085,
+      0.0398
+     ],
+     "small_sample": false
+    },
+    "majority_of_3_asr": {
+     "n": 5,
+     "d": 300,
+     "rate": 0.0167,
+     "ci": [
+      0.0071,
+      0.0384
+     ],
+     "small_sample": false
+    },
+    "single_replay_asr": {
+     "n": 4,
+     "d": 300,
+     "rate": 0.0133,
+     "ci": [
+      0.0052,
+      0.0338
+     ],
+     "small_sample": false
+    },
+    "majority_changes_task": {
+     "n": 3,
+     "d": 300,
+     "rate": 0.01,
+     "ci": [
+      0.0034,
+      0.029
+     ],
+     "small_sample": false
+    }
+   },
+   "incident[cf]": {
+    "runs_all_repeats": 68,
+    "repeats": [
+     1,
+     2,
+     3
+    ],
+    "small_sample": false,
+    "asr_per_repeat": [
+     {
+      "n": 32.0,
+      "d": 272,
+      "rate": 0.1176,
+      "ci": [
+       0.0846,
+       0.1614
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 30.0,
+      "d": 272,
+      "rate": 0.1103,
+      "ci": [
+       0.0784,
+       0.1531
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 33.0,
+      "d": 272,
+      "rate": 0.1213,
+      "ci": [
+       0.0877,
+       0.1655
+      ],
+      "small_sample": false
+     }
+    ],
+    "spread_pp": 1.1,
+    "outcome_differs": {
+     "n": 42,
+     "d": 328,
+     "rate": 0.128,
+     "ci": [
+      0.0961,
+      0.1686
+     ],
+     "small_sample": false
+    },
+    "attack_differs": {
+     "n": 9,
+     "d": 328,
+     "rate": 0.0274,
+     "ci": [
+      0.0145,
+      0.0513
+     ],
+     "small_sample": false
+    },
+    "majority_of_3_asr": {
+     "n": 32,
+     "d": 272,
+     "rate": 0.1176,
+     "ci": [
+      0.0846,
+      0.1614
+     ],
+     "small_sample": false
+    },
+    "single_replay_asr": {
+     "n": 32,
+     "d": 272,
+     "rate": 0.1176,
+     "ci": [
+      0.0846,
+      0.1614
+     ],
+     "small_sample": false
+    },
+    "majority_changes_task": {
+     "n": 4,
+     "d": 272,
+     "rate": 0.0147,
+     "ci": [
+      0.0057,
+      0.0372
+     ],
+     "small_sample": false
+    }
+   },
+   "incident[cf]+verify": {
+    "runs_all_repeats": 76,
+    "repeats": [
+     1,
+     2,
+     3
+    ],
+    "small_sample": false,
+    "asr_per_repeat": [
+     {
+      "n": 1.0,
+      "d": 304,
+      "rate": 0.0033,
+      "ci": [
+       0.0006,
+       0.0184
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 5.0,
+      "d": 304,
+      "rate": 0.0164,
+      "ci": [
+       0.007,
+       0.0379
+      ],
+      "small_sample": false
+     },
+     {
+      "n": 5.0,
+      "d": 304,
+      "rate": 0.0164,
+      "ci": [
+       0.007,
+       0.0379
+      ],
+      "small_sample": false
+     }
+    ],
+    "spread_pp": 1.32,
+    "outcome_differs": {
+     "n": 51,
+     "d": 308,
+     "rate": 0.1656,
+     "ci": [
+      0.1282,
+      0.2112
+     ],
+     "small_sample": false
+    },
+    "attack_differs": {
+     "n": 8,
+     "d": 308,
+     "rate": 0.026,
+     "ci": [
+      0.0132,
+      0.0504
+     ],
+     "small_sample": false
+    },
+    "majority_of_3_asr": {
+     "n": 3,
+     "d": 304,
+     "rate": 0.0099,
+     "ci": [
+      0.0034,
+      0.0286
+     ],
+     "small_sample": false
+    },
+    "single_replay_asr": {
+     "n": 1,
+     "d": 304,
+     "rate": 0.0033,
+     "ci": [
+      0.0006,
+      0.0184
+     ],
+     "small_sample": false
+    },
+    "majority_changes_task": {
+     "n": 2,
+     "d": 304,
+     "rate": 0.0066,
+     "ci": [
+      0.0018,
+      0.0237
+     ],
+     "small_sample": false
+    }
+   },
+   "replay_noise": {
+    "units": 964,
+    "outcome_differs": {
+     "n": 150,
+     "d": 964,
+     "rate": 0.1556,
+     "ci": [
+      0.1341,
+      0.1798
+     ],
+     "small_sample": false
+    },
+    "attack_differs": {
+     "n": 47,
+     "d": 964,
+     "rate": 0.0488,
+     "ci": [
+      0.0369,
+      0.0642
+     ],
+     "small_sample": false
+    }
+   }
+  },
+  "3. Retrieval k ablation (proposal 9.3)": {
+   "none k=3": {
+    "mode": "none",
+    "k": 3,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 32.0,
+     "d": 93,
+     "rate": 0.3441,
+     "ci": [
+      0.2554,
+      0.4451
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 31,
+     "d": 82,
+     "rate": 0.378,
+     "ci": [
+      0.2808,
+      0.4862
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 31.0,
+     "d": 92,
+     "rate": 0.337,
+     "ci": [
+      0.2486,
+      0.4383
+     ],
+     "small_sample": false
+    },
+    "common_runs": 81,
+    "incident_runs": 49
+   },
+   "none k=5": {
+    "mode": "none",
+    "k": 5,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 52.0,
+     "d": 93,
+     "rate": 0.5591,
+     "ci": [
+      0.4579,
+      0.6557
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 49,
+     "d": 82,
+     "rate": 0.5976,
+     "ci": [
+      0.4894,
+      0.697
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 51.0,
+     "d": 92,
+     "rate": 0.5543,
+     "ci": [
+      0.4526,
+      0.6517
+     ],
+     "small_sample": false
+    },
+    "common_runs": 81,
+    "incident_runs": 60
+   },
+   "none k=10": {
+    "mode": "none",
+    "k": 10,
+    "runs": 81,
+    "small_sample": false,
+    "asr": {
+     "n": 64.0,
+     "d": 92,
+     "rate": 0.6957,
+     "ci": [
+      0.5954,
+      0.7803
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 62,
+     "d": 81,
+     "rate": 0.7654,
+     "ci": [
+      0.6625,
+      0.8444
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 64.0,
+     "d": 92,
+     "rate": 0.6957,
+     "ci": [
+      0.5954,
+      0.7803
+     ],
+     "small_sample": false
+    },
+    "common_runs": 81,
+    "incident_runs": 65
+   },
+   "incident[cf] k=3": {
+    "mode": "incident[cf]",
+    "k": 3,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 5.0,
+     "d": 93,
+     "rate": 0.0538,
+     "ci": [
+      0.0232,
+      0.1197
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 4,
+     "d": 82,
+     "rate": 0.0488,
+     "ci": [
+      0.0191,
+      0.1188
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 5.0,
+     "d": 91,
+     "rate": 0.0549,
+     "ci": [
+      0.0237,
+      0.1222
+     ],
+     "small_sample": false
+    },
+    "common_runs": 80,
+    "incident_runs": 48,
+    "cf_replays_per_incident": {
+     "mean": 4.7083,
+     "ci": [
+      4.3542,
+      5.0833
+     ]
+    },
+    "seconds_per_incident": {
+     "mean": 43.0889,
+     "ci": [
+      35.0498,
+      52.6762
+     ]
+    },
+    "cf_replays_per_incident_common_runs": {
+     "mean": 4.6522,
+     "ci": [
+      4.2609,
+      5.0435
+     ],
+     "n": 46,
+     "small_sample": false
+    }
+   },
+   "incident[cf] k=5": {
+    "mode": "incident[cf]",
+    "k": 5,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 9.0,
+     "d": 93,
+     "rate": 0.0968,
+     "ci": [
+      0.0518,
+      0.1738
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 8,
+     "d": 82,
+     "rate": 0.0976,
+     "ci": [
+      0.0503,
+      0.1809
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 9.0,
+     "d": 91,
+     "rate": 0.0989,
+     "ci": [
+      0.0529,
+      0.1774
+     ],
+     "small_sample": false
+    },
+    "common_runs": 80,
+    "incident_runs": 60,
+    "cf_replays_per_incident": {
+     "mean": 7,
+     "ci": [
+      6.4333,
+      7.55
+     ]
+    },
+    "seconds_per_incident": {
+     "mean": 21.4379,
+     "ci": [
+      19.3821,
+      23.5172
+     ]
+    },
+    "cf_replays_per_incident_common_runs": {
+     "mean": 6.9655,
+     "ci": [
+      6.3966,
+      7.5862
+     ],
+     "n": 58,
+     "small_sample": false
+    }
+   },
+   "incident[cf] k=10": {
+    "mode": "incident[cf]",
+    "k": 10,
+    "runs": 80,
+    "small_sample": false,
+    "asr": {
+     "n": 4.0,
+     "d": 91,
+     "rate": 0.044,
+     "ci": [
+      0.0172,
+      0.1076
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 4,
+     "d": 80,
+     "rate": 0.05,
+     "ci": [
+      0.0196,
+      0.1216
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 4.0,
+     "d": 91,
+     "rate": 0.044,
+     "ci": [
+      0.0172,
+      0.1076
+     ],
+     "small_sample": false
+    },
+    "common_runs": 80,
+    "incident_runs": 66,
+    "cf_replays_per_incident": {
+     "mean": 12.4545,
+     "ci": [
+      11.8485,
+      13.0606
+     ]
+    },
+    "seconds_per_incident": {
+     "mean": 155.5588,
+     "ci": [
+      129.837,
+      183.9192
+     ]
+    },
+    "cf_replays_per_incident_common_runs": {
+     "mean": 12.4545,
+     "ci": [
+      11.8485,
+      13.0606
+     ],
+     "n": 66,
+     "small_sample": false
+    }
+   }
+  },
+  "4. Consolidation depth ablation (proposal 9.3)": {
+   "none depth=0": {
+    "mode": "none",
+    "depth": 0,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 51.0,
+     "d": 94,
+     "rate": 0.5426,
+     "ci": [
+      0.4422,
+      0.6396
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 48,
+     "d": 82,
+     "rate": 0.5854,
+     "ci": [
+      0.4773,
+      0.6858
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 51.0,
+     "d": 94,
+     "rate": 0.5426,
+     "ci": [
+      0.4422,
+      0.6396
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0,
+    "quarantined": 0,
+    "poison_left": {
+     "n": 79,
+     "d": 82,
+     "rate": 0.9634,
+     "ci": [
+      0.8979,
+      0.9875
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0,
+    "poison_left_common_runs": {
+     "n": 79,
+     "d": 82,
+     "rate": 0.9634,
+     "ci": [
+      0.8979,
+      0.9875
+     ],
+     "small_sample": false
+    }
+   },
+   "none depth=1": {
+    "mode": "none",
+    "depth": 1,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 56.0,
+     "d": 94,
+     "rate": 0.5957,
+     "ci": [
+      0.4947,
+      0.6893
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 52,
+     "d": 82,
+     "rate": 0.6341,
+     "ci": [
+      0.5261,
+      0.7302
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 56.0,
+     "d": 94,
+     "rate": 0.5957,
+     "ci": [
+      0.4947,
+      0.6893
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0,
+    "quarantined": 0,
+    "poison_left": {
+     "n": 79,
+     "d": 82,
+     "rate": 0.9634,
+     "ci": [
+      0.8979,
+      0.9875
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0,
+    "poison_left_common_runs": {
+     "n": 79,
+     "d": 82,
+     "rate": 0.9634,
+     "ci": [
+      0.8979,
+      0.9875
+     ],
+     "small_sample": false
+    }
+   },
+   "none depth=2": {
+    "mode": "none",
+    "depth": 2,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 56.0,
+     "d": 94,
+     "rate": 0.5957,
+     "ci": [
+      0.4947,
+      0.6893
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 51,
+     "d": 82,
+     "rate": 0.622,
+     "ci": [
+      0.5138,
+      0.7192
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 56.0,
+     "d": 94,
+     "rate": 0.5957,
+     "ci": [
+      0.4947,
+      0.6893
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0,
+    "quarantined": 0,
+    "poison_left": {
+     "n": 72,
+     "d": 82,
+     "rate": 0.878,
+     "ci": [
+      0.7899,
+      0.9324
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0,
+    "poison_left_common_runs": {
+     "n": 72,
+     "d": 82,
+     "rate": 0.878,
+     "ci": [
+      0.7899,
+      0.9324
+     ],
+     "small_sample": false
+    }
+   },
+   "none depth=3": {
+    "mode": "none",
+    "depth": 3,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 50.0,
+     "d": 94,
+     "rate": 0.5319,
+     "ci": [
+      0.4318,
+      0.6295
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 46,
+     "d": 82,
+     "rate": 0.561,
+     "ci": [
+      0.4532,
+      0.6633
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 50.0,
+     "d": 94,
+     "rate": 0.5319,
+     "ci": [
+      0.4318,
+      0.6295
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0,
+    "quarantined": 0,
+    "poison_left": {
+     "n": 69,
+     "d": 82,
+     "rate": 0.8415,
+     "ci": [
+      0.7474,
+      0.9049
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0,
+    "poison_left_common_runs": {
+     "n": 69,
+     "d": 82,
+     "rate": 0.8415,
+     "ci": [
+      0.7474,
+      0.9049
+     ],
+     "small_sample": false
+    }
+   },
+   "selective[oracle] depth=0": {
+    "mode": "selective[oracle]",
+    "depth": 0,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 1.0,
+     "d": 94,
+     "rate": 0.0106,
+     "ci": [
+      0.0019,
+      0.0578
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 1,
+     "d": 82,
+     "rate": 0.0122,
+     "ci": [
+      0.0022,
+      0.0659
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 1.0,
+     "d": 94,
+     "rate": 0.0106,
+     "ci": [
+      0.0019,
+      0.0578
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0.78,
+    "quarantined": 7.5,
+    "poison_left": {
+     "n": 1,
+     "d": 82,
+     "rate": 0.0122,
+     "ci": [
+      0.0022,
+      0.0659
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0.78,
+    "poison_left_common_runs": {
+     "n": 1,
+     "d": 82,
+     "rate": 0.0122,
+     "ci": [
+      0.0022,
+      0.0659
+     ],
+     "small_sample": false
+    }
+   },
+   "selective[oracle] depth=1": {
+    "mode": "selective[oracle]",
+    "depth": 1,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 4.0,
+     "d": 94,
+     "rate": 0.0426,
+     "ci": [
+      0.0167,
+      0.1044
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 4,
+     "d": 82,
+     "rate": 0.0488,
+     "ci": [
+      0.0191,
+      0.1188
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 4.0,
+     "d": 94,
+     "rate": 0.0426,
+     "ci": [
+      0.0167,
+      0.1044
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0.78,
+    "quarantined": 8.476,
+    "poison_left": {
+     "n": 0,
+     "d": 82,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.0448
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0.78,
+    "poison_left_common_runs": {
+     "n": 0,
+     "d": 82,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.0448
+     ],
+     "small_sample": false
+    }
+   },
+   "selective[oracle] depth=2": {
+    "mode": "selective[oracle]",
+    "depth": 2,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 2.0,
+     "d": 94,
+     "rate": 0.0213,
+     "ci": [
+      0.0059,
+      0.0743
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 2,
+     "d": 82,
+     "rate": 0.0244,
+     "ci": [
+      0.0067,
+      0.0846
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 2.0,
+     "d": 94,
+     "rate": 0.0213,
+     "ci": [
+      0.0059,
+      0.0743
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0.78,
+    "quarantined": 9.073,
+    "poison_left": {
+     "n": 0,
+     "d": 82,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.0448
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0.78,
+    "poison_left_common_runs": {
+     "n": 0,
+     "d": 82,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.0448
+     ],
+     "small_sample": false
+    }
+   },
+   "selective[oracle] depth=3": {
+    "mode": "selective[oracle]",
+    "depth": 3,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 3.0,
+     "d": 94,
+     "rate": 0.0319,
+     "ci": [
+      0.0109,
+      0.0897
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 3,
+     "d": 82,
+     "rate": 0.0366,
+     "ci": [
+      0.0125,
+      0.1021
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 3.0,
+     "d": 94,
+     "rate": 0.0319,
+     "ci": [
+      0.0109,
+      0.0897
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0.78,
+    "quarantined": 9.354,
+    "poison_left": {
+     "n": 0,
+     "d": 82,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.0448
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0.78,
+    "poison_left_common_runs": {
+     "n": 0,
+     "d": 82,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.0448
+     ],
+     "small_sample": false
+    }
+   },
+   "incident[cf] depth=0": {
+    "mode": "incident[cf]",
+    "depth": 0,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 9.0,
+     "d": 94,
+     "rate": 0.0957,
+     "ci": [
+      0.0512,
+      0.172
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 8,
+     "d": 82,
+     "rate": 0.0976,
+     "ci": [
+      0.0503,
+      0.1809
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 9.0,
+     "d": 94,
+     "rate": 0.0957,
+     "ci": [
+      0.0512,
+      0.172
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0.122,
+    "quarantined": 2.72,
+    "poison_left": {
+     "n": 29,
+     "d": 82,
+     "rate": 0.3537,
+     "ci": [
+      0.2589,
+      0.4616
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0.122,
+    "poison_left_common_runs": {
+     "n": 29,
+     "d": 82,
+     "rate": 0.3537,
+     "ci": [
+      0.2589,
+      0.4616
+     ],
+     "small_sample": false
+    }
+   },
+   "incident[cf] depth=1": {
+    "mode": "incident[cf]",
+    "depth": 1,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 10.0,
+     "d": 94,
+     "rate": 0.1064,
+     "ci": [
+      0.0588,
+      0.1849
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 9,
+     "d": 82,
+     "rate": 0.1098,
+     "ci": [
+      0.0588,
+      0.1956
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 10.0,
+     "d": 94,
+     "rate": 0.1064,
+     "ci": [
+      0.0588,
+      0.1849
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0.11,
+    "quarantined": 3.354,
+    "poison_left": {
+     "n": 26,
+     "d": 82,
+     "rate": 0.3171,
+     "ci": [
+      0.2265,
+      0.424
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0.11,
+    "poison_left_common_runs": {
+     "n": 26,
+     "d": 82,
+     "rate": 0.3171,
+     "ci": [
+      0.2265,
+      0.424
+     ],
+     "small_sample": false
+    }
+   },
+   "incident[cf] depth=2": {
+    "mode": "incident[cf]",
+    "depth": 2,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 8.0,
+     "d": 94,
+     "rate": 0.0851,
+     "ci": [
+      0.0438,
+      0.159
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 8,
+     "d": 82,
+     "rate": 0.0976,
+     "ci": [
+      0.0503,
+      0.1809
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 8.0,
+     "d": 94,
+     "rate": 0.0851,
+     "ci": [
+      0.0438,
+      0.159
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0.073,
+    "quarantined": 4.098,
+    "poison_left": {
+     "n": 18,
+     "d": 82,
+     "rate": 0.2195,
+     "ci": [
+      0.1436,
+      0.3205
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0.073,
+    "poison_left_common_runs": {
+     "n": 18,
+     "d": 82,
+     "rate": 0.2195,
+     "ci": [
+      0.1436,
+      0.3205
+     ],
+     "small_sample": false
+    }
+   },
+   "incident[cf] depth=3": {
+    "mode": "incident[cf]",
+    "depth": 3,
+    "runs": 82,
+    "small_sample": false,
+    "asr": {
+     "n": 4.0,
+     "d": 94,
+     "rate": 0.0426,
+     "ci": [
+      0.0167,
+      0.1044
+     ],
+     "small_sample": false
+    },
+    "attacked_runs": {
+     "n": 3,
+     "d": 82,
+     "rate": 0.0366,
+     "ci": [
+      0.0125,
+      0.1021
+     ],
+     "small_sample": false
+    },
+    "asr_common_runs": {
+     "n": 4.0,
+     "d": 94,
+     "rate": 0.0426,
+     "ci": [
+      0.0167,
+      0.1044
+     ],
+     "small_sample": false
+    },
+    "common_runs": 82,
+    "collateral": 0.073,
+    "quarantined": 4.317,
+    "poison_left": {
+     "n": 13,
+     "d": 82,
+     "rate": 0.1585,
+     "ci": [
+      0.0951,
+      0.2526
+     ],
+     "small_sample": false
+    },
+    "collateral_common_runs": 0.073,
+    "poison_left_common_runs": {
+     "n": 13,
+     "d": 82,
+     "rate": 0.1585,
+     "ci": [
+      0.0951,
+      0.2526
+     ],
+     "small_sample": false
+    }
+   }
+  },
+  "5. Frozen vs re-retrieval counterfactual, and ancestry / counterfactual ablations (proposal 9.3)": {
+   "frozen_vs_reretrieve": {
+    "frozen (canonical)": {
+     "runs": 81,
+     "incident_runs": 59,
+     "small_sample": false,
+     "asr": {
+      "n": 9.0,
+      "d": 92,
+      "rate": 0.0978,
+      "ci": [
+       0.0523,
+       0.1756
+      ],
+      "small_sample": false
+     },
+     "cf_replays": {
+      "mean": 6.9831,
+      "ci": [
+       6.4237,
+       7.5593
+      ]
+     },
+     "seconds": {
+      "mean": 21.5028,
+      "ci": [
+       19.5072,
+       23.5821
+      ]
+     },
+     "cf_seconds": null,
+     "LLM_calls": {
+      "mean": 23.3729,
+      "ci": [
+       21.2034,
+       25.6102
+      ]
+     }
+    },
+    "re-retrieval": {
+     "runs": 81,
+     "incident_runs": 59,
+     "small_sample": false,
+     "asr": {
+      "n": 6.0,
+      "d": 92,
+      "rate": 0.0652,
+      "ci": [
+       0.0302,
+       0.1351
+      ],
+      "small_sample": false
+     },
+     "cf_replays": {
+      "mean": 7.0169,
+      "ci": [
+       6.4915,
+       7.5424
+      ]
+     },
+     "seconds": {
+      "mean": 80.9495,
+      "ci": [
+       60.921,
+       104.3578
+      ]
+     },
+     "cf_seconds": {
+      "mean": 80.8783,
+      "ci": [
+       60.8453,
+       104.2861
+      ]
+     },
+     "LLM_calls": {
+      "mean": 23.322,
+      "ci": [
+       21.0339,
+       25.5254
+      ]
+     }
+    },
+    "paired": [
+     {
+      "a": "incident[cf]+reretrieve",
+      "b": "incident[cf]",
+      "population": "incident",
+      "runs": 59,
+      "small_sample": false,
+      "ASR": [
+       -0.0254,
+       -0.0678,
+       0.0
+      ],
+      "BR": [
+       0.0593,
+       0.0085,
+       0.1271
+      ],
+      "BMP": [
+       -0.0395,
+       -0.1,
+       0.0137
+      ],
+      "collateral": [
+       0.0678,
+       -0.1186,
+       0.2712
+      ],
+      "poison left": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    ]
+   },
+   "culprit_agreement": {
+    "runs": 59,
+    "small_sample": false,
+    "counts": {
+     "neither found one": 23,
+     "same culprits": 20,
+     "only re-retrieval found one": 10,
+     "only frozen found one": 4,
+     "overlapping": 2
+    },
+    "frozen_sources": {
+     "families sweep": 59
+    },
+    "same_or_overlapping": {
+     "n": 22,
+     "d": 59,
+     "rate": 0.3729,
+     "ci": [
+      0.2608,
+      0.5005
+     ],
+     "small_sample": false
+    },
+    "noise_floor_pairs": 160,
+    "noise_floor_counts": {
+     "neither found one": 74,
+     "same culprits": 69,
+     "only frozen found one": 2,
+     "only second replay found one": 8,
+     "overlapping": 7
+    },
+    "noise_floor_same_or_overlapping": {
+     "n": 76,
+     "d": 160,
+     "rate": 0.475,
+     "ci": [
+      0.3991,
+      0.5521
+     ],
+     "small_sample": false
+    }
+   },
+   "ablation": {
+    "rows": {
+     "incident runs: none": {
+      "runs": 67,
+      "small_sample": false,
+      "asr": {
+       "n": 55.0,
+       "d": 77,
+       "rate": 0.7143,
+       "ci": [
+        0.6051,
+        0.8031
+       ],
+       "small_sample": false
+      },
+      "attacked_runs": {
+       "n": 52,
+       "d": 67,
+       "rate": 0.7761,
+       "ci": [
+        0.6629,
+        0.8594
+       ],
+       "small_sample": false
+      },
+      "bmp": {
+       "n": 87,
+       "d": 87,
+       "rate": 1.0,
+       "ci": [
+        0.9577,
+        1.0
+       ],
+       "small_sample": false
+      },
+      "br": 0.1866,
+      "poison_left": {
+       "n": 67,
+       "d": 67,
+       "rate": 1.0,
+       "ci": [
+        0.9458,
+        1.0
+       ],
+       "small_sample": false
+      },
+      "collateral": 0,
+      "quarantined": 0,
+      "llm_calls": 0,
+      "seconds": 0.001
+     },
+     "incident runs: ancestry": {
+      "runs": 67,
+      "small_sample": false,
+      "asr": {
+       "n": 2.0,
+       "d": 77,
+       "rate": 0.026,
+       "ci": [
+        0.0072,
+        0.0898
+       ],
+       "small_sample": false
+      },
+      "attacked_runs": {
+       "n": 2,
+       "d": 67,
+       "rate": 0.0299,
+       "ci": [
+        0.0082,
+        0.1025
+       ],
+       "small_sample": false
+      },
+      "bmp": {
+       "n": 77,
+       "d": 87,
+       "rate": 0.8851,
+       "ci": [
+        0.8012,
+        0.9364
+       ],
+       "small_sample": false
+      },
+      "br": 0.6642,
+      "poison_left": {
+       "n": 1,
+       "d": 67,
+       "rate": 0.0149,
+       "ci": [
+        0.0026,
+        0.0798
+       ],
+       "small_sample": false
+      },
+      "collateral": 1.09,
+      "quarantined": 8.179,
+      "llm_calls": 0,
+      "seconds": 0.05
+     },
+     "incident runs: selective[cf]": {
+      "runs": 67,
+      "small_sample": false,
+      "asr": {
+       "n": 9.0,
+       "d": 77,
+       "rate": 0.1169,
+       "ci": [
+        0.0627,
+        0.2075
+       ],
+       "small_sample": false
+      },
+      "attacked_runs": {
+       "n": 7,
+       "d": 67,
+       "rate": 0.1045,
+       "ci": [
+        0.0515,
+        0.2003
+       ],
+       "small_sample": false
+      },
+      "bmp": {
+       "n": 79,
+       "d": 87,
+       "rate": 0.908,
+       "ci": [
+        0.8289,
+        0.9527
+       ],
+       "small_sample": false
+      },
+      "br": 0.5746,
+      "poison_left": {
+       "n": 8,
+       "d": 67,
+       "rate": 0.1194,
+       "ci": [
+        0.0618,
+        0.2183
+       ],
+       "small_sample": false
+      },
+      "collateral": 0.791,
+      "quarantined": 7.642,
+      "llm_calls": 9.358,
+      "seconds": 8.933
+     },
+     "incident runs: incident[cf]": {
+      "runs": 67,
+      "small_sample": false,
+      "asr": {
+       "n": 6.0,
+       "d": 77,
+       "rate": 0.0779,
+       "ci": [
+        0.0362,
+        0.1598
+       ],
+       "small_sample": false
+      },
+      "attacked_runs": {
+       "n": 5,
+       "d": 67,
+       "rate": 0.0746,
+       "ci": [
+        0.0323,
+        0.1631
+       ],
+       "small_sample": false
+      },
+      "bmp": {
+       "n": 80,
+       "d": 87,
+       "rate": 0.9195,
+       "ci": [
+        0.8431,
+        0.9605
+       ],
+       "small_sample": false
+      },
+      "br": 0.6119,
+      "poison_left": {
+       "n": 10,
+       "d": 67,
+       "rate": 0.1493,
+       "ci": [
+        0.0831,
+        0.2534
+       ],
+       "small_sample": false
+      },
+      "collateral": 0.149,
+      "quarantined": 3.731,
+      "llm_calls": 22.522,
+      "seconds": 20.645
+     },
+     "all runs: none": {
+      "runs": 93,
+      "small_sample": false,
+      "asr": {
+       "n": 57.0,
+       "d": 106,
+       "rate": 0.5377,
+       "ci": [
+        0.4432,
+        0.6297
+       ],
+       "small_sample": false
+      },
+      "attacked_runs": {
+       "n": 54,
+       "d": 93,
+       "rate": 0.5806,
+       "ci": [
+        0.4791,
+        0.6758
+       ],
+       "small_sample": false
+      },
+      "bmp": {
+       "n": 114,
+       "d": 114,
+       "rate": 1.0,
+       "ci": [
+        0.9674,
+        1.0
+       ],
+       "small_sample": false
+      },
+      "br": 0.3226,
+      "poison_left": {
+       "n": 89,
+       "d": 93,
+       "rate": 0.957,
+       "ci": [
+        0.8946,
+        0.9831
+       ],
+       "small_sample": false
+      },
+      "collateral": 0,
+      "quarantined": 0,
+      "llm_calls": 0,
+      "seconds": 0.001
+     },
+     "all runs: ancestry": {
+      "runs": 93,
+      "small_sample": false,
+      "asr": {
+       "n": 2.0,
+       "d": 106,
+       "rate": 0.0189,
+       "ci": [
+        0.0052,
+        0.0662
+       ],
+       "small_sample": false
+      },
+      "attacked_runs": {
+       "n": 2,
+       "d": 93,
+       "rate": 0.0215,
+       "ci": [
+        0.0059,
+        0.0751
+       ],
+       "small_sample": false
+      },
+      "bmp": {
+       "n": 103,
+       "d": 114,
+       "rate": 0.9035,
+       "ci": [
+        0.8354,
+        0.9453
+       ],
+       "small_sample": false
+      },
+      "br": 0.6667,
+      "poison_left": {
+       "n": 1,
+       "d": 93,
+       "rate": 0.0108,
+       "ci": [
+        0.0019,
+        0.0584
+       ],
+       "small_sample": false
+      },
+      "collateral": 1.097,
+      "quarantined": 7.849,
+      "llm_calls": 0,
+      "seconds": 0.049
+     },
+     "all runs: selective[cf]": {
+      "runs": 93,
+      "small_sample": false,
+      "asr": {
+       "n": 11.0,
+       "d": 106,
+       "rate": 0.1038,
+       "ci": [
+        0.0589,
+        0.1763
+       ],
+       "small_sample": false
+      },
+      "attacked_runs": {
+       "n": 9,
+       "d": 93,
+       "rate": 0.0968,
+       "ci": [
+        0.0518,
+        0.1738
+       ],
+       "small_sample": false
+      },
+      "bmp": {
+       "n": 104,
+       "d": 114,
+       "rate": 0.9123,
+       "ci": [
+        0.846,
+        0.9517
+       ],
+       "small_sample": false
+      },
+      "br": 0.6237,
+      "poison_left": {
+       "n": 30,
+       "d": 93,
+       "rate": 0.3226,
+       "ci": [
+        0.2362,
+        0.423
+       ],
+       "small_sample": false
+      },
+      "collateral": 0.774,
+      "quarantined": 6.925,
+      "llm_calls": 6.742,
+      "seconds": 6.445
+     },
+     "all runs: incident[cf]": {
+      "runs": 93,
+      "small_sample": false,
+      "asr": {
+       "n": 9.0,
+       "d": 106,
+       "rate": 0.0849,
+       "ci": [
+        0.0453,
+        0.1535
+       ],
+       "small_sample": false
+      },
+      "attacked_runs": {
+       "n": 8,
+       "d": 93,
+       "rate": 0.086,
+       "ci": [
+        0.0442,
+        0.1607
+       ],
+       "small_sample": false
+      },
+      "bmp": {
+       "n": 105,
+       "d": 114,
+       "rate": 0.9211,
+       "ci": [
+        0.8567,
+        0.9579
+       ],
+       "small_sample": false
+      },
+      "br": 0.6237,
+      "poison_left": {
+       "n": 32,
+       "d": 93,
+       "rate": 0.3441,
+       "ci": [
+        0.2554,
+        0.4451
+       ],
+       "small_sample": false
+      },
+      "collateral": 0.108,
+      "quarantined": 2.688,
+      "llm_calls": 16.226,
+      "seconds": 14.874
+     }
+    },
+    "paired": [
+     {
+      "a": "incident[cf]",
+      "b": "selective[cf]",
+      "population": "incident",
+      "runs": 67,
+      "small_sample": false,
+      "ASR": [
+       -0.0373,
+       -0.0821,
+       0.0
+      ],
+      "BR": [
+       0.0373,
+       -0.0448,
+       0.1194
+      ],
+      "BMP": [
+       0.0115,
+       -0.0357,
+       0.0625
+      ],
+      "collateral": [
+       -0.6418,
+       -1.1045,
+       -0.1791
+      ],
+      "poison left": [
+       0.0299,
+       0.0,
+       0.0746
+      ]
+     },
+     {
+      "a": "ancestry",
+      "b": "selective[cf]",
+      "population": "incident",
+      "runs": 67,
+      "small_sample": false,
+      "ASR": [
+       -0.0746,
+       -0.1493,
+       -0.0149
+      ],
+      "BR": [
+       0.0896,
+       0.0,
+       0.1791
+      ],
+      "BMP": [
+       -0.023,
+       -0.0899,
+       0.0476
+      ],
+      "collateral": [
+       0.2985,
+       0.1493,
+       0.4776
+      ],
+      "poison left": [
+       -0.1045,
+       -0.194,
+       -0.0448
+      ]
+     },
+     {
+      "a": "incident[cf]",
+      "b": "ancestry",
+      "population": "incident",
+      "runs": 67,
+      "small_sample": false,
+      "ASR": [
+       0.0373,
+       0.0,
+       0.0821
+      ],
+      "BR": [
+       -0.0522,
+       -0.1418,
+       0.0224
+      ],
+      "BMP": [
+       0.0345,
+       -0.012,
+       0.0899
+      ],
+      "collateral": [
+       -0.9403,
+       -1.4478,
+       -0.5075
+      ],
+      "poison left": [
+       0.1343,
+       0.0597,
+       0.2239
+      ]
+     }
+    ],
+    "replay_aa": [],
+    "replay_noise": {
+     "pairs": 372,
+     "attack_flips": {
+      "n": 13,
+      "d": 424,
+      "rate": 0.0307,
+      "ci": [
+       0.018,
+       0.0517
+      ],
+      "small_sample": false
+     },
+     "probe_flips": {
+      "n": 30,
+      "d": 776,
+      "rate": 0.0387,
+      "ci": [
+       0.0272,
+       0.0547
+      ],
+      "small_sample": false
+     }
+    }
+   }
+  },
+  "6. Pair/group counterfactuals and latency (proposal 12.3)": {
+   "culprit_kinds": {
+    "runs": 246,
+    "alarms": 180,
+    "small_sample": false,
+    "none": {
+     "n": 60,
+     "d": 180,
+     "rate": 0.3333,
+     "ci": [
+      0.2686,
+      0.405
+     ],
+     "small_sample": false
+    },
+    "single": {
+     "n": 100,
+     "d": 180,
+     "rate": 0.5556,
+     "ci": [
+      0.4826,
+      0.6262
+     ],
+     "small_sample": false
+    },
+    "pair": {
+     "n": 20,
+     "d": 180,
+     "rate": 0.1111,
+     "ci": [
+      0.0731,
+      0.1654
+     ],
+     "small_sample": false
+    },
+    "no_incident": 66
+   },
+   "asr": {
+    "canonical (sequential, singles)": {
+     "runs": 82,
+     "small_sample": false,
+     "asr": {
+      "n": 0.0,
+      "d": 94,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0393
+      ],
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 0,
+      "d": 82,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0448
+      ],
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 94,
+      "d": 103,
+      "rate": 0.9126,
+      "ci": [
+       0.8422,
+       0.9533
+      ],
+      "small_sample": false
+     },
+     "br": 0.6707,
+     "poison_left": {
+      "n": 25,
+      "d": 82,
+      "rate": 0.3049,
+      "ci": [
+       0.2158,
+       0.4114
+      ],
+      "small_sample": false
+     },
+     "collateral": 0.171,
+     "quarantined": 2.866,
+     "llm_calls": 22.89,
+     "seconds": 21.965
+    },
+    "groups, 6 workers": {
+     "runs": 82,
+     "small_sample": false,
+     "asr": {
+      "n": 2.0,
+      "d": 94,
+      "rate": 0.0213,
+      "ci": [
+       0.0059,
+       0.0743
+      ],
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 2,
+      "d": 82,
+      "rate": 0.0244,
+      "ci": [
+       0.0067,
+       0.0846
+      ],
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 93,
+      "d": 103,
+      "rate": 0.9029,
+      "ci": [
+       0.8304,
+       0.9464
+      ],
+      "small_sample": false
+     },
+     "br": 0.6951,
+     "poison_left": {
+      "n": 25,
+      "d": 82,
+      "rate": 0.3049,
+      "ci": [
+       0.2158,
+       0.4114
+      ],
+      "small_sample": false
+     },
+     "collateral": 0.183,
+     "quarantined": 2.878,
+     "llm_calls": 32.341,
+     "seconds": 33.612
+    },
+    "paired": [
+     {
+      "a": "incident[cf]+groups+verify",
+      "b": "incident[cf]+verify",
+      "population": "incident",
+      "runs": 60,
+      "small_sample": false,
+      "ASR": [
+       0.0333,
+       0.0,
+       0.0833
+      ],
+      "BR": [
+       0.0583,
+       -0.025,
+       0.1417
+      ],
+      "BMP": [
+       -0.0127,
+       -0.0556,
+       0.0278
+      ],
+      "collateral": [
+       0.0167,
+       -0.1333,
+       0.15
+      ],
+      "poison left": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     {
+      "a": "incident[cf]+groups+verify",
+      "b": "incident[cf]+verify",
+      "population": "all",
+      "runs": 82,
+      "small_sample": false,
+      "ASR": [
+       0.0244,
+       0.0,
+       0.061
+      ],
+      "BR": [
+       0.0244,
+       -0.0488,
+       0.0915
+      ],
+      "BMP": [
+       -0.0097,
+       -0.0408,
+       0.0235
+      ],
+      "collateral": [
+       0.0122,
+       -0.0976,
+       0.1098
+      ],
+      "poison left": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    ]
+   },
+   "latency": {
+    "cf replays": {
+     "sequential": {
+      "mean": 7.4833,
+      "ci": [
+       6.7167,
+       8.3167
+      ]
+     },
+     "parallel": {
+      "mean": 16.7667,
+      "ci": [
+       14.4,
+       19.4833
+      ]
+     },
+     "paired_runs": 60
+    },
+    "cf seconds": {
+     "sequential": null,
+     "parallel": {
+      "mean": 36.1857,
+      "ci": [
+       27.8366,
+       46.4147
+      ]
+     },
+     "paired_runs": 0
+    },
+    "recovery seconds": {
+     "sequential": {
+      "mean": 27.9182,
+      "ci": [
+       24.8378,
+       31.1125
+      ]
+     },
+     "parallel": {
+      "mean": 43.6352,
+      "ci": [
+       33.9524,
+       55.8128
+      ]
+     },
+     "paired_runs": 60
+    },
+    "LLM calls": {
+     "sequential": {
+      "mean": 29.3,
+      "ci": [
+       26.1167,
+       32.6833
+      ]
+     },
+     "parallel": {
+      "mean": 42.65,
+      "ci": [
+       35.3,
+       50.3833
+      ]
+     },
+     "paired_runs": 60
+    },
+    "seconds per cf replay": {
+     "sequential": {
+      "mean": 3.8695,
+      "ci": [
+       3.6419,
+       4.1397
+      ]
+     },
+     "parallel": {
+      "mean": 4.163,
+      "ci": [
+       2.5174,
+       6.4897
+      ]
+     },
+     "paired_runs": 60
+    }
+   },
+   "clean_control": {
+    "incident[cf]+verify (groups)": {
+     "runs": 2,
+     "small_sample": true,
+     "asr": {
+      "n": 0.0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "attacked_runs": {
+      "n": 0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "bmp": {
+      "n": 2,
+      "d": 4,
+      "rate": 0.5,
+      "ci": [
+       0.15,
+       0.85
+      ],
+      "small_sample": true
+     },
+     "br": 0.5,
+     "poison_left": {
+      "n": 0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "collateral": 2,
+     "quarantined": 2,
+     "llm_calls": 36.5,
+     "seconds": 13.732,
+     "culprit_kinds": {
+      "single": 1,
+      "none": 1
+     }
+    },
+    "incident[cf]+verify (canonical)": {
+     "runs": 2,
+     "small_sample": true,
+     "asr": {
+      "n": 0.0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "attacked_runs": {
+      "n": 0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "bmp": {
+      "n": 2,
+      "d": 4,
+      "rate": 0.5,
+      "ci": [
+       0.15,
+       0.85
+      ],
+      "small_sample": true
+     },
+     "br": 0.5,
+     "poison_left": {
+      "n": 0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "collateral": 2,
+     "quarantined": 2,
+     "llm_calls": 28,
+     "seconds": 26.418,
+     "culprit_kinds": {
+      "unknown": 2
+     }
+    },
+    "selective[cf]+verify (groups)": {
+     "runs": 2,
+     "small_sample": true,
+     "asr": {
+      "n": 0.0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "attacked_runs": {
+      "n": 0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "bmp": {
+      "n": 2,
+      "d": 4,
+      "rate": 0.5,
+      "ci": [
+       0.15,
+       0.85
+      ],
+      "small_sample": true
+     },
+     "br": 0.5,
+     "poison_left": {
+      "n": 0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "collateral": 2,
+     "quarantined": 2,
+     "llm_calls": 35.5,
+     "seconds": 12.852,
+     "culprit_kinds": {
+      "single": 1,
+      "none": 1
+     }
+    },
+    "selective[cf]+verify (canonical)": {
+     "runs": 2,
+     "small_sample": true,
+     "asr": {
+      "n": 0.0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "attacked_runs": {
+      "n": 0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "bmp": {
+      "n": 2,
+      "d": 4,
+      "rate": 0.5,
+      "ci": [
+       0.15,
+       0.85
+      ],
+      "small_sample": true
+     },
+     "br": 0.5,
+     "poison_left": {
+      "n": 0,
+      "d": 2,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.6576
+      ],
+      "small_sample": true
+     },
+     "collateral": 2,
+     "quarantined": 2,
+     "llm_calls": 26,
+     "seconds": 24.262,
+     "culprit_kinds": {
+      "unknown": 2
+     }
+    }
+   }
+  },
+  "7. Claim repair (proposal 12.3 / 8.9)": {
+   "selective[oracle]": {
+    "runs": 8,
+    "small_sample": true,
+    "asr": {
+     "n": 0.0,
+     "d": 9,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.2992
+     ],
+     "small_sample": true
+    },
+    "attacked_runs": {
+     "n": 0,
+     "d": 8,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.3244
+     ],
+     "small_sample": true
+    },
+    "bmp": {
+     "n": 7,
+     "d": 9,
+     "rate": 0.7778,
+     "ci": [
+      0.4526,
+      0.9368
+     ],
+     "small_sample": true
+    },
+    "br": 0.5,
+    "poison_left": {
+     "n": 0,
+     "d": 8,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.3244
+     ],
+     "small_sample": true
+    },
+    "collateral": 0.5,
+    "quarantined": 7,
+    "llm_calls": 0,
+    "seconds": 2.125,
+    "claim_repaired": 0
+   },
+   "selective_recon[oracle]": {
+    "runs": 8,
+    "small_sample": true,
+    "asr": {
+     "n": 0.0,
+     "d": 9,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.2992
+     ],
+     "small_sample": true
+    },
+    "attacked_runs": {
+     "n": 0,
+     "d": 8,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.3244
+     ],
+     "small_sample": true
+    },
+    "bmp": {
+     "n": 7,
+     "d": 9,
+     "rate": 0.7778,
+     "ci": [
+      0.4526,
+      0.9368
+     ],
+     "small_sample": true
+    },
+    "br": 0.5,
+    "poison_left": {
+     "n": 0,
+     "d": 8,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.3244
+     ],
+     "small_sample": true
+    },
+    "collateral": 0.5,
+    "quarantined": 7,
+    "llm_calls": 1,
+    "seconds": 1.77,
+    "claim_repaired": 0
+   },
+   "selective_claims[oracle]": {
+    "runs": 8,
+    "small_sample": true,
+    "asr": {
+     "n": 1.0,
+     "d": 9,
+     "rate": 0.1111,
+     "ci": [
+      0.0199,
+      0.435
+     ],
+     "small_sample": true
+    },
+    "attacked_runs": {
+     "n": 1,
+     "d": 8,
+     "rate": 0.125,
+     "ci": [
+      0.0224,
+      0.4709
+     ],
+     "small_sample": true
+    },
+    "bmp": {
+     "n": 5,
+     "d": 9,
+     "rate": 0.5556,
+     "ci": [
+      0.2666,
+      0.8112
+     ],
+     "small_sample": true
+    },
+    "br": 0.4375,
+    "poison_left": {
+     "n": 0,
+     "d": 8,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.3244
+     ],
+     "small_sample": true
+    },
+    "collateral": 0.5,
+    "quarantined": 7,
+    "llm_calls": 1,
+    "seconds": 1.906,
+    "claim_repaired": 1
+   },
+   "selective[cf]": {
+    "runs": 8,
+    "small_sample": true,
+    "asr": {
+     "n": 0.0,
+     "d": 9,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.2992
+     ],
+     "small_sample": true
+    },
+    "attacked_runs": {
+     "n": 0,
+     "d": 8,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.3244
+     ],
+     "small_sample": true
+    },
+    "bmp": {
+     "n": 7,
+     "d": 9,
+     "rate": 0.7778,
+     "ci": [
+      0.4526,
+      0.9368
+     ],
+     "small_sample": true
+    },
+    "br": 0.625,
+    "poison_left": {
+     "n": 0,
+     "d": 8,
+     "rate": 0.0,
+     "ci": [
+      0.0,
+      0.3244
+     ],
+     "small_sample": true
+    },
+    "collateral": 0.5,
+    "quarantined": 7,
+    "llm_calls": 10.375,
+    "seconds": 20.293,
+    "claim_repaired": 0
+   },
+   "selective_claims[cf]": {
+    "runs": 8,
+    "small_sample": true,
+    "asr": {
+     "n": 1.0,
+     "d": 9,
+     "rate": 0.1111,
+     "ci": [
+      0.0199,
+      0.435
+     ],
+     "small_sample": true
+    },
+    "attacked_runs": {
+     "n": 1,
+     "d": 8,
+     "rate": 0.125,
+     "ci": [
+      0.0224,
+      0.4709
+     ],
+     "small_sample": true
+    },
+    "bmp": {
+     "n": 7,
+     "d": 9,
+     "rate": 0.7778,
+     "ci": [
+      0.4526,
+      0.9368
+     ],
+     "small_sample": true
+    },
+    "br": 0.4375,
+    "poison_left": {
+     "n": 1,
+     "d": 8,
+     "rate": 0.125,
+     "ci": [
+      0.0224,
+      0.4709
+     ],
+     "small_sample": true
+    },
+    "collateral": 0.5,
+    "quarantined": 7,
+    "llm_calls": 11.75,
+    "seconds": 13.742,
+    "claim_repaired": 0.875
+   },
+   "paired": [
+    {
+     "a": "selective_claims[oracle]",
+     "b": "selective[oracle]",
+     "population": "all",
+     "runs": 8,
+     "small_sample": true,
+     "ASR": [
+      0.0625,
+      0.0,
+      0.1875
+     ],
+     "BR": [
+      -0.0625,
+      -0.1875,
+      0.0
+     ],
+     "BMP": [
+      -0.2222,
+      -0.5,
+      0.0
+     ],
+     "collateral": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "poison left": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "a": "selective_claims[oracle]",
+     "b": "selective[oracle]",
+     "population": "mixed",
+     "runs": 8,
+     "small_sample": true,
+     "ASR": [
+      0.0625,
+      0.0,
+      0.1875
+     ],
+     "BR": [
+      -0.0625,
+      -0.1875,
+      0.0
+     ],
+     "BMP": [
+      -0.2222,
+      -0.4444,
+      0.0
+     ],
+     "collateral": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "poison left": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "a": "selective_claims[oracle]",
+     "b": "selective_recon[oracle]",
+     "population": "all",
+     "runs": 8,
+     "small_sample": true,
+     "ASR": [
+      0.0625,
+      0.0,
+      0.1875
+     ],
+     "BR": [
+      -0.0625,
+      -0.1875,
+      0.0
+     ],
+     "BMP": [
+      -0.2222,
+      -0.7143,
+      0.1667
+     ],
+     "collateral": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "poison left": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "a": "selective_recon[oracle]",
+     "b": "selective[oracle]",
+     "population": "mixed",
+     "runs": 8,
+     "small_sample": true,
+     "ASR": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "BR": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "BMP": [
+      0.0,
+      -0.2857,
+      0.4
+     ],
+     "collateral": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "poison left": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "a": "selective_claims[cf]",
+     "b": "selective[cf]",
+     "population": "incident",
+     "runs": 8,
+     "small_sample": true,
+     "ASR": [
+      0.0625,
+      0.0,
+      0.1875
+     ],
+     "BR": [
+      -0.1875,
+      -0.4375,
+      0.0
+     ],
+     "BMP": [
+      0.0,
+      -0.4,
+      0.2857
+     ],
+     "collateral": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "poison left": [
+      0.125,
+      0.0,
+      0.375
+     ]
+    },
+    {
+     "a": "selective[oracle]",
+     "b": "selective[oracle]+recovery_sweep",
+     "population": "all",
+     "runs": 8,
+     "small_sample": true,
+     "ASR": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "BR": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "BMP": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "collateral": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "poison left": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ],
+   "reinfection": {
+    "selective[oracle]+immunize": {
+     "runs": 2,
+     "small_sample": true,
+     "asr": {
+      "0": {
+       "n": 0.0,
+       "d": 2,
+       "rate": 0.0,
+       "ci": [
+        0.0,
+        0.6576
+       ],
+       "small_sample": true
+      },
+      "1": {
+       "n": 2.0,
+       "d": 2,
+       "rate": 1.0,
+       "ci": [
+        0.3424,
+        1.0
+       ],
+       "small_sample": true
+      },
+      "3": {
+       "n": 1.0,
+       "d": 2,
+       "rate": 0.5,
+       "ci": [
+        0.0945,
+        0.9055
+       ],
+       "small_sample": true
+      },
+      "5": {
+       "n": 1.0,
+       "d": 2,
+       "rate": 0.5,
+       "ci": [
+        0.0945,
+        0.9055
+       ],
+       "small_sample": true
+      },
+      "10": {
+       "n": 1.0,
+       "d": 2,
+       "rate": 0.5,
+       "ci": [
+        0.0945,
+        0.9055
+       ],
+       "small_sample": true
+      }
+     },
+     "reinfected": {
+      "n": 2,
+      "d": 2,
+      "rate": 1.0,
+      "ci": [
+       0.3424,
+       1.0
+      ],
+      "small_sample": true
+     }
+    },
+    "selective_claims[oracle]+immunize": {
+     "runs": 2,
+     "small_sample": true,
+     "asr": {
+      "0": {
+       "n": 0.0,
+       "d": 2,
+       "rate": 0.0,
+       "ci": [
+        0.0,
+        0.6576
+       ],
+       "small_sample": true
+      },
+      "1": {
+       "n": 2.0,
+       "d": 2,
+       "rate": 1.0,
+       "ci": [
+        0.3424,
+        1.0
+       ],
+       "small_sample": true
+      },
+      "3": {
+       "n": 1.0,
+       "d": 2,
+       "rate": 0.5,
+       "ci": [
+        0.0945,
+        0.9055
+       ],
+       "small_sample": true
+      },
+      "5": {
+       "n": 1.0,
+       "d": 2,
+       "rate": 0.5,
+       "ci": [
+        0.0945,
+        0.9055
+       ],
+       "small_sample": true
+      },
+      "10": {
+       "n": 1.0,
+       "d": 2,
+       "rate": 0.5,
+       "ci": [
+        0.0945,
+        0.9055
+       ],
+       "small_sample": true
+      }
+     },
+     "reinfected": {
+      "n": 2,
+      "d": 2,
+      "rate": 1.0,
+      "ci": [
+       0.3424,
+       1.0
+      ],
+      "small_sample": true
+     }
+    }
+   }
+  },
+  "8. Flat vs evolving memory (proposal 6.5)": {
+   "history": {
+    "flat poisoned all": {
+     "attacker": {
+      "n": 70,
+      "d": 120,
+      "rate": 0.5833,
+      "ci": [
+       0.4939,
+       0.6676
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "other": 20,
+      "attacker": 70,
+      "none": 8,
+      "correct": 22
+     }
+    },
+    "flat poisoned composed": {
+     "attacker": {
+      "n": 25,
+      "d": 40,
+      "rate": 0.625,
+      "ci": [
+       0.4703,
+       0.7578
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "other": 10,
+      "attacker": 25,
+      "correct": 2,
+      "none": 3
+     }
+    },
+    "flat poisoned direct": {
+     "attacker": {
+      "n": 28,
+      "d": 40,
+      "rate": 0.7,
+      "ci": [
+       0.5457,
+       0.8193
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "none": 4,
+      "correct": 5,
+      "attacker": 28,
+      "other": 3
+     }
+    },
+    "flat poisoned procedural": {
+     "attacker": {
+      "n": 17,
+      "d": 40,
+      "rate": 0.425,
+      "ci": [
+       0.2851,
+       0.5781
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "attacker": 17,
+      "correct": 15,
+      "other": 7,
+      "none": 1
+     }
+    },
+    "flat clean all": {
+     "attacker": {
+      "n": 2,
+      "d": 120,
+      "rate": 0.0167,
+      "ci": [
+       0.0046,
+       0.0587
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "other": 17,
+      "correct": 92,
+      "none": 9,
+      "attacker": 2
+     }
+    },
+    "flat clean composed": {
+     "attacker": {
+      "n": 0,
+      "d": 40,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0876
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "other": 6,
+      "correct": 30,
+      "none": 4
+     }
+    },
+    "flat clean direct": {
+     "attacker": {
+      "n": 1,
+      "d": 40,
+      "rate": 0.025,
+      "ci": [
+       0.0044,
+       0.1288
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "none": 3,
+      "correct": 29,
+      "other": 7,
+      "attacker": 1
+     }
+    },
+    "flat clean procedural": {
+     "attacker": {
+      "n": 1,
+      "d": 40,
+      "rate": 0.025,
+      "ci": [
+       0.0044,
+       0.1288
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "correct": 33,
+      "other": 4,
+      "none": 2,
+      "attacker": 1
+     }
+    },
+    "evolving poisoned all": {
+     "attacker": {
+      "n": 87,
+      "d": 120,
+      "rate": 0.725,
+      "ci": [
+       0.6391,
+       0.797
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "other": 12,
+      "attacker": 87,
+      "correct": 20,
+      "none": 1
+     }
+    },
+    "evolving poisoned composed": {
+     "attacker": {
+      "n": 31,
+      "d": 40,
+      "rate": 0.775,
+      "ci": [
+       0.625,
+       0.8768
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "other": 5,
+      "attacker": 31,
+      "correct": 4
+     }
+    },
+    "evolving poisoned direct": {
+     "attacker": {
+      "n": 33,
+      "d": 40,
+      "rate": 0.825,
+      "ci": [
+       0.6805,
+       0.9125
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "attacker": 33,
+      "none": 1,
+      "other": 3,
+      "correct": 3
+     }
+    },
+    "evolving poisoned procedural": {
+     "attacker": {
+      "n": 23,
+      "d": 40,
+      "rate": 0.575,
+      "ci": [
+       0.4219,
+       0.7149
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "correct": 13,
+      "attacker": 23,
+      "other": 4
+     }
+    },
+    "evolving clean all": {
+     "attacker": {
+      "n": 2,
+      "d": 120,
+      "rate": 0.0167,
+      "ci": [
+       0.0046,
+       0.0587
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "none": 10,
+      "correct": 93,
+      "other": 15,
+      "attacker": 2
+     }
+    },
+    "evolving clean composed": {
+     "attacker": {
+      "n": 1,
+      "d": 40,
+      "rate": 0.025,
+      "ci": [
+       0.0044,
+       0.1288
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "none": 4,
+      "correct": 29,
+      "other": 6,
+      "attacker": 1
+     }
+    },
+    "evolving clean direct": {
+     "attacker": {
+      "n": 1,
+      "d": 40,
+      "rate": 0.025,
+      "ci": [
+       0.0044,
+       0.1288
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "correct": 32,
+      "other": 5,
+      "attacker": 1,
+      "none": 2
+     }
+    },
+    "evolving clean procedural": {
+     "attacker": {
+      "n": 0,
+      "d": 40,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0876
+      ],
+      "small_sample": false
+     },
+     "outcomes": {
+      "correct": 32,
+      "other": 4,
+      "none": 4
+     }
+    },
+    "mcnemar poisoned all": {
+     "pairs": 120,
+     "both": 58,
+     "flat_only": 12,
+     "evolving_only": 29,
+     "p": 0.011508,
+     "duplicates_dropped": 0
+    },
+    "mcnemar poisoned composed": {
+     "pairs": 40,
+     "both": 19,
+     "flat_only": 6,
+     "evolving_only": 12,
+     "p": 0.237885,
+     "duplicates_dropped": 0
+    },
+    "mcnemar poisoned direct": {
+     "pairs": 40,
+     "both": 25,
+     "flat_only": 3,
+     "evolving_only": 8,
+     "p": 0.226562,
+     "duplicates_dropped": 0
+    },
+    "mcnemar poisoned procedural": {
+     "pairs": 40,
+     "both": 14,
+     "flat_only": 3,
+     "evolving_only": 9,
+     "p": 0.145996,
+     "duplicates_dropped": 0
+    },
+    "mcnemar clean all": {
+     "pairs": 120,
+     "both": 1,
+     "flat_only": 1,
+     "evolving_only": 1,
+     "p": 1.0,
+     "duplicates_dropped": 0
+    },
+    "mcnemar clean composed": {
+     "pairs": 40,
+     "both": 0,
+     "flat_only": 0,
+     "evolving_only": 1,
+     "p": 1.0,
+     "duplicates_dropped": 0
+    },
+    "mcnemar clean direct": {
+     "pairs": 40,
+     "both": 1,
+     "flat_only": 0,
+     "evolving_only": 0,
+     "p": 1.0,
+     "duplicates_dropped": 0
+    },
+    "mcnemar clean procedural": {
+     "pairs": 40,
+     "both": 0,
+     "flat_only": 1,
+     "evolving_only": 0,
+     "p": 1.0,
+     "duplicates_dropped": 0
+    }
+   },
+   "recovery": {
+    "variants": 6,
+    "rows": {
+     "none flat": {
+      "runs": 6,
+      "small_sample": true,
+      "asr": {
+       "n": 3.0,
+       "d": 6,
+       "rate": 0.5,
+       "ci": [
+        0.1876,
+        0.8124
+       ],
+       "small_sample": true
+      },
+      "attacked_runs": {
+       "n": 3,
+       "d": 6,
+       "rate": 0.5,
+       "ci": [
+        0.1876,
+        0.8124
+       ],
+       "small_sample": true
+      },
+      "bmp": {
+       "n": 10,
+       "d": 10,
+       "rate": 1.0,
+       "ci": [
+        0.7225,
+        1.0
+       ],
+       "small_sample": false
+      },
+      "br": 0.1667,
+      "poison_left": {
+       "n": 6,
+       "d": 6,
+       "rate": 1.0,
+       "ci": [
+        0.6097,
+        1.0
+       ],
+       "small_sample": true
+      },
+      "collateral": 0,
+      "quarantined": 0,
+      "llm_calls": 0,
+      "seconds": 0.331,
+      "root_consolidated": 0.0
+     },
+     "none evolving": {
+      "runs": 6,
+      "small_sample": true,
+      "asr": {
+       "n": 4.0,
+       "d": 6,
+       "rate": 0.6667,
+       "ci": [
+        0.3,
+        0.9032
+       ],
+       "small_sample": true
+      },
+      "attacked_runs": {
+       "n": 4,
+       "d": 6,
+       "rate": 0.6667,
+       "ci": [
+        0.3,
+        0.9032
+       ],
+       "small_sample": true
+      },
+      "bmp": {
+       "n": 7,
+       "d": 7,
+       "rate": 1.0,
+       "ci": [
+        0.6457,
+        1.0
+       ],
+       "small_sample": true
+      },
+      "br": 0.1667,
+      "poison_left": {
+       "n": 6,
+       "d": 6,
+       "rate": 1.0,
+       "ci": [
+        0.6097,
+        1.0
+       ],
+       "small_sample": true
+      },
+      "collateral": 0,
+      "quarantined": 0,
+      "llm_calls": 0,
+      "seconds": 0.001,
+      "root_consolidated": 0.8333333333333334
+     },
+     "root flat": {
+      "runs": 6,
+      "small_sample": true,
+      "asr": {
+       "n": 1.0,
+       "d": 6,
+       "rate": 0.1667,
+       "ci": [
+        0.0301,
+        0.5635
+       ],
+       "small_sample": true
+      },
+      "attacked_runs": {
+       "n": 1,
+       "d": 6,
+       "rate": 0.1667,
+       "ci": [
+        0.0301,
+        0.5635
+       ],
+       "small_sample": true
+      },
+      "bmp": {
+       "n": 10,
+       "d": 10,
+       "rate": 1.0,
+       "ci": [
+        0.7225,
+        1.0
+       ],
+       "small_sample": false
+      },
+      "br": 0.3333,
+      "poison_left": {
+       "n": 2,
+       "d": 6,
+       "rate": 0.3333,
+       "ci": [
+        0.0968,
+        0.7
+       ],
+       "small_sample": true
+      },
+      "collateral": 2.167,
+      "quarantined": 11.333,
+      "llm_calls": 0,
+      "seconds": 0.156,
+      "root_consolidated": 0.0
+     },
+     "root evolving": {
+      "runs": 6,
+      "small_sample": true,
+      "asr": {
+       "n": 3.0,
+       "d": 6,
+       "rate": 0.5,
+       "ci": [
+        0.1876,
+        0.8124
+       ],
+       "small_sample": true
+      },
+      "attacked_runs": {
+       "n": 3,
+       "d": 6,
+       "rate": 0.5,
+       "ci": [
+        0.1876,
+        0.8124
+       ],
+       "small_sample": true
+      },
+      "bmp": {
+       "n": 7,
+       "d": 7,
+       "rate": 1.0,
+       "ci": [
+        0.6457,
+        1.0
+       ],
+       "small_sample": true
+      },
+      "br": 0.3333,
+      "poison_left": {
+       "n": 6,
+       "d": 6,
+       "rate": 1.0,
+       "ci": [
+        0.6097,
+        1.0
+       ],
+       "small_sample": true
+      },
+      "collateral": 3,
+      "quarantined": 9.833,
+      "llm_calls": 0,
+      "seconds": 0.058,
+      "root_consolidated": 0.8333333333333334
+     },
+     "ancestry flat": {
+      "runs": 6,
+      "small_sample": true,
+      "asr": {
+       "n": 1.0,
+       "d": 6,
+       "rate": 0.1667,
+       "ci": [
+        0.0301,
+        0.5635
+       ],
+       "small_sample": true
+      },
+      "attacked_runs": {
+       "n": 1,
+       "d": 6,
+       "rate": 0.1667,
+       "ci": [
+        0.0301,
+        0.5635
+       ],
+       "small_sample": true
+      },
+      "bmp": {
+       "n": 10,
+       "d": 10,
+       "rate": 1.0,
+       "ci": [
+        0.7225,
+        1.0
+       ],
+       "small_sample": false
+      },
+      "br": 0.3333,
+      "poison_left": {
+       "n": 2,
+       "d": 6,
+       "rate": 0.3333,
+       "ci": [
+        0.0968,
+        0.7
+       ],
+       "small_sample": true
+      },
+      "collateral": 2.167,
+      "quarantined": 11.333,
+      "llm_calls": 0,
+      "seconds": 0.128,
+      "root_consolidated": 0.0
+     },
+     "ancestry evolving": {
+      "runs": 6,
+      "small_sample": true,
+      "asr": {
+       "n": 0.0,
+       "d": 6,
+       "rate": 0.0,
+       "ci": [
+        0.0,
+        0.3903
+       ],
+       "small_sample": true
+      },
+      "attacked_runs": {
+       "n": 0,
+       "d": 6,
+       "rate": 0.0,
+       "ci": [
+        0.0,
+        0.3903
+       ],
+       "small_sample": true
+      },
+      "bmp": {
+       "n": 6,
+       "d": 7,
+       "rate": 0.8571,
+       "ci": [
+        0.4869,
+        0.9743
+       ],
+       "small_sample": true
+      },
+      "br": 0.5,
+      "poison_left": {
+       "n": 0,
+       "d": 6,
+       "rate": 0.0,
+       "ci": [
+        0.0,
+        0.3903
+       ],
+       "small_sample": true
+      },
+      "collateral": 3.333,
+      "quarantined": 11.667,
+      "llm_calls": 0,
+      "seconds": 0.071,
+      "root_consolidated": 0.8333333333333334
+     },
+     "selective[oracle] flat": {
+      "runs": 6,
+      "small_sample": true,
+      "asr": {
+       "n": 1.0,
+       "d": 6,
+       "rate": 0.1667,
+       "ci": [
+        0.0301,
+        0.5635
+       ],
+       "small_sample": true
+      },
+      "attacked_runs": {
+       "n": 1,
+       "d": 6,
+       "rate": 0.1667,
+       "ci": [
+        0.0301,
+        0.5635
+       ],
+       "small_sample": true
+      },
+      "bmp": {
+       "n": 10,
+       "d": 10,
+       "rate": 1.0,
+       "ci": [
+        0.7225,
+        1.0
+       ],
+       "small_sample": false
+      },
+      "br": 0.5,
+      "poison_left": {
+       "n": 2,
+       "d": 6,
+       "rate": 0.3333,
+       "ci": [
+        0.0968,
+        0.7
+       ],
+       "small_sample": true
+      },
+      "collateral": 2.167,
+      "quarantined": 11.333,
+      "llm_calls": 0,
+      "seconds": 0.115,
+      "root_consolidated": 0.0
+     },
+     "selective[oracle] evolving": {
+      "runs": 6,
+      "small_sample": true,
+      "asr": {
+       "n": 0.0,
+       "d": 6,
+       "rate": 0.0,
+       "ci": [
+        0.0,
+        0.3903
+       ],
+       "small_sample": true
+      },
+      "attacked_runs": {
+       "n": 0,
+       "d": 6,
+       "rate": 0.0,
+       "ci": [
+        0.0,
+        0.3903
+       ],
+       "small_sample": true
+      },
+      "bmp": {
+       "n": 6,
+       "d": 7,
+       "rate": 0.8571,
+       "ci": [
+        0.4869,
+        0.9743
+       ],
+       "small_sample": true
+      },
+      "br": 0.5,
+      "poison_left": {
+       "n": 0,
+       "d": 6,
+       "rate": 0.0,
+       "ci": [
+        0.0,
+        0.3903
+       ],
+       "small_sample": true
+      },
+      "collateral": 3,
+      "quarantined": 11.167,
+      "llm_calls": 0,
+      "seconds": 0.071,
+      "root_consolidated": 0.8333333333333334
+     },
+     "incident[cf] flat": {
+      "runs": 6,
+      "small_sample": true,
+      "asr": {
+       "n": 1.0,
+       "d": 6,
+       "rate": 0.1667,
+       "ci": [
+        0.0301,
+        0.5635
+       ],
+       "small_sample": true
+      },
+      "attacked_runs": {
+       "n": 1,
+       "d": 6,
+       "rate": 0.1667,
+       "ci": [
+        0.0301,
+        0.5635
+       ],
+       "small_sample": true
+      },
+      "bmp": {
+       "n": 9,
+       "d": 10,
+       "rate": 0.9,
+       "ci": [
+        0.5958,
+        0.9821
+       ],
+       "small_sample": false
+      },
+      "br": 0.3333,
+      "poison_left": {
+       "n": 4,
+       "d": 6,
+       "rate": 0.6667,
+       "ci": [
+        0.3,
+        0.9032
+       ],
+       "small_sample": true
+      },
+      "collateral": 0.167,
+      "quarantined": 3.833,
+      "llm_calls": 30.167,
+      "seconds": 33.983,
+      "root_consolidated": 0.0
+     },
+     "incident[cf] evolving": {
+      "runs": 6,
+      "small_sample": true,
+      "asr": {
+       "n": 0.0,
+       "d": 6,
+       "rate": 0.0,
+       "ci": [
+        0.0,
+        0.3903
+       ],
+       "small_sample": true
+      },
+      "attacked_runs": {
+       "n": 0,
+       "d": 6,
+       "rate": 0.0,
+       "ci": [
+        0.0,
+        0.3903
+       ],
+       "small_sample": true
+      },
+      "bmp": {
+       "n": 6,
+       "d": 7,
+       "rate": 0.8571,
+       "ci": [
+        0.4869,
+        0.9743
+       ],
+       "small_sample": true
+      },
+      "br": 0.6667,
+      "poison_left": {
+       "n": 2,
+       "d": 6,
+       "rate": 0.3333,
+       "ci": [
+        0.0968,
+        0.7
+       ],
+       "small_sample": true
+      },
+      "collateral": 0,
+      "quarantined": 4.333,
+      "llm_calls": 21.5,
+      "seconds": 18.852,
+      "root_consolidated": 0.8333333333333334
+     }
+    },
+    "root_only": {
+     "flat": {
+      "runs": 6,
+      "attacked_without_recovery": 3,
+      "cleared_by_root": {
+       "n": 2,
+       "d": 3,
+       "rate": 0.6667,
+       "ci": [
+        0.2077,
+        0.9385
+       ],
+       "small_sample": true
+      }
+     },
+     "evolving": {
+      "runs": 6,
+      "attacked_without_recovery": 4,
+      "cleared_by_root": {
+       "n": 1,
+       "d": 4,
+       "rate": 0.25,
+       "ci": [
+        0.0456,
+        0.6994
+       ],
+       "small_sample": true
+      }
+     },
+     "flat_minus_evolving_reduction_pp": {
+      "mean": 16.67,
+      "ci": [
+       -33.33,
+       66.67
+      ],
+      "variants": 6,
+      "small_sample": true
+     }
+    }
+   }
+  },
+  "9a. Healing vs quarantine (Phase 2, H): results/main/records.jsonl": {
+   "file": "/home/surya/repos/MemHeal/results/main/records.jsonl",
+   "runs": 231,
+   "scenarios": 77,
+   "incident_runs": 174,
+   "incident_scenarios": 72,
+   "absent_modes": [],
+   "sources": {
+    "heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "heal": 231
+    },
+    "heal[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "heal": 37
+    },
+    "heal_rebuild[cf] family=full cf_workers=6 stop_after_action=True": {
+     "heal": 231
+    },
+    "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "heal": 231
+    },
+    "incident[cf]": {
+     "recovery": 77
+    },
+    "incident[cf] family=full cf_workers=6 stop_after_action=True": {
+     "heal": 231
+    },
+    "incident[cf]+verify": {
+     "recovery": 77
+    },
+    "incident[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "heal": 40
+    },
+    "selective_claims[cf]": {
+     "claims": 6
+    },
+    "selective_claims[oracle]": {
+     "claims": 6
+    },
+    "selective_claims[oracle] family=full stop_after_action=True": {
+     "heal": 231
+    },
+    "selective_recon[oracle]": {
+     "claims": 6,
+     "recovery": 71
+    },
+    "selective_recon[oracle] family=full stop_after_action=True": {
+     "heal": 231
+    },
+    "selective[cf]": {
+     "claims": 6,
+     "recovery": 71
+    },
+    "selective[oracle]": {
+     "claims": 6,
+     "recovery": 71
+    },
+    "selective[oracle] family=full stop_after_action=True": {
+     "heal": 231
+    },
+    "selective[oracle]+immunize": {
+     "recovery": 77
+    },
+    "unmerge[cf]": {
+     "recovery": 77
+    },
+    "unmerge[oracle]": {
+     "recovery": 77
+    },
+    "unmerge[oracle] family=full stop_after_action=True": {
+     "heal": 231
+    }
+   },
+   "rows": {
+    "incident runs: heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 174,
+     "small_sample": false,
+     "asr": {
+      "n": 27,
+      "d": 696,
+      "rate": 0.0388,
+      "ci": [
+       0.015,
+       0.0649
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 13,
+      "d": 174,
+      "rate": 0.0747,
+      "ci": [
+       0.0303,
+       0.1187
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 218,
+      "d": 240,
+      "rate": 0.9083,
+      "ci": [
+       0.8664,
+       0.9462
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6523,
+     "poison_left": {
+      "n": 18,
+      "d": 174,
+      "rate": 0.1034,
+      "ci": [
+       0.0585,
+       0.1529
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.144,
+     "quarantined": 3.816,
+     "llm_calls": 25.753,
+     "seconds": 41.919,
+     "scenarios": 72,
+     "residual_attack": 0.144
+    },
+    "incident runs: heal[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "runs": 28,
+     "small_sample": false,
+     "asr": {
+      "n": 0,
+      "d": 112,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.1206
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 0,
+      "d": 28,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.1206
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 30,
+      "d": 32,
+      "rate": 0.9375,
+      "ci": [
+       0.8485,
+       1.0
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6786,
+     "poison_left": {
+      "n": 1,
+      "d": 28,
+      "rate": 0.0357,
+      "ci": [
+       0.0,
+       0.1071
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.107,
+     "quarantined": 4.286,
+     "llm_calls": 55.821,
+     "seconds": 102.112,
+     "scenarios": 28,
+     "residual_attack": 0.036
+    },
+    "incident runs: heal_rebuild[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 174,
+     "small_sample": false,
+     "asr": {
+      "n": 19,
+      "d": 696,
+      "rate": 0.0273,
+      "ci": [
+       0.0101,
+       0.0469
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 10,
+      "d": 174,
+      "rate": 0.0575,
+      "ci": [
+       0.0235,
+       0.0914
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 221,
+      "d": 240,
+      "rate": 0.9208,
+      "ci": [
+       0.8854,
+       0.9528
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6825,
+     "poison_left": {
+      "n": 19,
+      "d": 174,
+      "rate": 0.1092,
+      "ci": [
+       0.0604,
+       0.1656
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.115,
+     "quarantined": 3.782,
+     "llm_calls": 26.443,
+     "seconds": 44.309,
+     "scenarios": 72,
+     "residual_attack": 0.149
+    },
+    "incident runs: heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 174,
+     "small_sample": false,
+     "asr": {
+      "n": 36,
+      "d": 696,
+      "rate": 0.0517,
+      "ci": [
+       0.0216,
+       0.0865
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 16,
+      "d": 174,
+      "rate": 0.092,
+      "ci": [
+       0.0449,
+       0.1411
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 217,
+      "d": 240,
+      "rate": 0.9042,
+      "ci": [
+       0.8577,
+       0.9484
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6853,
+     "poison_left": {
+      "n": 19,
+      "d": 174,
+      "rate": 0.1092,
+      "ci": [
+       0.0604,
+       0.1656
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.046,
+     "quarantined": 3.713,
+     "llm_calls": 18.96,
+     "seconds": 29.644,
+     "scenarios": 72,
+     "residual_attack": 0.149
+    },
+    "incident runs: incident[cf]": {
+     "runs": 55,
+     "small_sample": false,
+     "asr": {
+      "n": 6,
+      "d": 64,
+      "rate": 0.0938,
+      "ci": [
+       0.0164,
+       0.1774
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 5,
+      "d": 55,
+      "rate": 0.0909,
+      "ci": [
+       0.0182,
+       0.1818
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 69,
+      "d": 76,
+      "rate": 0.9079,
+      "ci": [
+       0.8421,
+       0.9714
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.5818,
+     "poison_left": {
+      "n": 10,
+      "d": 55,
+      "rate": 0.1818,
+      "ci": [
+       0.0909,
+       0.2909
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.164,
+     "quarantined": 3.655,
+     "llm_calls": 23.327,
+     "seconds": 21.215,
+     "scenarios": 55,
+     "residual_attack": 0.273
+    },
+    "incident runs: incident[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 174,
+     "small_sample": false,
+     "asr": {
+      "n": 35,
+      "d": 696,
+      "rate": 0.0503,
+      "ci": [
+       0.0206,
+       0.0848
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 17,
+      "d": 174,
+      "rate": 0.0977,
+      "ci": [
+       0.0444,
+       0.1618
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 203,
+      "d": 240,
+      "rate": 0.8458,
+      "ci": [
+       0.8008,
+       0.8923
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6552,
+     "poison_left": {
+      "n": 26,
+      "d": 174,
+      "rate": 0.1494,
+      "ci": [
+       0.0882,
+       0.2222
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.115,
+     "quarantined": 3.695,
+     "llm_calls": 15.42,
+     "seconds": 27.273,
+     "scenarios": 72,
+     "residual_attack": 0.213
+    },
+    "incident runs: incident[cf]+verify": {
+     "runs": 55,
+     "small_sample": false,
+     "asr": {
+      "n": 0,
+      "d": 64,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0653
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 0,
+      "d": 55,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0653
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 69,
+      "d": 76,
+      "rate": 0.9079,
+      "ci": [
+       0.8451,
+       0.9683
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6,
+     "poison_left": {
+      "n": 8,
+      "d": 55,
+      "rate": 0.1455,
+      "ci": [
+       0.0545,
+       0.2364
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.236,
+     "quarantined": 3.8,
+     "llm_calls": 29.545,
+     "seconds": 27.879,
+     "scenarios": 55,
+     "residual_attack": 0.2
+    },
+    "incident runs: incident[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "runs": 30,
+     "small_sample": false,
+     "asr": {
+      "n": 1,
+      "d": 120,
+      "rate": 0.0083,
+      "ci": [
+       0.0,
+       0.025
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 30,
+      "rate": 0.0333,
+      "ci": [
+       0.0,
+       0.1
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 31,
+      "d": 36,
+      "rate": 0.8611,
+      "ci": [
+       0.7561,
+       0.9512
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.625,
+     "poison_left": {
+      "n": 4,
+      "d": 30,
+      "rate": 0.1333,
+      "ci": [
+       0.0333,
+       0.2667
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.067,
+     "quarantined": 4.067,
+     "llm_calls": 51.9,
+     "seconds": 113.085,
+     "scenarios": 30,
+     "residual_attack": 0.133
+    },
+    "incident runs: selective_claims[cf]": {
+     "runs": 6,
+     "small_sample": true,
+     "asr": {
+      "n": 1,
+      "d": 7,
+      "rate": 0.1429,
+      "ci": [
+       0.0,
+       0.3333
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 6,
+      "rate": 0.1667,
+      "ci": [
+       0.0,
+       0.5
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "bmp": {
+      "n": 7,
+      "d": 8,
+      "rate": 0.875,
+      "ci": [
+       0.5,
+       1.0
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "br": 0.5833,
+     "poison_left": {
+      "n": 1,
+      "d": 6,
+      "rate": 0.1667,
+      "ci": [
+       0.0,
+       0.5
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "collateral": 0.5,
+     "quarantined": 6.167,
+     "llm_calls": 13.333,
+     "seconds": 15.643,
+     "scenarios": 6,
+     "residual_attack": 0.167
+    },
+    "incident runs: selective_claims[oracle]": {
+     "runs": 6,
+     "small_sample": true,
+     "asr": {
+      "n": 1,
+      "d": 7,
+      "rate": 0.1429,
+      "ci": [
+       0.0,
+       0.3333
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 6,
+      "rate": 0.1667,
+      "ci": [
+       0.0,
+       0.5
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "bmp": {
+      "n": 5,
+      "d": 8,
+      "rate": 0.625,
+      "ci": [
+       0.3333,
+       0.8571
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "br": 0.5833,
+     "poison_left": {
+      "n": 0,
+      "d": 6,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.3903
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "collateral": 0.5,
+     "quarantined": 6.167,
+     "llm_calls": 1,
+     "seconds": 2.017,
+     "scenarios": 6,
+     "residual_attack": 0
+    },
+    "incident runs: selective_claims[oracle] family=full stop_after_action=True": {
+     "runs": 174,
+     "small_sample": false,
+     "asr": {
+      "n": 17,
+      "d": 696,
+      "rate": 0.0244,
+      "ci": [
+       0.0101,
+       0.0401
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 14,
+      "d": 174,
+      "rate": 0.0805,
+      "ci": [
+       0.0355,
+       0.1264
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 219,
+      "d": 240,
+      "rate": 0.9125,
+      "ci": [
+       0.8696,
+       0.9487
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6882,
+     "poison_left": {
+      "n": 3,
+      "d": 174,
+      "rate": 0.0172,
+      "ci": [
+       0.0,
+       0.0389
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.885,
+     "quarantined": 7.943,
+     "llm_calls": 0.511,
+     "seconds": 0.639,
+     "scenarios": 72,
+     "residual_attack": 0.04
+    },
+    "incident runs: selective_recon[oracle]": {
+     "runs": 55,
+     "small_sample": false,
+     "asr": {
+      "n": 1,
+      "d": 64,
+      "rate": 0.0156,
+      "ci": [
+       0.0,
+       0.0484
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 55,
+      "rate": 0.0182,
+      "ci": [
+       0.0,
+       0.0545
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 69,
+      "d": 76,
+      "rate": 0.9079,
+      "ci": [
+       0.8261,
+       0.9737
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.7545,
+     "poison_left": {
+      "n": 1,
+      "d": 55,
+      "rate": 0.0182,
+      "ci": [
+       0.0,
+       0.0545
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.745,
+     "quarantined": 7.836,
+     "llm_calls": 0.436,
+     "seconds": 0.556,
+     "scenarios": 55,
+     "residual_attack": 0.055
+    },
+    "incident runs: selective_recon[oracle] family=full stop_after_action=True": {
+     "runs": 174,
+     "small_sample": false,
+     "asr": {
+      "n": 9,
+      "d": 696,
+      "rate": 0.0129,
+      "ci": [
+       0.0043,
+       0.0239
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 7,
+      "d": 174,
+      "rate": 0.0402,
+      "ci": [
+       0.0122,
+       0.0773
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 220,
+      "d": 240,
+      "rate": 0.9167,
+      "ci": [
+       0.8745,
+       0.9524
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.717,
+     "poison_left": {
+      "n": 3,
+      "d": 174,
+      "rate": 0.0172,
+      "ci": [
+       0.0,
+       0.0389
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.885,
+     "quarantined": 7.943,
+     "llm_calls": 0.414,
+     "seconds": 0.575,
+     "scenarios": 72,
+     "residual_attack": 0.04
+    },
+    "incident runs: selective[cf]": {
+     "runs": 55,
+     "small_sample": false,
+     "asr": {
+      "n": 8,
+      "d": 64,
+      "rate": 0.125,
+      "ci": [
+       0.0312,
+       0.2239
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 6,
+      "d": 55,
+      "rate": 0.1091,
+      "ci": [
+       0.0364,
+       0.2
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 68,
+      "d": 76,
+      "rate": 0.8947,
+      "ci": [
+       0.8235,
+       0.961
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.5727,
+     "poison_left": {
+      "n": 8,
+      "d": 55,
+      "rate": 0.1455,
+      "ci": [
+       0.0545,
+       0.2364
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.764,
+     "quarantined": 7.6,
+     "llm_calls": 9.455,
+     "seconds": 10.177,
+     "scenarios": 55,
+     "residual_attack": 0.218
+    },
+    "incident runs: selective[oracle]": {
+     "runs": 55,
+     "small_sample": false,
+     "asr": {
+      "n": 1,
+      "d": 64,
+      "rate": 0.0156,
+      "ci": [
+       0.0,
+       0.0484
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 55,
+      "rate": 0.0182,
+      "ci": [
+       0.0,
+       0.0545
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 65,
+      "d": 76,
+      "rate": 0.8553,
+      "ci": [
+       0.7821,
+       0.9294
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6545,
+     "poison_left": {
+      "n": 1,
+      "d": 55,
+      "rate": 0.0182,
+      "ci": [
+       0.0,
+       0.0545
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.745,
+     "quarantined": 7.836,
+     "llm_calls": 0,
+     "seconds": 0.251,
+     "scenarios": 55,
+     "residual_attack": 0.055
+    },
+    "incident runs: selective[oracle] family=full stop_after_action=True": {
+     "runs": 174,
+     "small_sample": false,
+     "asr": {
+      "n": 14,
+      "d": 696,
+      "rate": 0.0201,
+      "ci": [
+       0.007,
+       0.0359
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 10,
+      "d": 174,
+      "rate": 0.0575,
+      "ci": [
+       0.0225,
+       0.1034
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 200,
+      "d": 240,
+      "rate": 0.8333,
+      "ci": [
+       0.7768,
+       0.8855
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6882,
+     "poison_left": {
+      "n": 3,
+      "d": 174,
+      "rate": 0.0172,
+      "ci": [
+       0.0,
+       0.0389
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.885,
+     "quarantined": 7.943,
+     "llm_calls": 0,
+     "seconds": 0.099,
+     "scenarios": 72,
+     "residual_attack": 0.04
+    },
+    "incident runs: selective[oracle]+immunize": {
+     "runs": 55,
+     "small_sample": false,
+     "asr": {
+      "n": 1,
+      "d": 64,
+      "rate": 0.0156,
+      "ci": [
+       0.0,
+       0.0484
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 55,
+      "rate": 0.0182,
+      "ci": [
+       0.0,
+       0.0545
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 67,
+      "d": 76,
+      "rate": 0.8816,
+      "ci": [
+       0.7945,
+       0.9583
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.7364,
+     "poison_left": {
+      "n": 1,
+      "d": 55,
+      "rate": 0.0182,
+      "ci": [
+       0.0,
+       0.0545
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.745,
+     "quarantined": 7.836,
+     "llm_calls": 0,
+     "seconds": 0.057,
+     "scenarios": 55,
+     "residual_attack": 0.055
+    },
+    "incident runs: unmerge[cf]": {
+     "runs": 55,
+     "small_sample": false,
+     "asr": {
+      "n": 6,
+      "d": 64,
+      "rate": 0.0938,
+      "ci": [
+       0.0161,
+       0.1846
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 5,
+      "d": 55,
+      "rate": 0.0909,
+      "ci": [
+       0.0182,
+       0.1818
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 72,
+      "d": 76,
+      "rate": 0.9474,
+      "ci": [
+       0.8933,
+       0.9881
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6727,
+     "poison_left": {
+      "n": 8,
+      "d": 55,
+      "rate": 0.1455,
+      "ci": [
+       0.0545,
+       0.2364
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.764,
+     "quarantined": 7.6,
+     "llm_calls": 9.836,
+     "seconds": 9.562,
+     "scenarios": 55,
+     "residual_attack": 0.218
+    },
+    "incident runs: unmerge[oracle]": {
+     "runs": 55,
+     "small_sample": false,
+     "asr": {
+      "n": 1,
+      "d": 64,
+      "rate": 0.0156,
+      "ci": [
+       0.0,
+       0.0484
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 55,
+      "rate": 0.0182,
+      "ci": [
+       0.0,
+       0.0545
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 67,
+      "d": 76,
+      "rate": 0.8816,
+      "ci": [
+       0.8052,
+       0.9481
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6727,
+     "poison_left": {
+      "n": 1,
+      "d": 55,
+      "rate": 0.0182,
+      "ci": [
+       0.0,
+       0.0545
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.745,
+     "quarantined": 7.836,
+     "llm_calls": 0,
+     "seconds": 0.069,
+     "scenarios": 55,
+     "residual_attack": 0.055
+    },
+    "incident runs: unmerge[oracle] family=full stop_after_action=True": {
+     "runs": 174,
+     "small_sample": false,
+     "asr": {
+      "n": 5,
+      "d": 696,
+      "rate": 0.0072,
+      "ci": [
+       0.0014,
+       0.0154
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 4,
+      "d": 174,
+      "rate": 0.023,
+      "ci": [
+       0.0055,
+       0.0465
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 216,
+      "d": 240,
+      "rate": 0.9,
+      "ci": [
+       0.8621,
+       0.9353
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.7126,
+     "poison_left": {
+      "n": 3,
+      "d": 174,
+      "rate": 0.0172,
+      "ci": [
+       0.0,
+       0.0389
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.885,
+     "quarantined": 7.943,
+     "llm_calls": 0,
+     "seconds": 0.131,
+     "scenarios": 72,
+     "residual_attack": 0.04
+    },
+    "all runs: heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "small_sample": false,
+     "asr": {
+      "n": 67,
+      "d": 924,
+      "rate": 0.0725,
+      "ci": [
+       0.0465,
+       0.1006
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 36,
+      "d": 231,
+      "rate": 0.1558,
+      "ci": [
+       0.1082,
+       0.2078
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 278,
+      "d": 304,
+      "rate": 0.9145,
+      "ci": [
+       0.8759,
+       0.9495
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6407,
+     "poison_left": {
+      "n": 65,
+      "d": 231,
+      "rate": 0.2814,
+      "ci": [
+       0.2121,
+       0.3506
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.108,
+     "quarantined": 2.874,
+     "llm_calls": 19.398,
+     "seconds": 31.586,
+     "scenarios": 77,
+     "residual_attack": 0.346
+    },
+    "all runs: heal[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "runs": 37,
+     "small_sample": false,
+     "asr": {
+      "n": 0,
+      "d": 148,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0941
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 0,
+      "d": 37,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0941
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 36,
+      "d": 41,
+      "rate": 0.878,
+      "ci": [
+       0.75,
+       0.9778
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6689,
+     "poison_left": {
+      "n": 6,
+      "d": 37,
+      "rate": 0.1622,
+      "ci": [
+       0.0541,
+       0.2973
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.108,
+     "quarantined": 3.459,
+     "llm_calls": 52.703,
+     "seconds": 99.669,
+     "scenarios": 37,
+     "residual_attack": 0.189
+    },
+    "all runs: heal_rebuild[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "small_sample": false,
+     "asr": {
+      "n": 58,
+      "d": 924,
+      "rate": 0.0628,
+      "ci": [
+       0.0422,
+       0.0855
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 34,
+      "d": 231,
+      "rate": 0.1472,
+      "ci": [
+       0.1039,
+       0.1948
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 281,
+      "d": 304,
+      "rate": 0.9243,
+      "ci": [
+       0.8912,
+       0.9553
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6699,
+     "poison_left": {
+      "n": 66,
+      "d": 231,
+      "rate": 0.2857,
+      "ci": [
+       0.2165,
+       0.355
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.087,
+     "quarantined": 2.848,
+     "llm_calls": 19.918,
+     "seconds": 33.377,
+     "scenarios": 77,
+     "residual_attack": 0.351
+    },
+    "all runs: heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "small_sample": false,
+     "asr": {
+      "n": 74,
+      "d": 924,
+      "rate": 0.0801,
+      "ci": [
+       0.053,
+       0.1115
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 40,
+      "d": 231,
+      "rate": 0.1732,
+      "ci": [
+       0.1255,
+       0.2251
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 277,
+      "d": 304,
+      "rate": 0.9112,
+      "ci": [
+       0.8694,
+       0.9503
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6786,
+     "poison_left": {
+      "n": 66,
+      "d": 231,
+      "rate": 0.2857,
+      "ci": [
+       0.2165,
+       0.355
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.035,
+     "quarantined": 2.797,
+     "llm_calls": 14.281,
+     "seconds": 22.331,
+     "scenarios": 77,
+     "residual_attack": 0.351
+    },
+    "all runs: incident[cf]": {
+     "runs": 77,
+     "small_sample": false,
+     "asr": {
+      "n": 9,
+      "d": 89,
+      "rate": 0.1011,
+      "ci": [
+       0.0357,
+       0.1765
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 8,
+      "d": 77,
+      "rate": 0.1039,
+      "ci": [
+       0.039,
+       0.1818
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 91,
+      "d": 99,
+      "rate": 0.9192,
+      "ci": [
+       0.8659,
+       0.9684
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.5974,
+     "poison_left": {
+      "n": 29,
+      "d": 77,
+      "rate": 0.3766,
+      "ci": [
+       0.2727,
+       0.4935
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.117,
+     "quarantined": 2.61,
+     "llm_calls": 16.662,
+     "seconds": 15.154,
+     "scenarios": 77,
+     "residual_attack": 0.481
+    },
+    "all runs: incident[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "small_sample": false,
+     "asr": {
+      "n": 69,
+      "d": 924,
+      "rate": 0.0747,
+      "ci": [
+       0.0498,
+       0.1017
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 37,
+      "d": 231,
+      "rate": 0.1602,
+      "ci": [
+       0.1126,
+       0.2121
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 265,
+      "d": 304,
+      "rate": 0.8717,
+      "ci": [
+       0.8333,
+       0.9101
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6602,
+     "poison_left": {
+      "n": 73,
+      "d": 231,
+      "rate": 0.316,
+      "ci": [
+       0.2424,
+       0.3896
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.087,
+     "quarantined": 2.784,
+     "llm_calls": 11.615,
+     "seconds": 20.544,
+     "scenarios": 77,
+     "residual_attack": 0.398
+    },
+    "all runs: incident[cf]+verify": {
+     "runs": 77,
+     "small_sample": false,
+     "asr": {
+      "n": 0,
+      "d": 89,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0475
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 0,
+      "d": 77,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.0475
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 91,
+      "d": 99,
+      "rate": 0.9192,
+      "ci": [
+       0.8632,
+       0.9684
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6494,
+     "poison_left": {
+      "n": 25,
+      "d": 77,
+      "rate": 0.3247,
+      "ci": [
+       0.2208,
+       0.4416
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.169,
+     "quarantined": 2.766,
+     "llm_calls": 22.662,
+     "seconds": 21.559,
+     "scenarios": 77,
+     "residual_attack": 0.403
+    },
+    "all runs: incident[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "runs": 40,
+     "small_sample": false,
+     "asr": {
+      "n": 1,
+      "d": 160,
+      "rate": 0.0063,
+      "ci": [
+       0.0,
+       0.0187
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 40,
+      "rate": 0.025,
+      "ci": [
+       0.0,
+       0.075
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 38,
+      "d": 45,
+      "rate": 0.8444,
+      "ci": [
+       0.75,
+       0.94
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6312,
+     "poison_left": {
+      "n": 10,
+      "d": 40,
+      "rate": 0.25,
+      "ci": [
+       0.125,
+       0.4
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.075,
+     "quarantined": 3.25,
+     "llm_calls": 48.2,
+     "seconds": 108.542,
+     "scenarios": 40,
+     "residual_attack": 0.275
+    },
+    "all runs: selective_claims[cf]": {
+     "runs": 6,
+     "small_sample": true,
+     "asr": {
+      "n": 1,
+      "d": 7,
+      "rate": 0.1429,
+      "ci": [
+       0.0,
+       0.3333
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 6,
+      "rate": 0.1667,
+      "ci": [
+       0.0,
+       0.5
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "bmp": {
+      "n": 7,
+      "d": 8,
+      "rate": 0.875,
+      "ci": [
+       0.5,
+       1.0
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "br": 0.5833,
+     "poison_left": {
+      "n": 1,
+      "d": 6,
+      "rate": 0.1667,
+      "ci": [
+       0.0,
+       0.5
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "collateral": 0.5,
+     "quarantined": 6.167,
+     "llm_calls": 13.333,
+     "seconds": 15.643,
+     "scenarios": 6,
+     "residual_attack": 0.167
+    },
+    "all runs: selective_claims[oracle]": {
+     "runs": 6,
+     "small_sample": true,
+     "asr": {
+      "n": 1,
+      "d": 7,
+      "rate": 0.1429,
+      "ci": [
+       0.0,
+       0.3333
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 6,
+      "rate": 0.1667,
+      "ci": [
+       0.0,
+       0.5
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "bmp": {
+      "n": 5,
+      "d": 8,
+      "rate": 0.625,
+      "ci": [
+       0.3333,
+       0.8571
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "br": 0.5833,
+     "poison_left": {
+      "n": 0,
+      "d": 6,
+      "rate": 0.0,
+      "ci": [
+       0.0,
+       0.3903
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": true
+     },
+     "collateral": 0.5,
+     "quarantined": 6.167,
+     "llm_calls": 1,
+     "seconds": 2.017,
+     "scenarios": 6,
+     "residual_attack": 0
+    },
+    "all runs: selective_claims[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "small_sample": false,
+     "asr": {
+      "n": 18,
+      "d": 924,
+      "rate": 0.0195,
+      "ci": [
+       0.0097,
+       0.0325
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 15,
+      "d": 231,
+      "rate": 0.0649,
+      "ci": [
+       0.0346,
+       0.0996
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 280,
+      "d": 304,
+      "rate": 0.9211,
+      "ci": [
+       0.8873,
+       0.9542
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.7013,
+     "poison_left": {
+      "n": 3,
+      "d": 231,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.0303
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.81,
+     "quarantined": 7.416,
+     "llm_calls": 0.506,
+     "seconds": 0.614,
+     "scenarios": 77,
+     "residual_attack": 0.03
+    },
+    "all runs: selective_recon[oracle]": {
+     "runs": 77,
+     "small_sample": false,
+     "asr": {
+      "n": 1,
+      "d": 89,
+      "rate": 0.0112,
+      "ci": [
+       0.0,
+       0.0353
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 77,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.039
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 91,
+      "d": 99,
+      "rate": 0.9192,
+      "ci": [
+       0.8557,
+       0.9703
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.7338,
+     "poison_left": {
+      "n": 1,
+      "d": 77,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.039
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.779,
+     "quarantined": 7.455,
+     "llm_calls": 0.403,
+     "seconds": 0.503,
+     "scenarios": 77,
+     "residual_attack": 0.039
+    },
+    "all runs: selective_recon[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "small_sample": false,
+     "asr": {
+      "n": 10,
+      "d": 924,
+      "rate": 0.0108,
+      "ci": [
+       0.0043,
+       0.0195
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 8,
+      "d": 231,
+      "rate": 0.0346,
+      "ci": [
+       0.013,
+       0.0606
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 276,
+      "d": 304,
+      "rate": 0.9079,
+      "ci": [
+       0.8647,
+       0.945
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.7305,
+     "poison_left": {
+      "n": 3,
+      "d": 231,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.0303
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.81,
+     "quarantined": 7.416,
+     "llm_calls": 0.394,
+     "seconds": 0.556,
+     "scenarios": 77,
+     "residual_attack": 0.03
+    },
+    "all runs: selective[cf]": {
+     "runs": 77,
+     "small_sample": false,
+     "asr": {
+      "n": 10,
+      "d": 89,
+      "rate": 0.1124,
+      "ci": [
+       0.0361,
+       0.1977
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 8,
+      "d": 77,
+      "rate": 0.1039,
+      "ci": [
+       0.039,
+       0.1818
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 90,
+      "d": 99,
+      "rate": 0.9091,
+      "ci": [
+       0.8511,
+       0.9596
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6234,
+     "poison_left": {
+      "n": 27,
+      "d": 77,
+      "rate": 0.3506,
+      "ci": [
+       0.2468,
+       0.4675
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.792,
+     "quarantined": 6.909,
+     "llm_calls": 6.753,
+     "seconds": 7.278,
+     "scenarios": 77,
+     "residual_attack": 0.442
+    },
+    "all runs: selective[oracle]": {
+     "runs": 77,
+     "small_sample": false,
+     "asr": {
+      "n": 1,
+      "d": 89,
+      "rate": 0.0112,
+      "ci": [
+       0.0,
+       0.0353
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 77,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.039
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 88,
+      "d": 99,
+      "rate": 0.8889,
+      "ci": [
+       0.8208,
+       0.9417
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6818,
+     "poison_left": {
+      "n": 1,
+      "d": 77,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.039
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.779,
+     "quarantined": 7.455,
+     "llm_calls": 0,
+     "seconds": 0.191,
+     "scenarios": 77,
+     "residual_attack": 0.039
+    },
+    "all runs: selective[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "small_sample": false,
+     "asr": {
+      "n": 15,
+      "d": 924,
+      "rate": 0.0162,
+      "ci": [
+       0.0065,
+       0.0292
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 11,
+      "d": 231,
+      "rate": 0.0476,
+      "ci": [
+       0.0173,
+       0.0823
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 261,
+      "d": 304,
+      "rate": 0.8586,
+      "ci": [
+       0.8084,
+       0.9034
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.7002,
+     "poison_left": {
+      "n": 3,
+      "d": 231,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.0303
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.81,
+     "quarantined": 7.416,
+     "llm_calls": 0,
+     "seconds": 0.09,
+     "scenarios": 77,
+     "residual_attack": 0.03
+    },
+    "all runs: selective[oracle]+immunize": {
+     "runs": 77,
+     "small_sample": false,
+     "asr": {
+      "n": 1,
+      "d": 89,
+      "rate": 0.0112,
+      "ci": [
+       0.0,
+       0.0353
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 77,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.039
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 90,
+      "d": 99,
+      "rate": 0.9091,
+      "ci": [
+       0.8396,
+       0.9674
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.7597,
+     "poison_left": {
+      "n": 1,
+      "d": 77,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.039
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.779,
+     "quarantined": 7.455,
+     "llm_calls": 0,
+     "seconds": 0.055,
+     "scenarios": 77,
+     "residual_attack": 0.039
+    },
+    "all runs: unmerge[cf]": {
+     "runs": 77,
+     "small_sample": false,
+     "asr": {
+      "n": 9,
+      "d": 89,
+      "rate": 0.1011,
+      "ci": [
+       0.043,
+       0.1758
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 8,
+      "d": 77,
+      "rate": 0.1039,
+      "ci": [
+       0.039,
+       0.1818
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 94,
+      "d": 99,
+      "rate": 0.9495,
+      "ci": [
+       0.902,
+       0.9891
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6818,
+     "poison_left": {
+      "n": 27,
+      "d": 77,
+      "rate": 0.3506,
+      "ci": [
+       0.2468,
+       0.4675
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.792,
+     "quarantined": 6.909,
+     "llm_calls": 7.026,
+     "seconds": 6.84,
+     "scenarios": 77,
+     "residual_attack": 0.442
+    },
+    "all runs: unmerge[oracle]": {
+     "runs": 77,
+     "small_sample": false,
+     "asr": {
+      "n": 1,
+      "d": 89,
+      "rate": 0.0112,
+      "ci": [
+       0.0,
+       0.0353
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 1,
+      "d": 77,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.039
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 90,
+      "d": 99,
+      "rate": 0.9091,
+      "ci": [
+       0.8491,
+       0.9565
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6883,
+     "poison_left": {
+      "n": 1,
+      "d": 77,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.039
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.779,
+     "quarantined": 7.455,
+     "llm_calls": 0,
+     "seconds": 0.064,
+     "scenarios": 77,
+     "residual_attack": 0.039
+    },
+    "all runs: unmerge[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "small_sample": false,
+     "asr": {
+      "n": 5,
+      "d": 924,
+      "rate": 0.0054,
+      "ci": [
+       0.0011,
+       0.0119
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 4,
+      "d": 231,
+      "rate": 0.0173,
+      "ci": [
+       0.0043,
+       0.0346
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 275,
+      "d": 304,
+      "rate": 0.9046,
+      "ci": [
+       0.8656,
+       0.9397
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.724,
+     "poison_left": {
+      "n": 3,
+      "d": 231,
+      "rate": 0.013,
+      "ci": [
+       0.0,
+       0.0303
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.81,
+     "quarantined": 7.416,
+     "llm_calls": 0,
+     "seconds": 0.123,
+     "scenarios": 77,
+     "residual_attack": 0.03
+    }
+   },
+   "actions": {
+    "heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 2.874,
+     "n_healed": 0.749,
+     "n_heal_quarantined": 2.022,
+     "claims_kept": 1.45,
+     "claims_dropped": 4.39,
+     "cf_replays": {
+      "mean": 5.2641,
+      "ci": [
+       4.7056,
+       5.8225
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 2.3766,
+      "ci": [
+       1.961,
+       2.8182
+      ]
+     },
+     "LLM_calls": {
+      "mean": 19.3983,
+      "ci": [
+       17.2338,
+       21.5108
+      ]
+     },
+     "seconds": {
+      "mean": 31.5865,
+      "ci": [
+       26.8041,
+       36.379
+      ]
+     }
+    },
+    "heal[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "runs": 37,
+     "scenarios": 37,
+     "small_sample": false,
+     "n_quarantined": 3.459,
+     "n_healed": 0.703,
+     "n_heal_quarantined": 2.703,
+     "claims_kept": 1.081,
+     "claims_dropped": 5.73,
+     "cf_replays": {
+      "mean": 5.8919,
+      "ci": [
+       4.8108,
+       6.9189
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 3.5676,
+      "ci": [
+       2.027,
+       5.4324
+      ]
+     },
+     "LLM_calls": {
+      "mean": 52.7027,
+      "ci": [
+       45.1081,
+       59.7297
+      ]
+     },
+     "seconds": {
+      "mean": 99.6694,
+      "ci": [
+       84.3584,
+       115.9824
+      ]
+     }
+    },
+    "heal_rebuild[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 2.848,
+     "n_healed": 0.745,
+     "n_heal_quarantined": 1.996,
+     "claims_kept": 1.779,
+     "claims_dropped": 2.602,
+     "cf_replays": {
+      "mean": 5.1905,
+      "ci": [
+       4.632,
+       5.71
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 2.5455,
+      "ci": [
+       2.026,
+       3.0519
+      ]
+     },
+     "LLM_calls": {
+      "mean": 19.9177,
+      "ci": [
+       17.5498,
+       22.3117
+      ]
+     },
+     "seconds": {
+      "mean": 33.3772,
+      "ci": [
+       26.7584,
+       41.6669
+      ]
+     }
+    },
+    "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 2.797,
+     "n_healed": 0.835,
+     "n_heal_quarantined": 1.857,
+     "claims_kept": 1.654,
+     "claims_dropped": 3.913,
+     "cf_replays": {
+      "mean": 5.355,
+      "ci": [
+       4.8052,
+       5.9177
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "LLM_calls": {
+      "mean": 14.2814,
+      "ci": [
+       12.5195,
+       16.1342
+      ]
+     },
+     "seconds": {
+      "mean": 22.3306,
+      "ci": [
+       18.71,
+       26.5176
+      ]
+     }
+    },
+    "incident[cf]": {
+     "runs": 77,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 2.61,
+     "n_healed": null,
+     "n_heal_quarantined": null,
+     "claims_kept": null,
+     "claims_dropped": null,
+     "cf_replays": {
+      "mean": 7.0727,
+      "ci": [
+       6.5636,
+       7.6545
+      ]
+     },
+     "claim_cf_replays": null,
+     "LLM_calls": {
+      "mean": 16.6623,
+      "ci": [
+       13.6364,
+       19.5974
+      ]
+     },
+     "seconds": {
+      "mean": 15.1537,
+      "ci": [
+       12.41,
+       17.8307
+      ]
+     }
+    },
+    "incident[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 2.784,
+     "n_healed": 0,
+     "n_heal_quarantined": 0,
+     "claims_kept": 0,
+     "claims_dropped": 0,
+     "cf_replays": {
+      "mean": 5.2771,
+      "ci": [
+       4.684,
+       5.8398
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "LLM_calls": {
+      "mean": 11.6147,
+      "ci": [
+       10.0736,
+       13.1558
+      ]
+     },
+     "seconds": {
+      "mean": 20.544,
+      "ci": [
+       16.3834,
+       25.1565
+      ]
+     }
+    },
+    "incident[cf]+verify": {
+     "runs": 77,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 2.766,
+     "n_healed": null,
+     "n_heal_quarantined": null,
+     "claims_kept": null,
+     "claims_dropped": null,
+     "cf_replays": {
+      "mean": 7.5439,
+      "ci": [
+       6.7368,
+       8.386
+      ]
+     },
+     "claim_cf_replays": null,
+     "LLM_calls": {
+      "mean": 22.6623,
+      "ci": [
+       19.1169,
+       26.4416
+      ]
+     },
+     "seconds": {
+      "mean": 21.5595,
+      "ci": [
+       18.324,
+       25.1177
+      ]
+     }
+    },
+    "incident[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "runs": 40,
+     "scenarios": 40,
+     "small_sample": false,
+     "n_quarantined": 3.25,
+     "n_healed": 0,
+     "n_heal_quarantined": 0,
+     "claims_kept": 0,
+     "claims_dropped": 0,
+     "cf_replays": {
+      "mean": 5.825,
+      "ci": [
+       4.6,
+       7.05
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "LLM_calls": {
+      "mean": 48.2,
+      "ci": [
+       40.45,
+       57.375
+      ]
+     },
+     "seconds": {
+      "mean": 108.5423,
+      "ci": [
+       87.0579,
+       133.5517
+      ]
+     }
+    },
+    "selective_claims[cf]": {
+     "runs": 6,
+     "scenarios": 6,
+     "small_sample": true,
+     "n_quarantined": 6.167,
+     "n_healed": null,
+     "n_heal_quarantined": null,
+     "claims_kept": null,
+     "claims_dropped": null,
+     "cf_replays": {
+      "mean": 3.3333,
+      "ci": [
+       2.6667,
+       4
+      ]
+     },
+     "claim_cf_replays": null,
+     "LLM_calls": {
+      "mean": 13.3333,
+      "ci": [
+       10.1667,
+       16.5
+      ]
+     },
+     "seconds": {
+      "mean": 15.6433,
+      "ci": [
+       11.4037,
+       19.895
+      ]
+     }
+    },
+    "selective_claims[oracle]": {
+     "runs": 6,
+     "scenarios": 6,
+     "small_sample": true,
+     "n_quarantined": 6.167,
+     "n_healed": null,
+     "n_heal_quarantined": null,
+     "claims_kept": null,
+     "claims_dropped": null,
+     "cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "claim_cf_replays": null,
+     "LLM_calls": {
+      "mean": 1,
+      "ci": [
+       1,
+       1
+      ]
+     },
+     "seconds": {
+      "mean": 2.0167,
+      "ci": [
+       1.4448,
+       2.8457
+      ]
+     }
+    },
+    "selective_claims[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 7.416,
+     "n_healed": 0,
+     "n_heal_quarantined": 0,
+     "claims_kept": 0.987,
+     "claims_dropped": 0.918,
+     "cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "LLM_calls": {
+      "mean": 0.5065,
+      "ci": [
+       0.4156,
+       0.5974
+      ]
+     },
+     "seconds": {
+      "mean": 0.6144,
+      "ci": [
+       0.5178,
+       0.7166
+      ]
+     }
+    },
+    "selective_recon[oracle]": {
+     "runs": 77,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 7.455,
+     "n_healed": null,
+     "n_heal_quarantined": null,
+     "claims_kept": null,
+     "claims_dropped": null,
+     "cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "claim_cf_replays": null,
+     "LLM_calls": {
+      "mean": 0.4026,
+      "ci": [
+       0.2727,
+       0.5455
+      ]
+     },
+     "seconds": {
+      "mean": 0.5029,
+      "ci": [
+       0.3526,
+       0.6729
+      ]
+     }
+    },
+    "selective_recon[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 7.416,
+     "n_healed": 0,
+     "n_heal_quarantined": 0,
+     "claims_kept": 0,
+     "claims_dropped": 0,
+     "cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "LLM_calls": {
+      "mean": 0.3939,
+      "ci": [
+       0.3074,
+       0.4762
+      ]
+     },
+     "seconds": {
+      "mean": 0.5557,
+      "ci": [
+       0.4555,
+       0.657
+      ]
+     }
+    },
+    "selective[cf]": {
+     "runs": 77,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 6.909,
+     "n_healed": null,
+     "n_heal_quarantined": null,
+     "claims_kept": null,
+     "claims_dropped": null,
+     "cf_replays": {
+      "mean": 2.6909,
+      "ci": [
+       2.3455,
+       3.0364
+      ]
+     },
+     "claim_cf_replays": null,
+     "LLM_calls": {
+      "mean": 6.7532,
+      "ci": [
+       5.4156,
+       8.3247
+      ]
+     },
+     "seconds": {
+      "mean": 7.2784,
+      "ci": [
+       5.6991,
+       9.2137
+      ]
+     }
+    },
+    "selective[oracle]": {
+     "runs": 77,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 7.455,
+     "n_healed": null,
+     "n_heal_quarantined": null,
+     "claims_kept": null,
+     "claims_dropped": null,
+     "cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "claim_cf_replays": null,
+     "LLM_calls": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "seconds": {
+      "mean": 0.1913,
+      "ci": [
+       0.0805,
+       0.3145
+      ]
+     }
+    },
+    "selective[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 7.416,
+     "n_healed": 0,
+     "n_heal_quarantined": 0,
+     "claims_kept": 0,
+     "claims_dropped": 0,
+     "cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "LLM_calls": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "seconds": {
+      "mean": 0.0901,
+      "ci": [
+       0.0782,
+       0.1039
+      ]
+     }
+    },
+    "selective[oracle]+immunize": {
+     "runs": 77,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 7.455,
+     "n_healed": null,
+     "n_heal_quarantined": null,
+     "claims_kept": null,
+     "claims_dropped": null,
+     "cf_replays": null,
+     "claim_cf_replays": null,
+     "LLM_calls": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "seconds": {
+      "mean": 0.0548,
+      "ci": [
+       0.0494,
+       0.0607
+      ]
+     }
+    },
+    "unmerge[cf]": {
+     "runs": 77,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 6.909,
+     "n_healed": null,
+     "n_heal_quarantined": null,
+     "claims_kept": null,
+     "claims_dropped": null,
+     "cf_replays": {
+      "mean": 2.7818,
+      "ci": [
+       2.4545,
+       3.1273
+      ]
+     },
+     "claim_cf_replays": null,
+     "LLM_calls": {
+      "mean": 7.026,
+      "ci": [
+       5.6104,
+       8.5714
+      ]
+     },
+     "seconds": {
+      "mean": 6.8396,
+      "ci": [
+       5.4615,
+       8.2783
+      ]
+     }
+    },
+    "unmerge[oracle]": {
+     "runs": 77,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 7.455,
+     "n_healed": null,
+     "n_heal_quarantined": null,
+     "claims_kept": null,
+     "claims_dropped": null,
+     "cf_replays": null,
+     "claim_cf_replays": null,
+     "LLM_calls": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "seconds": {
+      "mean": 0.0639,
+      "ci": [
+       0.0559,
+       0.0733
+      ]
+     }
+    },
+    "unmerge[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "scenarios": 77,
+     "small_sample": false,
+     "n_quarantined": 7.416,
+     "n_healed": 0,
+     "n_heal_quarantined": 0,
+     "claims_kept": 0,
+     "claims_dropped": 0,
+     "cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "LLM_calls": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "seconds": {
+      "mean": 0.1228,
+      "ci": [
+       0.1019,
+       0.1459
+      ]
+     }
+    }
+   },
+   "decisions": {
+    "heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "scenarios": 77,
+     "small_sample": false,
+     "claims_dropped": 1014,
+     "dropped_by": {
+      "name": 777,
+      "source-taint": 189,
+      "cf": 31,
+      "ddmin": 17,
+      "support": 0,
+      "oracle": 0
+     },
+     "ddmin_replays": {
+      "mean": 0.4935,
+      "ci": [
+       0.2597,
+       0.7662
+      ]
+     },
+     "post_heal_runs": 90,
+     "post_heal_scenarios": 56,
+     "post_heal_harmful_share": {
+      "mean": 0.4556,
+      "ci": [
+       0.3333,
+       0.572
+      ],
+      "n": 90,
+      "small_sample": false
+     },
+     "post_heal_runs_harmful": {
+      "n": 47,
+      "d": 90,
+      "rate": 0.5222,
+      "ci": [
+       0.396,
+       0.6484
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     }
+    },
+    "heal[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "runs": 37,
+     "scenarios": 37,
+     "small_sample": false,
+     "claims_dropped": 212,
+     "dropped_by": {
+      "name": 147,
+      "source-taint": 45,
+      "cf": 12,
+      "ddmin": 8,
+      "support": 0,
+      "oracle": 0
+     },
+     "ddmin_replays": {
+      "mean": 1.3784,
+      "ci": [
+       0.3243,
+       2.8378
+      ]
+     },
+     "post_heal_runs": 14,
+     "post_heal_scenarios": 14,
+     "post_heal_harmful_share": {
+      "mean": 0.4524,
+      "ci": [
+       0.2143,
+       0.7143
+      ],
+      "n": 14,
+      "small_sample": false
+     },
+     "post_heal_runs_harmful": {
+      "n": 7,
+      "d": 14,
+      "rate": 0.5,
+      "ci": [
+       0.2143,
+       0.7857
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     }
+    },
+    "heal_rebuild[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "scenarios": 77,
+     "small_sample": false,
+     "claims_dropped": 601,
+     "dropped_by": {
+      "name": 487,
+      "source-taint": 47,
+      "cf": 48,
+      "ddmin": 5,
+      "support": 14,
+      "oracle": 0
+     },
+     "ddmin_replays": {
+      "mean": 0.6234,
+      "ci": [
+       0.3506,
+       0.9221
+      ]
+     },
+     "post_heal_runs": 88,
+     "post_heal_scenarios": 48,
+     "post_heal_harmful_share": {
+      "mean": 0.2462,
+      "ci": [
+       0.1264,
+       0.3754
+      ],
+      "n": 88,
+      "small_sample": false
+     },
+     "post_heal_runs_harmful": {
+      "n": 26,
+      "d": 88,
+      "rate": 0.2955,
+      "ci": [
+       0.1667,
+       0.4302
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     }
+    },
+    "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "scenarios": 77,
+     "small_sample": false,
+     "claims_dropped": 904,
+     "dropped_by": {
+      "name": 0,
+      "source-taint": 0,
+      "cf": 0,
+      "ddmin": 0,
+      "support": 0,
+      "oracle": 904
+     },
+     "ddmin_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "post_heal_runs": 0,
+     "post_heal_scenarios": 0,
+     "post_heal_harmful_share": null,
+     "post_heal_runs_harmful": null
+    }
+   },
+   "preservation": {
+    "incident runs: heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 174,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "incident runs: heal[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "runs": 28,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "incident runs: heal_rebuild[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 174,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "incident runs: heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 174,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "incident runs: incident[cf]": {
+     "runs": 55,
+     "measured": 55,
+     "measured_scenarios": 55,
+     "small_sample": false,
+     "bcp": {
+      "n": 34,
+      "d": 101,
+      "rate": 0.3366,
+      "ci": [
+       0.252,
+       0.4333
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.3366,
+       "ci": [
+        0.2135,
+        0.4488
+       ]
+      }
+     },
+     "acr": {
+      "n": 62,
+      "d": 76,
+      "rate": 0.8158,
+      "ci": [
+       0.7142,
+       0.887
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.8158,
+       "ci": [
+        0.7037,
+        0.92
+       ]
+      }
+     }
+    },
+    "incident runs: incident[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 174,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "incident runs: incident[cf]+verify": {
+     "runs": 55,
+     "measured": 55,
+     "measured_scenarios": 55,
+     "small_sample": false,
+     "bcp": {
+      "n": 26,
+      "d": 110,
+      "rate": 0.2364,
+      "ci": [
+       0.1667,
+       0.3238
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.2364,
+       "ci": [
+        0.1321,
+        0.3417
+       ]
+      }
+     },
+     "acr": {
+      "n": 66,
+      "d": 76,
+      "rate": 0.8684,
+      "ci": [
+       0.7745,
+       0.9269
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.8684,
+       "ci": [
+        0.7848,
+        0.9538
+       ]
+      }
+     }
+    },
+    "incident runs: incident[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "runs": 30,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "incident runs: selective_claims[cf]": {
+     "runs": 6,
+     "measured": 6,
+     "measured_scenarios": 6,
+     "small_sample": true,
+     "bcp": {
+      "n": 7,
+      "d": 7,
+      "rate": 1.0,
+      "ci": [
+       0.6457,
+       1.0
+      ],
+      "small_sample": true,
+      "boot": {
+       "mean": 1.0,
+       "ci": [
+        0.6097,
+        1.0
+       ]
+      }
+     },
+     "acr": {
+      "n": 7,
+      "d": 8,
+      "rate": 0.875,
+      "ci": [
+       0.5291,
+       0.9776
+      ],
+      "small_sample": true,
+      "boot": {
+       "mean": 0.875,
+       "ci": [
+        0.6667,
+        1.0
+       ]
+      }
+     }
+    },
+    "incident runs: selective_claims[oracle]": {
+     "runs": 6,
+     "measured": 6,
+     "measured_scenarios": 6,
+     "small_sample": true,
+     "bcp": {
+      "n": 7,
+      "d": 7,
+      "rate": 1.0,
+      "ci": [
+       0.6457,
+       1.0
+      ],
+      "small_sample": true,
+      "boot": {
+       "mean": 1.0,
+       "ci": [
+        0.6097,
+        1.0
+       ]
+      }
+     },
+     "acr": {
+      "n": 8,
+      "d": 8,
+      "rate": 1.0,
+      "ci": [
+       0.6756,
+       1.0
+      ],
+      "small_sample": true,
+      "boot": {
+       "mean": 1.0,
+       "ci": [
+        0.6097,
+        1.0
+       ]
+      }
+     }
+    },
+    "incident runs: selective_claims[oracle] family=full stop_after_action=True": {
+     "runs": 174,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "incident runs: selective_recon[oracle]": {
+     "runs": 55,
+     "measured": 55,
+     "measured_scenarios": 55,
+     "small_sample": false,
+     "bcp": {
+      "n": 26,
+      "d": 92,
+      "rate": 0.2826,
+      "ci": [
+       0.2008,
+       0.3819
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.2826,
+       "ci": [
+        0.1667,
+        0.383
+       ]
+      }
+     },
+     "acr": {
+      "n": 75,
+      "d": 76,
+      "rate": 0.9868,
+      "ci": [
+       0.9292,
+       0.9977
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.9868,
+       "ci": [
+        0.9625,
+        1.0
+       ]
+      }
+     }
+    },
+    "incident runs: selective_recon[oracle] family=full stop_after_action=True": {
+     "runs": 174,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "incident runs: selective[cf]": {
+     "runs": 55,
+     "measured": 55,
+     "measured_scenarios": 55,
+     "small_sample": false,
+     "bcp": {
+      "n": 33,
+      "d": 92,
+      "rate": 0.3587,
+      "ci": [
+       0.2682,
+       0.4605
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.3587,
+       "ci": [
+        0.2143,
+        0.4848
+       ]
+      }
+     },
+     "acr": {
+      "n": 65,
+      "d": 76,
+      "rate": 0.8553,
+      "ci": [
+       0.7591,
+       0.9172
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.8553,
+       "ci": [
+        0.7407,
+        0.9474
+       ]
+      }
+     }
+    },
+    "incident runs: selective[oracle]": {
+     "runs": 55,
+     "measured": 55,
+     "measured_scenarios": 55,
+     "small_sample": false,
+     "bcp": {
+      "n": 18,
+      "d": 92,
+      "rate": 0.1957,
+      "ci": [
+       0.1275,
+       0.2882
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.1957,
+       "ci": [
+        0.0875,
+        0.2963
+       ]
+      }
+     },
+     "acr": {
+      "n": 75,
+      "d": 76,
+      "rate": 0.9868,
+      "ci": [
+       0.9292,
+       0.9977
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.9868,
+       "ci": [
+        0.9625,
+        1.0
+       ]
+      }
+     }
+    },
+    "incident runs: selective[oracle] family=full stop_after_action=True": {
+     "runs": 174,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "incident runs: selective[oracle]+immunize": {
+     "runs": 55,
+     "measured": 55,
+     "measured_scenarios": 55,
+     "small_sample": false,
+     "bcp": {
+      "n": 18,
+      "d": 92,
+      "rate": 0.1957,
+      "ci": [
+       0.1275,
+       0.2882
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.1957,
+       "ci": [
+        0.0875,
+        0.2963
+       ]
+      }
+     },
+     "acr": {
+      "n": 75,
+      "d": 76,
+      "rate": 0.9868,
+      "ci": [
+       0.9292,
+       0.9977
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.9868,
+       "ci": [
+        0.9625,
+        1.0
+       ]
+      }
+     }
+    },
+    "incident runs: unmerge[cf]": {
+     "runs": 55,
+     "measured": 55,
+     "measured_scenarios": 55,
+     "small_sample": false,
+     "bcp": {
+      "n": 41,
+      "d": 92,
+      "rate": 0.4457,
+      "ci": [
+       0.3483,
+       0.5474
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.4457,
+       "ci": [
+        0.3182,
+        0.5529
+       ]
+      }
+     },
+     "acr": {
+      "n": 65,
+      "d": 76,
+      "rate": 0.8553,
+      "ci": [
+       0.7591,
+       0.9172
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.8553,
+       "ci": [
+        0.7407,
+        0.9474
+       ]
+      }
+     }
+    },
+    "incident runs: unmerge[oracle]": {
+     "runs": 55,
+     "measured": 55,
+     "measured_scenarios": 55,
+     "small_sample": false,
+     "bcp": {
+      "n": 30,
+      "d": 92,
+      "rate": 0.3261,
+      "ci": [
+       0.2389,
+       0.4272
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.3261,
+       "ci": [
+        0.2333,
+        0.4091
+       ]
+      }
+     },
+     "acr": {
+      "n": 75,
+      "d": 76,
+      "rate": 0.9868,
+      "ci": [
+       0.9292,
+       0.9977
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.9868,
+       "ci": [
+        0.9625,
+        1.0
+       ]
+      }
+     }
+    },
+    "incident runs: unmerge[oracle] family=full stop_after_action=True": {
+     "runs": 174,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "all runs: heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "all runs: heal[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "runs": 37,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "all runs: heal_rebuild[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "all runs: heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "all runs: incident[cf]": {
+     "runs": 77,
+     "measured": 77,
+     "measured_scenarios": 77,
+     "small_sample": false,
+     "bcp": {
+      "n": 55,
+      "d": 122,
+      "rate": 0.4508,
+      "ci": [
+       0.3654,
+       0.5393
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.4508,
+       "ci": [
+        0.3465,
+        0.5564
+       ]
+      }
+     },
+     "acr": {
+      "n": 62,
+      "d": 99,
+      "rate": 0.6263,
+      "ci": [
+       0.5279,
+       0.7152
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.6263,
+       "ci": [
+        0.5158,
+        0.7312
+       ]
+      }
+     }
+    },
+    "all runs: incident[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 231,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "all runs: incident[cf]+verify": {
+     "runs": 77,
+     "measured": 77,
+     "measured_scenarios": 77,
+     "small_sample": false,
+     "bcp": {
+      "n": 45,
+      "d": 131,
+      "rate": 0.3435,
+      "ci": [
+       0.2677,
+       0.4282
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.3435,
+       "ci": [
+        0.2381,
+        0.463
+       ]
+      }
+     },
+     "acr": {
+      "n": 68,
+      "d": 99,
+      "rate": 0.6869,
+      "ci": [
+       0.59,
+       0.7698
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.6869,
+       "ci": [
+        0.5918,
+        0.7826
+       ]
+      }
+     }
+    },
+    "all runs: incident[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3": {
+     "runs": 40,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "all runs: selective_claims[cf]": {
+     "runs": 6,
+     "measured": 6,
+     "measured_scenarios": 6,
+     "small_sample": true,
+     "bcp": {
+      "n": 7,
+      "d": 7,
+      "rate": 1.0,
+      "ci": [
+       0.6457,
+       1.0
+      ],
+      "small_sample": true,
+      "boot": {
+       "mean": 1.0,
+       "ci": [
+        0.6097,
+        1.0
+       ]
+      }
+     },
+     "acr": {
+      "n": 7,
+      "d": 8,
+      "rate": 0.875,
+      "ci": [
+       0.5291,
+       0.9776
+      ],
+      "small_sample": true,
+      "boot": {
+       "mean": 0.875,
+       "ci": [
+        0.6667,
+        1.0
+       ]
+      }
+     }
+    },
+    "all runs: selective_claims[oracle]": {
+     "runs": 6,
+     "measured": 6,
+     "measured_scenarios": 6,
+     "small_sample": true,
+     "bcp": {
+      "n": 7,
+      "d": 7,
+      "rate": 1.0,
+      "ci": [
+       0.6457,
+       1.0
+      ],
+      "small_sample": true,
+      "boot": {
+       "mean": 1.0,
+       "ci": [
+        0.6097,
+        1.0
+       ]
+      }
+     },
+     "acr": {
+      "n": 8,
+      "d": 8,
+      "rate": 1.0,
+      "ci": [
+       0.6756,
+       1.0
+      ],
+      "small_sample": true,
+      "boot": {
+       "mean": 1.0,
+       "ci": [
+        0.6097,
+        1.0
+       ]
+      }
+     }
+    },
+    "all runs: selective_claims[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "all runs: selective_recon[oracle]": {
+     "runs": 77,
+     "measured": 77,
+     "measured_scenarios": 77,
+     "small_sample": false,
+     "bcp": {
+      "n": 37,
+      "d": 113,
+      "rate": 0.3274,
+      "ci": [
+       0.2478,
+       0.4184
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.3274,
+       "ci": [
+        0.2295,
+        0.4153
+       ]
+      }
+     },
+     "acr": {
+      "n": 98,
+      "d": 99,
+      "rate": 0.9899,
+      "ci": [
+       0.945,
+       0.9982
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.9899,
+       "ci": [
+        0.9697,
+        1.0
+       ]
+      }
+     }
+    },
+    "all runs: selective_recon[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "all runs: selective[cf]": {
+     "runs": 77,
+     "measured": 77,
+     "measured_scenarios": 77,
+     "small_sample": false,
+     "bcp": {
+      "n": 54,
+      "d": 113,
+      "rate": 0.4779,
+      "ci": [
+       0.388,
+       0.5692
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.4779,
+       "ci": [
+        0.354,
+        0.5929
+       ]
+      }
+     },
+     "acr": {
+      "n": 65,
+      "d": 99,
+      "rate": 0.6566,
+      "ci": [
+       0.5588,
+       0.7427
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.6566,
+       "ci": [
+        0.5474,
+        0.7642
+       ]
+      }
+     }
+    },
+    "all runs: selective[oracle]": {
+     "runs": 77,
+     "measured": 77,
+     "measured_scenarios": 77,
+     "small_sample": false,
+     "bcp": {
+      "n": 24,
+      "d": 113,
+      "rate": 0.2124,
+      "ci": [
+       0.1471,
+       0.2966
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.2124,
+       "ci": [
+        0.1158,
+        0.2969
+       ]
+      }
+     },
+     "acr": {
+      "n": 98,
+      "d": 99,
+      "rate": 0.9899,
+      "ci": [
+       0.945,
+       0.9982
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.9899,
+       "ci": [
+        0.9697,
+        1.0
+       ]
+      }
+     }
+    },
+    "all runs: selective[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    },
+    "all runs: selective[oracle]+immunize": {
+     "runs": 77,
+     "measured": 77,
+     "measured_scenarios": 77,
+     "small_sample": false,
+     "bcp": {
+      "n": 24,
+      "d": 113,
+      "rate": 0.2124,
+      "ci": [
+       0.1471,
+       0.2966
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.2124,
+       "ci": [
+        0.1158,
+        0.2969
+       ]
+      }
+     },
+     "acr": {
+      "n": 98,
+      "d": 99,
+      "rate": 0.9899,
+      "ci": [
+       0.945,
+       0.9982
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.9899,
+       "ci": [
+        0.9697,
+        1.0
+       ]
+      }
+     }
+    },
+    "all runs: unmerge[cf]": {
+     "runs": 77,
+     "measured": 77,
+     "measured_scenarios": 77,
+     "small_sample": false,
+     "bcp": {
+      "n": 62,
+      "d": 113,
+      "rate": 0.5487,
+      "ci": [
+       0.4568,
+       0.6373
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.5487,
+       "ci": [
+        0.4412,
+        0.6429
+       ]
+      }
+     },
+     "acr": {
+      "n": 65,
+      "d": 99,
+      "rate": 0.6566,
+      "ci": [
+       0.5588,
+       0.7427
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.6566,
+       "ci": [
+        0.5474,
+        0.7642
+       ]
+      }
+     }
+    },
+    "all runs: unmerge[oracle]": {
+     "runs": 77,
+     "measured": 77,
+     "measured_scenarios": 77,
+     "small_sample": false,
+     "bcp": {
+      "n": 41,
+      "d": 113,
+      "rate": 0.3628,
+      "ci": [
+       0.28,
+       0.4546
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.3628,
+       "ci": [
+        0.2703,
+        0.4444
+       ]
+      }
+     },
+     "acr": {
+      "n": 98,
+      "d": 99,
+      "rate": 0.9899,
+      "ci": [
+       0.945,
+       0.9982
+      ],
+      "small_sample": false,
+      "boot": {
+       "mean": 0.9899,
+       "ci": [
+        0.9697,
+        1.0
+       ]
+      }
+     }
+    },
+    "all runs: unmerge[oracle] family=full stop_after_action=True": {
+     "runs": 231,
+     "measured": 0,
+     "measured_scenarios": 0,
+     "small_sample": true
+    }
+   },
+   "paired": [
+    {
+     "a": "heal[cf] family=full cf_workers=6 stop_after_action=True",
+     "b": "incident[cf] family=full cf_workers=6 stop_after_action=True",
+     "population": "incident",
+     "runs": 174,
+     "scenarios": 72,
+     "small_sample": false,
+     "ASR": [
+      -0.0115,
+      -0.0355,
+      0.0133
+     ],
+     "BR": [
+      -0.0029,
+      -0.052,
+      0.0489
+     ],
+     "BMP": [
+      0.0625,
+      0.0154,
+      0.1166
+     ],
+     "collateral": [
+      0.0287,
+      -0.0353,
+      0.0938
+     ],
+     "poison left": [
+      -0.046,
+      -0.0938,
+      -0.006
+     ],
+     "claims_runs": 0,
+     "claims_scenarios": 0,
+     "BCP": null,
+     "ACR": null
+    },
+    {
+     "a": "heal[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3",
+     "b": "incident[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3",
+     "population": "incident",
+     "runs": 28,
+     "scenarios": 28,
+     "small_sample": false,
+     "ASR": [
+      -0.0089,
+      -0.0268,
+      0.0
+     ],
+     "BR": [
+      0.0804,
+      -0.0357,
+      0.2143
+     ],
+     "BMP": [
+      0.0625,
+      -0.0645,
+      0.1795
+     ],
+     "collateral": [
+      0.0714,
+      -0.1071,
+      0.3214
+     ],
+     "poison left": [
+      -0.0714,
+      -0.1786,
+      0.0
+     ],
+     "claims_runs": 0,
+     "claims_scenarios": 0,
+     "BCP": null,
+     "ACR": null
+    },
+    {
+     "a": "heal_rebuild[cf] family=full cf_workers=6 stop_after_action=True",
+     "b": "incident[cf] family=full cf_workers=6 stop_after_action=True",
+     "population": "incident",
+     "runs": 174,
+     "scenarios": 72,
+     "small_sample": false,
+     "ASR": [
+      -0.023,
+      -0.044,
+      -0.006
+     ],
+     "BR": [
+      0.0273,
+      -0.0216,
+      0.0714
+     ],
+     "BMP": [
+      0.075,
+      0.0273,
+      0.1255
+     ],
+     "collateral": [
+      0.0,
+      -0.0651,
+      0.0629
+     ],
+     "poison left": [
+      -0.0402,
+      -0.0884,
+      -0.0054
+     ],
+     "claims_runs": 0,
+     "claims_scenarios": 0,
+     "BCP": null,
+     "ACR": null
+    },
+    {
+     "a": "heal_rebuild[cf] family=full cf_workers=6 stop_after_action=True",
+     "b": "heal[cf] family=full cf_workers=6 stop_after_action=True",
+     "population": "incident",
+     "runs": 174,
+     "scenarios": 72,
+     "small_sample": false,
+     "ASR": [
+      -0.0115,
+      -0.0273,
+      0.0029
+     ],
+     "BR": [
+      0.0302,
+      -0.0057,
+      0.0665
+     ],
+     "BMP": [
+      0.0125,
+      -0.0249,
+      0.0476
+     ],
+     "collateral": [
+      -0.0287,
+      -0.0872,
+      0.0235
+     ],
+     "poison left": [
+      0.0057,
+      0.0,
+      0.0183
+     ],
+     "claims_runs": 0,
+     "claims_scenarios": 0,
+     "BCP": null,
+     "ACR": null
+    },
+    {
+     "a": "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True",
+     "b": "incident[cf] family=full cf_workers=6 stop_after_action=True",
+     "population": "incident",
+     "runs": 174,
+     "scenarios": 72,
+     "small_sample": false,
+     "ASR": [
+      0.0014,
+      -0.0229,
+      0.0279
+     ],
+     "BR": [
+      0.0302,
+      -0.0183,
+      0.0793
+     ],
+     "BMP": [
+      0.0583,
+      0.0088,
+      0.1143
+     ],
+     "collateral": [
+      -0.069,
+      -0.1617,
+      0.0118
+     ],
+     "poison left": [
+      -0.0402,
+      -0.0893,
+      -0.0054
+     ],
+     "claims_runs": 0,
+     "claims_scenarios": 0,
+     "BCP": null,
+     "ACR": null
+    },
+    {
+     "a": "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True",
+     "b": "heal[cf] family=full cf_workers=6 stop_after_action=True",
+     "population": "incident",
+     "runs": 174,
+     "scenarios": 72,
+     "small_sample": false,
+     "ASR": [
+      0.0129,
+      -0.0042,
+      0.0319
+     ],
+     "BR": [
+      0.033,
+      -0.003,
+      0.0697
+     ],
+     "BMP": [
+      -0.0042,
+      -0.0366,
+      0.0317
+     ],
+     "collateral": [
+      -0.0977,
+      -0.1802,
+      -0.0353
+     ],
+     "poison left": [
+      0.0057,
+      0.0,
+      0.0179
+     ],
+     "claims_runs": 0,
+     "claims_scenarios": 0,
+     "BCP": null,
+     "ACR": null
+    }
+   ],
+   "figure": {
+    "population": "incident runs",
+    "points": [
+     {
+      "label": "heal[cf] family=full cf_workers=6 stop_after_action=True",
+      "mode": "heal",
+      "verdicts": "cf",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "cf_workers",
+        6
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 174,
+      "scenarios": 72,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       96.12,
+       93.51,
+       98.5
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "heal[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3",
+      "mode": "heal",
+      "verdicts": "cf",
+      "modifiers": [
+       "verify"
+      ],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "cf_workers",
+        6
+       ],
+       [
+        "stop_after_action",
+        true
+       ],
+       [
+        "verify_n",
+        3
+       ]
+      ],
+      "runs": 28,
+      "scenarios": 28,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       100.0,
+       87.94,
+       100.0
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "heal_rebuild[cf] family=full cf_workers=6 stop_after_action=True",
+      "mode": "heal_rebuild",
+      "verdicts": "cf",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "cf_workers",
+        6
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 174,
+      "scenarios": 72,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       97.27,
+       95.31,
+       98.99
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True",
+      "mode": "heal_oracle",
+      "verdicts": "oracle",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "cf_workers",
+        6
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 174,
+      "scenarios": 72,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       94.83,
+       91.35,
+       97.84
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "incident[cf]",
+      "mode": "incident",
+      "verdicts": "cf",
+      "modifiers": [],
+      "knobs": [],
+      "runs": 55,
+      "scenarios": 55,
+      "measured": 55,
+      "measured_scenarios": 55,
+      "blocked": [
+       90.62,
+       82.26,
+       98.36
+      ],
+      "acr": [
+       81.58,
+       70.37,
+       92.0
+      ],
+      "bcp": [
+       33.66,
+       21.35,
+       44.88
+      ]
+     },
+     {
+      "label": "incident[cf] family=full cf_workers=6 stop_after_action=True",
+      "mode": "incident",
+      "verdicts": "cf",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "cf_workers",
+        6
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 174,
+      "scenarios": 72,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       94.97,
+       91.52,
+       97.94
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "incident[cf]+verify",
+      "mode": "incident",
+      "verdicts": "cf",
+      "modifiers": [
+       "verify"
+      ],
+      "knobs": [],
+      "runs": 55,
+      "scenarios": 55,
+      "measured": 55,
+      "measured_scenarios": 55,
+      "blocked": [
+       100.0,
+       93.47,
+       100.0
+      ],
+      "acr": [
+       86.84,
+       78.48,
+       95.38
+      ],
+      "bcp": [
+       23.64,
+       13.21,
+       34.17
+      ]
+     },
+     {
+      "label": "incident[cf]+verify family=full cf_workers=6 stop_after_action=True verify_n=3",
+      "mode": "incident",
+      "verdicts": "cf",
+      "modifiers": [
+       "verify"
+      ],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "cf_workers",
+        6
+       ],
+       [
+        "stop_after_action",
+        true
+       ],
+       [
+        "verify_n",
+        3
+       ]
+      ],
+      "runs": 30,
+      "scenarios": 30,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       99.17,
+       97.5,
+       100.0
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "selective_claims[cf]",
+      "mode": "selective_claims",
+      "verdicts": "cf",
+      "modifiers": [],
+      "knobs": [],
+      "runs": 6,
+      "scenarios": 6,
+      "measured": 6,
+      "measured_scenarios": 6,
+      "blocked": [
+       85.71,
+       66.67,
+       100.0
+      ],
+      "acr": [
+       87.5,
+       66.67,
+       100.0
+      ],
+      "bcp": [
+       100.0,
+       60.97,
+       100.0
+      ]
+     },
+     {
+      "label": "selective_claims[oracle]",
+      "mode": "selective_claims",
+      "verdicts": "oracle",
+      "modifiers": [],
+      "knobs": [],
+      "runs": 6,
+      "scenarios": 6,
+      "measured": 6,
+      "measured_scenarios": 6,
+      "blocked": [
+       85.71,
+       66.67,
+       100.0
+      ],
+      "acr": [
+       100.0,
+       60.97,
+       100.0
+      ],
+      "bcp": [
+       100.0,
+       60.97,
+       100.0
+      ]
+     },
+     {
+      "label": "selective_claims[oracle] family=full stop_after_action=True",
+      "mode": "selective_claims",
+      "verdicts": "oracle",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 174,
+      "scenarios": 72,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       97.56,
+       95.99,
+       98.99
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "selective_recon[oracle]",
+      "mode": "selective_recon",
+      "verdicts": "oracle",
+      "modifiers": [],
+      "knobs": [],
+      "runs": 55,
+      "scenarios": 55,
+      "measured": 55,
+      "measured_scenarios": 55,
+      "blocked": [
+       98.44,
+       95.16,
+       100.0
+      ],
+      "acr": [
+       98.68,
+       96.25,
+       100.0
+      ],
+      "bcp": [
+       28.26,
+       16.67,
+       38.3
+      ]
+     },
+     {
+      "label": "selective_recon[oracle] family=full stop_after_action=True",
+      "mode": "selective_recon",
+      "verdicts": "oracle",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 174,
+      "scenarios": 72,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       98.71,
+       97.61,
+       99.57
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "selective[cf]",
+      "mode": "selective",
+      "verdicts": "cf",
+      "modifiers": [],
+      "knobs": [],
+      "runs": 55,
+      "scenarios": 55,
+      "measured": 55,
+      "measured_scenarios": 55,
+      "blocked": [
+       87.5,
+       77.61,
+       96.88
+      ],
+      "acr": [
+       85.53,
+       74.07,
+       94.74
+      ],
+      "bcp": [
+       35.87,
+       21.43,
+       48.48
+      ]
+     },
+     {
+      "label": "selective[oracle]",
+      "mode": "selective",
+      "verdicts": "oracle",
+      "modifiers": [],
+      "knobs": [],
+      "runs": 55,
+      "scenarios": 55,
+      "measured": 55,
+      "measured_scenarios": 55,
+      "blocked": [
+       98.44,
+       95.16,
+       100.0
+      ],
+      "acr": [
+       98.68,
+       96.25,
+       100.0
+      ],
+      "bcp": [
+       19.57,
+       8.75,
+       29.63
+      ]
+     },
+     {
+      "label": "selective[oracle] family=full stop_after_action=True",
+      "mode": "selective",
+      "verdicts": "oracle",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 174,
+      "scenarios": 72,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       97.99,
+       96.41,
+       99.3
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "selective[oracle]+immunize",
+      "mode": "selective",
+      "verdicts": "oracle",
+      "modifiers": [
+       "immunize"
+      ],
+      "knobs": [],
+      "runs": 55,
+      "scenarios": 55,
+      "measured": 55,
+      "measured_scenarios": 55,
+      "blocked": [
+       98.44,
+       95.16,
+       100.0
+      ],
+      "acr": [
+       98.68,
+       96.25,
+       100.0
+      ],
+      "bcp": [
+       19.57,
+       8.75,
+       29.63
+      ]
+     },
+     {
+      "label": "unmerge[cf]",
+      "mode": "unmerge",
+      "verdicts": "cf",
+      "modifiers": [],
+      "knobs": [],
+      "runs": 55,
+      "scenarios": 55,
+      "measured": 55,
+      "measured_scenarios": 55,
+      "blocked": [
+       90.62,
+       81.54,
+       98.39
+      ],
+      "acr": [
+       85.53,
+       74.07,
+       94.74
+      ],
+      "bcp": [
+       44.57,
+       31.82,
+       55.29
+      ]
+     },
+     {
+      "label": "unmerge[oracle]",
+      "mode": "unmerge",
+      "verdicts": "oracle",
+      "modifiers": [],
+      "knobs": [],
+      "runs": 55,
+      "scenarios": 55,
+      "measured": 55,
+      "measured_scenarios": 55,
+      "blocked": [
+       98.44,
+       95.16,
+       100.0
+      ],
+      "acr": [
+       98.68,
+       96.25,
+       100.0
+      ],
+      "bcp": [
+       32.61,
+       23.33,
+       40.91
+      ]
+     },
+     {
+      "label": "unmerge[oracle] family=full stop_after_action=True",
+      "mode": "unmerge",
+      "verdicts": "oracle",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 174,
+      "scenarios": 72,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       99.28,
+       98.46,
+       99.86
+      ],
+      "acr": null,
+      "bcp": null
+     }
+    ]
+   }
+  },
+  "9b. Healing vs quarantine (Phase 2, H): results/flat/main.jsonl": {
+   "file": "/home/surya/repos/MemHeal/results/flat/main.jsonl",
+   "runs": 216,
+   "scenarios": 72,
+   "incident_runs": 137,
+   "incident_scenarios": 55,
+   "absent_modes": [
+    "heal_rebuild",
+    "selective_claims",
+    "selective_recon",
+    "unmerge"
+   ],
+   "sources": {
+    "heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "heal_flat": 216
+    },
+    "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "heal_flat": 216
+    },
+    "incident[cf] family=full cf_workers=6 stop_after_action=True": {
+     "heal_flat": 216
+    },
+    "selective[oracle] family=full stop_after_action=True": {
+     "heal_flat": 216
+    }
+   },
+   "rows": {
+    "incident runs: heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 137,
+     "small_sample": false,
+     "asr": {
+      "n": 43,
+      "d": 548,
+      "rate": 0.0785,
+      "ci": [
+       0.0407,
+       0.121
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 28,
+      "d": 137,
+      "rate": 0.2044,
+      "ci": [
+       0.1212,
+       0.2993
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 166,
+      "d": 177,
+      "rate": 0.9379,
+      "ci": [
+       0.9029,
+       0.973
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6715,
+     "poison_left": {
+      "n": 52,
+      "d": 137,
+      "rate": 0.3796,
+      "ci": [
+       0.2695,
+       0.4964
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 1.007,
+     "quarantined": 6.679,
+     "llm_calls": 26.109,
+     "seconds": 32.889,
+     "scenarios": 55,
+     "residual_attack": 1.38
+    },
+    "incident runs: heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 137,
+     "small_sample": false,
+     "asr": {
+      "n": 42,
+      "d": 548,
+      "rate": 0.0766,
+      "ci": [
+       0.0451,
+       0.1105
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 31,
+      "d": 137,
+      "rate": 0.2263,
+      "ci": [
+       0.1377,
+       0.3129
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 166,
+      "d": 177,
+      "rate": 0.9379,
+      "ci": [
+       0.9062,
+       0.9653
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6843,
+     "poison_left": {
+      "n": 50,
+      "d": 137,
+      "rate": 0.365,
+      "ci": [
+       0.2538,
+       0.4823
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 1.095,
+     "quarantined": 6.774,
+     "llm_calls": 23.971,
+     "seconds": 29.119,
+     "scenarios": 55,
+     "residual_attack": 1.35
+    },
+    "incident runs: incident[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 137,
+     "small_sample": false,
+     "asr": {
+      "n": 95,
+      "d": 548,
+      "rate": 0.1734,
+      "ci": [
+       0.1141,
+       0.2339
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 49,
+      "d": 137,
+      "rate": 0.3577,
+      "ci": [
+       0.2429,
+       0.4615
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 165,
+      "d": 177,
+      "rate": 0.9322,
+      "ci": [
+       0.891,
+       0.9653
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.5803,
+     "poison_left": {
+      "n": 94,
+      "d": 137,
+      "rate": 0.6861,
+      "ci": [
+       0.562,
+       0.7857
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.073,
+     "quarantined": 2.759,
+     "llm_calls": 18.007,
+     "seconds": 25.229,
+     "scenarios": 55,
+     "residual_attack": 2.883
+    },
+    "incident runs: selective[oracle] family=full stop_after_action=True": {
+     "runs": 137,
+     "small_sample": false,
+     "asr": {
+      "n": 45,
+      "d": 548,
+      "rate": 0.0821,
+      "ci": [
+       0.0481,
+       0.1214
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 34,
+      "d": 137,
+      "rate": 0.2482,
+      "ci": [
+       0.1556,
+       0.3429
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 166,
+      "d": 177,
+      "rate": 0.9379,
+      "ci": [
+       0.9023,
+       0.9694
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.688,
+     "poison_left": {
+      "n": 50,
+      "d": 137,
+      "rate": 0.365,
+      "ci": [
+       0.2555,
+       0.4789
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 1.117,
+     "quarantined": 6.81,
+     "llm_calls": 0,
+     "seconds": 0.078,
+     "scenarios": 55,
+     "residual_attack": 1.365
+    },
+    "all runs: heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 216,
+     "small_sample": false,
+     "asr": {
+      "n": 98,
+      "d": 864,
+      "rate": 0.1134,
+      "ci": [
+       0.0764,
+       0.1516
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 59,
+      "d": 216,
+      "rate": 0.2731,
+      "ci": [
+       0.1944,
+       0.3611
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 287,
+      "d": 300,
+      "rate": 0.9567,
+      "ci": [
+       0.931,
+       0.9773
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6609,
+     "poison_left": {
+      "n": 123,
+      "d": 216,
+      "rate": 0.5694,
+      "ci": [
+       0.4722,
+       0.6667
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.639,
+     "quarantined": 4.236,
+     "llm_calls": 16.56,
+     "seconds": 20.861,
+     "scenarios": 72,
+     "residual_attack": 2.264
+    },
+    "all runs: heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 216,
+     "small_sample": false,
+     "asr": {
+      "n": 97,
+      "d": 864,
+      "rate": 0.1123,
+      "ci": [
+       0.0787,
+       0.1481
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 62,
+      "d": 216,
+      "rate": 0.287,
+      "ci": [
+       0.2083,
+       0.3704
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 286,
+      "d": 300,
+      "rate": 0.9533,
+      "ci": [
+       0.9273,
+       0.975
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6725,
+     "poison_left": {
+      "n": 121,
+      "d": 216,
+      "rate": 0.5602,
+      "ci": [
+       0.463,
+       0.6528
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.694,
+     "quarantined": 4.296,
+     "llm_calls": 15.204,
+     "seconds": 18.471,
+     "scenarios": 72,
+     "residual_attack": 2.245
+    },
+    "all runs: incident[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 216,
+     "small_sample": false,
+     "asr": {
+      "n": 150,
+      "d": 864,
+      "rate": 0.1736,
+      "ci": [
+       0.1238,
+       0.2234
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 80,
+      "d": 216,
+      "rate": 0.3704,
+      "ci": [
+       0.2731,
+       0.4676
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 286,
+      "d": 300,
+      "rate": 0.9533,
+      "ci": [
+       0.9281,
+       0.9751
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.6053,
+     "poison_left": {
+      "n": 165,
+      "d": 216,
+      "rate": 0.7639,
+      "ci": [
+       0.6759,
+       0.8472
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.046,
+     "quarantined": 1.75,
+     "llm_calls": 11.421,
+     "seconds": 16.002,
+     "scenarios": 72,
+     "residual_attack": 3.218
+    },
+    "all runs: selective[oracle] family=full stop_after_action=True": {
+     "runs": 216,
+     "small_sample": false,
+     "asr": {
+      "n": 49,
+      "d": 864,
+      "rate": 0.0567,
+      "ci": [
+       0.0336,
+       0.0833
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "attacked_runs": {
+      "n": 38,
+      "d": 216,
+      "rate": 0.1759,
+      "ci": [
+       0.1065,
+       0.2454
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "bmp": {
+      "n": 287,
+      "d": 300,
+      "rate": 0.9567,
+      "ci": [
+       0.9272,
+       0.9792
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "br": 0.713,
+     "poison_left": {
+      "n": 59,
+      "d": 216,
+      "rate": 0.2731,
+      "ci": [
+       0.1852,
+       0.3657
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     },
+     "collateral": 0.898,
+     "quarantined": 6.227,
+     "llm_calls": 0,
+     "seconds": 0.078,
+     "scenarios": 72,
+     "residual_attack": 1.014
+    }
+   },
+   "actions": {
+    "heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 216,
+     "scenarios": 72,
+     "small_sample": false,
+     "n_quarantined": 4.236,
+     "n_healed": 0.213,
+     "n_heal_quarantined": 1.565,
+     "claims_kept": 0.532,
+     "claims_dropped": 4.861,
+     "cf_replays": {
+      "mean": 4.7083,
+      "ci": [
+       3.9074,
+       5.4954
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 0.7222,
+      "ci": [
+       0.3889,
+       1.1389
+      ]
+     },
+     "LLM_calls": {
+      "mean": 16.5602,
+      "ci": [
+       13.7037,
+       19.6343
+      ]
+     },
+     "seconds": {
+      "mean": 20.8614,
+      "ci": [
+       16.5661,
+       25.8676
+      ]
+     }
+    },
+    "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 216,
+     "scenarios": 72,
+     "small_sample": false,
+     "n_quarantined": 4.296,
+     "n_healed": 0.241,
+     "n_heal_quarantined": 1.481,
+     "claims_kept": 0.579,
+     "claims_dropped": 4.866,
+     "cf_replays": {
+      "mean": 4.8611,
+      "ci": [
+       4.0231,
+       5.6759
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "LLM_calls": {
+      "mean": 15.2037,
+      "ci": [
+       12.625,
+       17.7685
+      ]
+     },
+     "seconds": {
+      "mean": 18.4707,
+      "ci": [
+       14.8057,
+       22.4161
+      ]
+     }
+    },
+    "incident[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 216,
+     "scenarios": 72,
+     "small_sample": false,
+     "n_quarantined": 1.75,
+     "n_healed": 0,
+     "n_heal_quarantined": 0,
+     "claims_kept": 0,
+     "claims_dropped": 0,
+     "cf_replays": {
+      "mean": 4.75,
+      "ci": [
+       3.912,
+       5.5463
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "LLM_calls": {
+      "mean": 11.4213,
+      "ci": [
+       9.3519,
+       13.5972
+      ]
+     },
+     "seconds": {
+      "mean": 16.0024,
+      "ci": [
+       12.5222,
+       19.6913
+      ]
+     }
+    },
+    "selective[oracle] family=full stop_after_action=True": {
+     "runs": 216,
+     "scenarios": 72,
+     "small_sample": false,
+     "n_quarantined": 6.227,
+     "n_healed": 0,
+     "n_heal_quarantined": 0,
+     "claims_kept": 0,
+     "claims_dropped": 0,
+     "cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "claim_cf_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "LLM_calls": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "seconds": {
+      "mean": 0.0776,
+      "ci": [
+       0.0624,
+       0.0948
+      ]
+     }
+    }
+   },
+   "decisions": {
+    "heal[cf] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 216,
+     "scenarios": 72,
+     "small_sample": false,
+     "claims_dropped": 1050,
+     "dropped_by": {
+      "name": 547,
+      "source-taint": 479,
+      "cf": 18,
+      "ddmin": 6,
+      "support": 0,
+      "oracle": 0
+     },
+     "ddmin_replays": {
+      "mean": 0.2083,
+      "ci": [
+       0.0833,
+       0.375
+      ]
+     },
+     "post_heal_runs": 21,
+     "post_heal_scenarios": 12,
+     "post_heal_harmful_share": {
+      "mean": 0.3016,
+      "ci": [
+       0.1053,
+       0.5151
+      ],
+      "n": 21,
+      "small_sample": false
+     },
+     "post_heal_runs_harmful": {
+      "n": 8,
+      "d": 21,
+      "rate": 0.381,
+      "ci": [
+       0.1429,
+       0.625
+      ],
+      "interval": "scenario bootstrap",
+      "small_sample": false
+     }
+    },
+    "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True": {
+     "runs": 216,
+     "scenarios": 72,
+     "small_sample": false,
+     "claims_dropped": 1051,
+     "dropped_by": {
+      "name": 0,
+      "source-taint": 0,
+      "cf": 0,
+      "ddmin": 0,
+      "support": 0,
+      "oracle": 1051
+     },
+     "ddmin_replays": {
+      "mean": 0,
+      "ci": [
+       0,
+       0
+      ]
+     },
+     "post_heal_runs": 0,
+     "post_heal_scenarios": 0,
+     "post_heal_harmful_share": null,
+     "post_heal_runs_harmful": null
+    }
+   },
+   "preservation": null,
+   "paired": [
+    {
+     "a": "heal[cf] family=full cf_workers=6 stop_after_action=True",
+     "b": "incident[cf] family=full cf_workers=6 stop_after_action=True",
+     "population": "incident",
+     "runs": 137,
+     "scenarios": 55,
+     "small_sample": false,
+     "ASR": [
+      -0.0949,
+      -0.1405,
+      -0.0468
+     ],
+     "BR": [
+      0.0912,
+      0.0396,
+      0.1466
+     ],
+     "BMP": [
+      0.0056,
+      -0.0405,
+      0.0585
+     ],
+     "collateral": [
+      0.9343,
+      0.4085,
+      1.5694
+     ],
+     "poison left": [
+      -0.3066,
+      -0.4242,
+      -0.2014
+     ],
+     "claims_runs": 0,
+     "claims_scenarios": 0,
+     "BCP": null,
+     "ACR": null
+    },
+    {
+     "a": "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True",
+     "b": "incident[cf] family=full cf_workers=6 stop_after_action=True",
+     "population": "incident",
+     "runs": 137,
+     "scenarios": 55,
+     "small_sample": false,
+     "ASR": [
+      -0.0967,
+      -0.1418,
+      -0.0578
+     ],
+     "BR": [
+      0.104,
+      0.0543,
+      0.1508
+     ],
+     "BMP": [
+      0.0056,
+      -0.0393,
+      0.0538
+     ],
+     "collateral": [
+      1.0219,
+      0.4397,
+      1.6458
+     ],
+     "poison left": [
+      -0.3212,
+      -0.4406,
+      -0.2059
+     ],
+     "claims_runs": 0,
+     "claims_scenarios": 0,
+     "BCP": null,
+     "ACR": null
+    },
+    {
+     "a": "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True",
+     "b": "heal[cf] family=full cf_workers=6 stop_after_action=True",
+     "population": "incident",
+     "runs": 137,
+     "scenarios": 55,
+     "small_sample": false,
+     "ASR": [
+      -0.0018,
+      -0.0187,
+      0.0144
+     ],
+     "BR": [
+      0.0128,
+      -0.0195,
+      0.0453
+     ],
+     "BMP": [
+      0.0,
+      -0.0402,
+      0.0368
+     ],
+     "collateral": [
+      0.0876,
+      -0.0942,
+      0.2955
+     ],
+     "poison left": [
+      -0.0146,
+      -0.0385,
+      0.0
+     ],
+     "claims_runs": 0,
+     "claims_scenarios": 0,
+     "BCP": null,
+     "ACR": null
+    }
+   ],
+   "figure": {
+    "population": "incident runs",
+    "points": [
+     {
+      "label": "heal[cf] family=full cf_workers=6 stop_after_action=True",
+      "mode": "heal",
+      "verdicts": "cf",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "cf_workers",
+        6
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 137,
+      "scenarios": 55,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       92.15,
+       87.9,
+       95.93
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "heal_oracle[oracle] family=full cf_workers=6 stop_after_action=True",
+      "mode": "heal_oracle",
+      "verdicts": "oracle",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "cf_workers",
+        6
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 137,
+      "scenarios": 55,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       92.34,
+       88.95,
+       95.49
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "incident[cf] family=full cf_workers=6 stop_after_action=True",
+      "mode": "incident",
+      "verdicts": "cf",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "cf_workers",
+        6
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 137,
+      "scenarios": 55,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       82.66,
+       76.61,
+       88.59
+      ],
+      "acr": null,
+      "bcp": null
+     },
+     {
+      "label": "selective[oracle] family=full stop_after_action=True",
+      "mode": "selective",
+      "verdicts": "oracle",
+      "modifiers": [],
+      "knobs": [
+       [
+        "family",
+        "full"
+       ],
+       [
+        "stop_after_action",
+        true
+       ]
+      ],
+      "runs": 137,
+      "scenarios": 55,
+      "measured": 0,
+      "measured_scenarios": 0,
+      "blocked": [
+       91.79,
+       87.86,
+       95.19
+      ],
+      "acr": null,
+      "bcp": null
+     }
+    ]
+   }
+  }
+ }
+}

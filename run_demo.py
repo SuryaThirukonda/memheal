@@ -26,7 +26,7 @@ from memheal.scenarios import (ALL_VARIANTS as VARIANTS, ATTACK_CATEGORIES, SUIT
                                by_category, by_domain)
 from memheal.scenarios.base import Scenario
 from memheal import tools as tools_mod
-from memheal.tools import TOOL_SCHEMAS, ToolContext, normalize_url
+from memheal.tools import ToolContext
 
 ROOT = Path(__file__).parent
 DATA = ROOT / "data"

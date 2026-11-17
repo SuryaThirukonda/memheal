@@ -19,6 +19,7 @@ dev = [
     "pypdf>=6.21.1",
     "pytest>=8.0",
     "reportlab>=5.0.1",
+    "ruff>=0.17",
 ]
 
 [tool.uv]
@@ -35,3 +36,12 @@ explicit = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+
+[tool.ruff]
+line-length = 110
+extend-exclude = ["data", ".venv"]
+
+[tool.ruff.lint]
+# Errors only (syntax errors, undefined names, unused imports/variables): the code has
+# its own style, so formatting rules would only churn it.
+select = ["E9", "F"]

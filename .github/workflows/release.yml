@@ -1,0 +1,45 @@
+name: Release
+
+# Delivery: pushing a version tag (git tag v0.2.0 && git push origin v0.2.0) re-runs the
+# checks and publishes a GitHub Release with the reports, tables and figures attached.
+# Run folders (data/) never leave the machine; only what is already in the repo ships.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install locked dependencies
+        run: uv sync --frozen
+
+      - name: Run the 8 checks
+        run: bash scripts/checks.sh
+
+      - name: Bundle reports and results
+        run: |
+          mkdir -p dist
+          zip -qr "dist/memheal-${GITHUB_REF_NAME}-reports.zip" docs results README.md \
+            -x 'results/smoke/*' '*/.parts/*'
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/*.zip \
+            --title "MemHeal $GITHUB_REF_NAME" --generate-notes

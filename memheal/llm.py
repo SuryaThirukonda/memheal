@@ -28,6 +28,11 @@ NO_REASONING_PREFIXES = ("gpt-4.1", "gpt-4o")
 # silently loses every run in it.
 MAX_ATTEMPTS = 5
 BACKOFF_BASE = 2.0
+# Rate limits are a shared ceiling (tokens per minute across every parallel worker), not a
+# fault: under a full batch the ceiling is hit for minutes at a time, and five quick
+# attempts (~30 s) drop runs that would have succeeded. They get more, capped waits.
+RATE_LIMIT_ATTEMPTS = 14
+MAX_DELAY = 30.0
 
 # Counterfactual replays can run concurrently (influence.frozen_ablation(workers=...))
 # and share one LLM and one log file. A large entry is written in several chunks, so
@@ -138,16 +143,20 @@ class LLM:
 
         transient = (openai.APIConnectionError, openai.APITimeoutError,
                      openai.RateLimitError, openai.InternalServerError)
-        for attempt in range(1, MAX_ATTEMPTS + 1):
+        attempt = 0
+        while True:
+            attempt += 1
             try:
                 return self.client.responses.create(**request)
             except transient as exc:
                 self.retries += 1
-                if attempt == MAX_ATTEMPTS:
+                limit = (RATE_LIMIT_ATTEMPTS if isinstance(exc, openai.RateLimitError)
+                         else MAX_ATTEMPTS)
+                if attempt >= limit:
                     raise
                 # Jitter so parallel workers do not all come back at the same moment.
-                delay = BACKOFF_BASE ** (attempt - 1) * (1 + random.random() * 0.3)
-                print(f"    [retry {attempt}/{MAX_ATTEMPTS - 1} after "
+                delay = min(BACKOFF_BASE ** (attempt - 1), MAX_DELAY) * (1 + random.random() * 0.3)
+                print(f"    [retry {attempt}/{limit - 1} after "
                       f"{type(exc).__name__} on {tag}; sleeping {delay:.1f}s]", flush=True)
                 time.sleep(delay)
 

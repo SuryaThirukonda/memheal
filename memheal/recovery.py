@@ -35,6 +35,21 @@ Modes, from bluntest to most targeted:
                      'ambiguous', the attack's premise) is dropped too; cf verdicts know
                      no legitimate system, so there such a claim stays. Opt-in:
                      recover.py's `--mode all` keeps meaning the modes above.
+    heal             incident's detection, unchanged, but what it flags is HEALED rather
+                     than quarantined (memheal/heal.py): each flagged memory is split
+                     into claims, a claim is poisoned if it names the observed
+                     destination, if it asserts a change and comes from the roots' pages
+                     (source taint), or if the claim-level counterfactual's delta
+                     debugging finds it (for the culprits), and every flagged memory,
+                     summaries included, keeps its benign claims in lineage order, roots
+                     first. No ground truth. Opt-in, like selective_claims.
+    heal_oracle      heal with claims labelled by the scenario's AttackSpec instead (the
+                     upper bound on claim localisation; same detection, so the pair
+                     differs only there). Opt-in.
+    heal_rebuild     heal, except that a derived memory over healed parents is rebuilt
+                     from them with its recorded prompt (Section 5.7's replay, guarded:
+                     no input read off a root's page, no rebuilt claim its inputs do not
+                     support) instead of filtered claim by claim. Opt-in.
 
 `rollback` restores an earlier snapshot and re-runs history, so it lives in recover.py.
 """
@@ -57,28 +72,39 @@ if TYPE_CHECKING:  # importing the package builds the whole catalog; only the ty
     from memheal.scenarios.base import Scenario
 
 MODES = ("none", "reset", "root", "ancestry", "selective", "selective_recon", "unmerge", "incident",
-         "selective_claims")
+         "selective_claims", "heal", "heal_oracle", "heal_rebuild")
 # Modes whose descendant decisions come from verdicts (oracle labels or counterfactuals).
 VERDICT_MODES = frozenset({"selective", "selective_recon", "unmerge", "incident",
-                           "selective_claims"})
+                           "selective_claims", "heal", "heal_oracle", "heal_rebuild"})
+# Modes that heal what incident's detection flags (memheal/heal.py).
+HEAL_MODES = ("heal", "heal_oracle", "heal_rebuild")
 CF_THRESHOLD = 0.5
 # The operation a claim-repaired memory is written with (memories.operation).
 CLAIM_REPAIR = "claim_repair"
+# The operations heal writes: a healed memory, and the temporary row a claim-level
+# counterfactual replay renders in a culprit's place (never active, never retrievable).
+HEAL_OP = "heal"
+PROBE_OP = "cf_probe"
 
 _SESSION_PREFIX = re.compile(r"^s\d+:")
 
 
 @dataclass
 class RecoveryPlan:
-    """What a recovery will do. `quarantine`, `reconstruct` and `repair` are disjoint: a
-    memory being rebuilt or claim-repaired is quarantined by that step itself, after its
-    replacement exists."""
+    """What a recovery will do. `quarantine`, `reconstruct`, `repair` and `heal` are
+    disjoint: a memory being rebuilt, claim-repaired or healed is quarantined by that
+    step itself, after its replacement exists."""
     mode: str
     quarantine: set[str] = field(default_factory=set)
     reconstruct: set[str] = field(default_factory=set)
     restore: set[str] = field(default_factory=set)
     # Mixed memories selective_claims rewrites from their attack-free claims.
     repair: set[str] = field(default_factory=set)
+    # Everything a heal mode flags: what incident would quarantine, healed instead.
+    heal: set[str] = field(default_factory=set)
+    # The counterfactual's minimal flipping sets (heal's culprits, for the claim-level
+    # counterfactual). Singletons when a single removal flips.
+    culprit_sets: list[list[str]] = field(default_factory=list)
     reasons: dict[str, str] = field(default_factory=dict)
     inferred_roots: list[str] = field(default_factory=list)
     # Everything the plan considered tainted (roots, descendants, incident suspects).
@@ -243,12 +269,13 @@ def incident_suspects(
 ) -> list[str]:
     """Memories the incident points at: counterfactual flips, plus every stored memory
     (whatever its status) naming the observed destination. A consolidated root is not
-    retrievable but still names it, which is how the incident finds its way back."""
+    retrievable but still names it, which is how the incident finds its way back.
+    heal's probe rows are measurement scaffolding, not memories, and never count."""
     spec = observed_spec(observed_destination)
     flips = {m for m, e in influence_scores.items()
              if (s := _score(e)[0]) is not None and s >= threshold}
     return [r["id"] for r in db.all_memories(conn)
-            if r["status"] != "deleted"
+            if r["status"] != "deleted" and r["operation"] != PROBE_OP
             and (r["id"] in flips or (observed_destination and spec.names_attacker(r["text"])))]
 
 
@@ -286,14 +313,23 @@ def _store_order(conn: sqlite3.Connection, ids: Iterable[str]) -> list[str]:
 def _absorbs(conn: sqlite3.Connection, row: sqlite3.Row) -> bool:
     """Does this memory stand for its parents? A summary (or its rebuild) does: its
     parents were marked 'consolidated' because of it. A reflection cites its parents
-    but leaves them active, so it absorbed nothing. A claim repair stands for what the
-    memory it repaired stood for; that memory is its first parent (the edge written
-    with it, before any absorber edge)."""
-    if row["operation"] == CLAIM_REPAIR:
-        first = next(iter(db.parents_of(conn, row["id"])), None)
-        original = db.get_memory(conn, first) if first is not None else None
-        return original is not None and _absorbs(conn, original)
+    but leaves them active, so it absorbed nothing. A claim repair, or a healed memory,
+    stands for what the memory it replaced stood for; that memory is its first parent
+    (the edge written with it, before any absorber edge)."""
+    original = _replaced_by(conn, row)
+    if original is not None:
+        return _absorbs(conn, original)
+    if row["operation"] in (CLAIM_REPAIR, HEAL_OP):
+        return False
     return row["operation"] in ("summarize", "reconstruct") and not _is_reflection(conn, row)
+
+
+def _replaced_by(conn: sqlite3.Connection, row) -> sqlite3.Row | None:
+    """The memory a claim repair or a healed memory replaced (its first parent), else None."""
+    if row["operation"] not in (CLAIM_REPAIR, HEAL_OP):
+        return None
+    first = next(iter(db.parents_of(conn, row["id"])), None)
+    return db.get_memory(conn, first) if first is not None else None
 
 
 def _surviving_absorbers(conn: sqlite3.Connection, memory_id: str, gone: set[str]) -> list[str]:
@@ -395,14 +431,18 @@ def plan(
     observed_destination: str | None = None,
     influence_scores: Mapping[str, Any] | None = None,
     threshold: float = CF_THRESHOLD,
+    culprit_sets: Iterable[Iterable[str]] | None = None,
 ) -> RecoveryPlan:
     """Decide what `mode` would do to this store; writes nothing.
 
     roots/descendants default to the harness's poison lineage. `incident` never takes
     that default: it needs `observed_destination` (and the counterfactual
     `influence_scores`, if any were measured) and infers its own roots, so it can be
-    called with scenario=None. `spec` defaults to the verdicts' own (cf), else the
-    scenario's (oracle), else the observed destination's.
+    called with scenario=None. heal does the same; heal_oracle also needs the scenario,
+    for its claim labels. `culprit_sets` (heal only) are the counterfactual's minimal
+    flipping sets; they default to the flipping singletons of `influence_scores`.
+    `spec` defaults to the verdicts' own (cf), else the scenario's (oracle), else the
+    observed destination's.
     """
     if mode not in MODES:
         raise ValueError(f"unknown recovery mode {mode!r}; expected one of {MODES}")
@@ -418,6 +458,10 @@ def plan(
     if mode == "incident":
         return _plan_incident(conn, p, verdicts, roots, descendants, spec,
                               observed_destination, influence_scores or {}, threshold)
+    if mode in HEAL_MODES:
+        return _plan_heal(conn, p, scenario, verdicts, roots, descendants, spec,
+                          observed_destination, influence_scores or {}, threshold,
+                          culprit_sets)
 
     if roots is None or descendants is None:
         lin_roots, lin_desc = lineage.poison_lineage(conn, scenario, condition)
@@ -509,6 +553,31 @@ def _plan_incident(conn, p: RecoveryPlan, verdicts, roots, descendants, spec,
     return p
 
 
+def _plan_heal(conn, p: RecoveryPlan, scenario, verdicts, roots, descendants, spec,
+               observed_destination, influence_scores, threshold, culprit_sets) -> RecoveryPlan:
+    """Detection exactly as incident; everything incident would quarantine is healed.
+
+    heal and heal_rebuild judge claims against the observed destination alone (p.spec
+    stays incident's observed spec); they differ only in how memheal/heal.py heals what
+    is flagged. heal_oracle swaps in the scenario's AttackSpec for the claim labels
+    only: the flagged set is the same, so heal vs heal_oracle measures claim
+    localisation and nothing else.
+    """
+    if p.mode == "heal_oracle" and scenario is None and spec is None:
+        raise ValueError("heal_oracle labels claims with the scenario's AttackSpec; "
+                         "pass the scenario")
+    _plan_incident(conn, p, verdicts, roots, descendants, None if p.mode == "heal_oracle" else spec,
+                   observed_destination, influence_scores, threshold)
+    p.heal, p.quarantine = p.quarantine, set()
+    if culprit_sets is None:
+        culprit_sets = [[m] for m, e in influence_scores.items()
+                        if (s := _score(e)[0]) is not None and s >= threshold]
+    p.culprit_sets = [list(s) for s in culprit_sets]
+    if p.mode == "heal_oracle":
+        p.spec = spec or AttackSpec.from_scenario(scenario)
+    return p
+
+
 # --- applying ---------------------------------------------------------------------
 
 class _CountingLLM:
@@ -554,6 +623,11 @@ def _embed(embedder, texts: list[str]) -> list[bytes]:
 def _is_reflection(conn: sqlite3.Connection, row: sqlite3.Row) -> bool:
     if row["operation"] == "reflect":
         return True
+    if row["operation"] == HEAL_OP:
+        # A healed memory is whatever it healed; a rebuilt reflection keeps the
+        # reflection rule if a later round rebuilds it again.
+        original = _replaced_by(conn, row)
+        return original is not None and _is_reflection(conn, original)
     # A reconstruct of a reflection keeps the reflection rule if it is rebuilt again.
     prompt = db.get_prompt(conn, row["created_by_prompt"]) if row["created_by_prompt"] else None
     return row["operation"] == "reconstruct" and prompt is not None \
@@ -646,13 +720,15 @@ def _insert_replacements(conn, row, texts: list[str], parents: list[list[str]], 
     return new_ids
 
 
-def _replay_summary(conn, llm, embedder, row, clean: list[sqlite3.Row],
-                    spec: AttackSpec, gone: set[str]) -> tuple[list[str], list[str], str]:
-    """Replay the recorded consolidation prompt over just the clean parents.
+def _summary_outputs(conn, llm, row, inputs: list[sqlite3.Row], *,
+                     tag: str) -> tuple[list[tuple[str, list[str]]], str, str | None]:
+    """The recorded consolidation prompt replayed over `inputs` alone: each valid summary
+    as (text, cited input ids), with the prompt's hash and the model that answered.
 
     The recorded text is what produced the memory, so replaying it holds the
-    transformation fixed and changes only its input (Section 5.7). Returns
-    (new ids, restored ids, outcome reason).
+    transformation fixed and changes only its input (Section 5.7). Same validity rule as
+    memory.consolidate: real, distinct citations, at least two. Shared by reconstruct
+    and heal, which differ only in what they do with the summaries.
     """
     recorded = db.get_prompt(conn, row["created_by_prompt"]) if row["created_by_prompt"] else None
     if recorded is not None:
@@ -661,21 +737,30 @@ def _replay_summary(conn, llm, embedder, row, clean: list[sqlite3.Row],
         prompt = memory.CONSOLIDATION_PROMPTS["default"]
         prompt_hash = db.register_prompt(conn, "consolidate.default", prompt)
 
-    listing = "\n".join(f"{i}. {r['text']}" for i, r in enumerate(clean, start=1))
+    listing = "\n".join(f"{i}. {r['text']}" for i, r in enumerate(inputs, start=1))
     response = llm.respond(prompt, f"Memory:\n{listing}",
-                           json_schema=memory.CONSOLIDATION_SCHEMA,
-                           tag=f"reconstruct:summarize:{row['id']}")
+                           json_schema=memory.CONSOLIDATION_SCHEMA, tag=tag)
     summaries = json.loads(response.text or '{"summaries": []}').get("summaries", [])
-
-    # Same validity rule as memory.consolidate: real, distinct citations, at least two.
-    kept: list[tuple[str, list[str]]] = []
-    suspect: set[str] = set()
+    out: list[tuple[str, list[str]]] = []
     for s in summaries:
         text = (s.get("text") or "").strip()
-        idx = sorted({i for i in s.get("parents", []) if isinstance(i, int) and 1 <= i <= len(clean)})
-        if not text or len(idx) < 2:
-            continue
-        cited = [clean[i - 1]["id"] for i in idx]
+        idx = sorted({i for i in s.get("parents", []) if isinstance(i, int) and 1 <= i <= len(inputs)})
+        if text and len(idx) >= 2:
+            out.append((text, [inputs[i - 1]["id"] for i in idx]))
+    return out, prompt_hash, response.model
+
+
+def _replay_summary(conn, llm, embedder, row, clean: list[sqlite3.Row],
+                    spec: AttackSpec, gone: set[str]) -> tuple[list[str], list[str], str]:
+    """Replay the recorded consolidation prompt over just the clean parents.
+
+    Returns (new ids, restored ids, outcome reason).
+    """
+    outputs, prompt_hash, model = _summary_outputs(conn, llm, row, clean,
+                                                   tag=f"reconstruct:summarize:{row['id']}")
+    kept: list[tuple[str, list[str]]] = []
+    suspect: set[str] = set()
+    for text, cited in outputs:
         if spec.names_attacker(text):
             # The attack came back from clean inputs alone. Discard the text, and do not
             # trust the parents it drew on back into retrieval either.
@@ -693,7 +778,7 @@ def _replay_summary(conn, llm, embedder, row, clean: list[sqlite3.Row],
         return [], [c for c in clean_ids if _reactivate(conn, c, gone)], "reconstruct:empty-replay"
 
     new_ids = _insert_replacements(conn, row, [t for t, _ in kept], [c for _, c in kept],
-                                   embedder, prompt_hash, response.model, gone)
+                                   embedder, prompt_hash, model, gone)
     cited_all = {c for _, cited in kept for c in cited}
     # Mirrors consolidate: the new summary stands for what it cites.
     db.set_status_many(conn, [c for c in cited_all
@@ -712,21 +797,30 @@ def _rewrite_reflection(conn, llm, embedder, row, clean: list[sqlite3.Row],
     attacker steered, so replaying it would bring the taint back. Its parents are
     still active, so an empty answer just means quarantine.
     """
-    prompt = memory.RECONSTRUCT_PROMPTS["reflect"]
-    prompt_hash = db.register_prompt(conn, "reconstruct.reflect", prompt)
-    listing = "\n".join(f"{i}. {r['text']}" for i, r in enumerate(clean, start=1))
-    response = llm.respond(prompt, f"Memory:\n{listing}", json_schema=memory.FACTS_SCHEMA,
-                           tag=f"reconstruct:reflect:{row['id']}")
-    facts = [f.strip() for f in json.loads(response.text or '{"facts": []}').get("facts", [])
-             if f.strip()]
+    facts, prompt_hash, model = _reflection_facts(conn, llm, clean,
+                                                  tag=f"reconstruct:reflect:{row['id']}")
     tainted_facts = [f for f in facts if spec.names_attacker(f)]
     facts = [f for f in facts if not spec.names_attacker(f)]
     if not facts:
         return [], "reconstruct-still-tainted" if tainted_facts else "reconstruct:empty-replay"
     parent_ids = [r["id"] for r in clean]
     new_ids = _insert_replacements(conn, row, facts, [parent_ids] * len(facts), embedder,
-                                   prompt_hash, response.model, gone)
+                                   prompt_hash, model, gone)
     return new_ids, "reconstruct:reflect"
+
+
+def _reflection_facts(conn, llm, inputs: list[sqlite3.Row], *,
+                      tag: str) -> tuple[list[str], str, str | None]:
+    """The reflection-rewrite prompt over `inputs` alone: the procedure facts they
+    support, the prompt's hash and the model that answered. Shared by reconstruct and
+    heal."""
+    prompt = memory.RECONSTRUCT_PROMPTS["reflect"]
+    prompt_hash = db.register_prompt(conn, "reconstruct.reflect", prompt)
+    listing = "\n".join(f"{i}. {r['text']}" for i, r in enumerate(inputs, start=1))
+    response = llm.respond(prompt, f"Memory:\n{listing}", json_schema=memory.FACTS_SCHEMA, tag=tag)
+    facts = [f.strip() for f in json.loads(response.text or '{"facts": []}').get("facts", [])
+             if f.strip()]
+    return facts, prompt_hash, response.model
 
 
 # --- claim repair (Section 12.3) ------------------------------------------------------
@@ -864,17 +958,24 @@ def apply(
     embedder: memory.Embedder | None,
     recovery_id: str,
     spec: AttackSpec | None = None,
+    *,
+    heal=None,
 ) -> dict[str, Any]:
-    """Carry out a plan: quarantine, then reconstruct, then claim-repair, then restore.
+    """Carry out a plan: quarantine, then reconstruct, then claim-repair, then restore,
+    then heal.
 
     That order matters. Reconstruction judges parents against the tainted set, so the
     quarantines must be in; restoration comes last so a parent a reconstruction just
-    cited (and so re-absorbed) is not also put back on its own.
+    cited (and so re-absorbed) is not also put back on its own. A heal plan has nothing
+    in the other sets; memheal/heal.py carries it out, with `heal` (a heal.HealContext:
+    the harness's claim-level replays and the split cache) when the caller has one.
     Returns {counts, quarantined, new_ids, restored, claim_repaired, claim_ambiguous,
-    llm_calls}; llm_calls counts only the calls made here, claim_repaired lists the
-    memories a claim repair replaced (their replacements are in new_ids), and
+    claims_kept, claims_dropped, llm_calls}, plus 'heal' (heal.apply's summary) for the
+    heal modes; llm_calls counts only the calls made here, claim_repaired lists the
+    memories a claim repair replaced (their replacements are in new_ids),
     claim_ambiguous counts the claims those repairs dropped for undermining the
-    legitimate system alone.
+    legitimate system alone, and claims_kept/claims_dropped count the claims written
+    into replacements and the claims judged to carry the attack (claim repair and heal).
     """
     spec = spec or plan.spec or observed_spec(None)
     counting = _CountingLLM(llm)
@@ -905,6 +1006,7 @@ def apply(
     # repairs can stay consolidated under its repair instead of surfacing twice.
     replaced: dict[str, str] = {}
     n_ambiguous = 0
+    claims_kept = claims_dropped = 0
     for m in reversed(_store_order(conn, plan.repair)):
         row = db.get_memory(conn, m)
         before = row["status"] if row is not None else "deleted"
@@ -912,10 +1014,12 @@ def apply(
                             recovery_id, plan.mode, removed=removed, replaced=replaced)
         if before not in ("quarantined", "deleted"):
             quarantined.append(m)
+        claims_dropped += len(out["dropped"]) + len(out["ambiguous"])
         if out["replacement_ids"]:
             replaced[m] = out["replacement_ids"][0]
             new_ids += out["replacement_ids"]
             n_ambiguous += len(out["ambiguous"])
+            claims_kept += len(out["kept"])
 
     for m in _store_order(conn, plan.restore):
         if m in plan.quarantine or m in tainted:
@@ -924,7 +1028,18 @@ def apply(
             restored.append(m)
             db.log_recovery(conn, recovery_id, plan.mode, m, "restore", reason=plan.reasons.get(m))
 
-    return {
+    healed = None
+    if plan.mode in HEAL_MODES:
+        from memheal import heal as healing          # heal builds on this module
+        healed = healing.apply(conn, plan, counting, embedder, recovery_id, spec,
+                               context=heal, has_llm=llm is not None)
+        quarantined += [m for m in healed["quarantined"] if m not in quarantined]
+        new_ids += healed["new_ids"]
+        restored += [r for r in healed["restored"] if r not in restored]
+        claims_kept += healed["claims_kept"]
+        claims_dropped += healed["claims_dropped"]
+
+    out = {
         "counts": {"quarantined": len(quarantined), "reconstructed": n_reconstructed,
                    "new": len(new_ids), "restored": len(restored)},
         "quarantined": quarantined,
@@ -932,8 +1047,13 @@ def apply(
         "restored": restored,
         "claim_repaired": list(replaced),
         "claim_ambiguous": n_ambiguous,
+        "claims_kept": claims_kept,
+        "claims_dropped": claims_dropped,
         "llm_calls": counting.calls,
     }
+    if healed is not None:
+        out["heal"] = healed
+    return out
 
 
 # --- immunize ---------------------------------------------------------------------

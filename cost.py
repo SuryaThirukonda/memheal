@@ -59,6 +59,13 @@ from typing import Any, Callable, Collection, Hashable, Iterable, Sequence
 
 import numpy as np
 
+# recover.py's experiment knobs (T7, and heal v2's verify_n, claim_n and ddmin_budget)
+# have one definition, measure.py's, so a record that is a measurement of its own there is
+# a row of its own here: a +verify configuration at --verify-n 3 is never priced with one
+# at 1. CF_KNOBS are the knobs only a counterfactual has (an oracle record carries None
+# for them); the cf-vs-oracle pairs below are of modes without +verify or claim-level
+# replays, so those are the only one-sided knobs they can differ on.
+from measure import CF_KNOBS, config_key, knobs
 from memheal import db, memory
 
 ROOT = Path(__file__).parent
@@ -1038,33 +1045,11 @@ def triggered(rec: dict) -> bool:
     return bool(rec.get("incident"))
 
 
-# recover.py's experiment knobs (T7) and the value each has in a record written before
-# they existed or by a sweep that left it alone. k is absent: a record's k is the k its
-# replays used, which is the run's own k unless the incident was observed fresh.
-KNOBS = ("family", "k", "repeat", "depth", "cf_method", "cf_groups", "cf_workers", "observe")
-KNOB_DEFAULTS = {"family": "recorded", "repeat": None, "depth": 0, "cf_method": "frozen",
-                 "cf_groups": False, "cf_workers": 1, "observe": "logged"}
-
-
-def knobs(rec: dict) -> tuple[tuple[str, Any], ...]:
-    """The knobs a record departs from the defaults on, in KNOBS order: () for every
-    record a default sweep wrote, old or new, so those still group and deduplicate
-    together, while a k=3 and a k=10 measurement of one run stay two measurements."""
-    out = []
-    for name in KNOBS:
-        value = rec.get(name)
-        if value is None or (name in KNOB_DEFAULTS and value == KNOB_DEFAULTS[name]):
-            continue
-        if name == "k" and rec.get("observe") != "fresh":
-            continue
-        out.append((name, value))
-    return tuple(out)
-
-
 def cost_key(rec: dict) -> tuple:
-    """What was done to the store, knobs included: measure.config_key plus knobs()."""
-    import measure
-    return (measure.config_key(rec), knobs(rec))
+    """What was done to the store, knobs included: measure.config_key plus knobs(), the
+    knob table measure.py's tables group by too (measure.setting_key flattens the same
+    pair), so the cost and recovery tables split records the same way."""
+    return (config_key(rec), knobs(rec))
 
 
 def cost_label(key: tuple) -> str:
@@ -1085,7 +1070,7 @@ def load_records(path: Path) -> list[dict]:
 
     The knobs are part of the key (as in measure.record_key), so a file holding several
     knob settings for one run (repeats, k, depth) keeps every setting; cost_key also
-    groups the tables by them, which measure.py's tables do not.
+    groups the tables by them, as measure.py's tables do.
     """
     rows = []
     for i, line in enumerate(Path(path).read_text().splitlines(), 1):
@@ -1162,10 +1147,6 @@ DIAGNOSIS_PAIRS = (
     (("selective", "cf", (), "patched"), ("selective", "oracle", (), "patched")),
     (("unmerge", "cf", (), "patched"), ("unmerge", "oracle", (), "patched")),
 )
-
-
-# Knobs only a counterfactual has: an oracle record carries None for them.
-CF_KNOBS = ("cf_method", "cf_groups", "cf_workers")
 
 
 def diagnosis_rows(records: Sequence[dict], pairs=DIAGNOSIS_PAIRS,

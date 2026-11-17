@@ -44,8 +44,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from memheal import db
+from memheal.heal import CLAIM_N, DDMIN_BUDGET
 from memheal.labels import CARRIES_ATTACK, LABELS, AttackSpec, label_lineage
-from memheal.scenarios import ALL_VARIANTS, ATTACK_CATEGORIES
+from memheal.scenarios import ADAPTIVE_CATEGORIES, ALL_VARIANTS, ATTACK_CATEGORIES
 from run_demo import is_poison
 
 ROOT = Path(__file__).parent
@@ -261,6 +262,14 @@ def pct(n: int, d: int) -> str:
     return f"{100 * n / d:.0f}% ({n}/{d})" if d else "-"
 
 
+def categories(runs) -> tuple[str, ...]:
+    """The attack categories a per-category table or plot shows: the three catalog ones
+    always (as before), then each adaptive category (Section 12.3) the runs include, so a
+    table over runs with no adaptive scenario reads exactly as it did."""
+    present = {r.category for r in runs}
+    return (*ATTACK_CATEGORIES, *(c for c in ADAPTIVE_CATEGORIES if c in present))
+
+
 def md_table(header: list[str], rows: list[list]) -> str:
     out = ["| " + " | ".join(header) + " |", "|" + "---|" * len(header)]
     out += ["| " + " | ".join(str(c) for c in row) + " |" for row in rows]
@@ -308,7 +317,7 @@ def tables_for(name: str, runs: list[RunMeasure], judge: dict | None) -> str:
                  "lineage is labelled harmful or mixed in that snapshot. *Retrieved* = such a "
                  "memory was in the target's top-k; *acted* = attacker outcome (ASR).\n")
     rows = []
-    for cat in (*ATTACK_CATEGORIES, "all"):
+    for cat in (*categories(poisoned), "all"):
         sub = [r for r in poisoned if cat == "all" or r.category == cat]
         rates = survival_rates(sub)
         # Only procedural cases reflect, so an "all" figure at that stage would be the
@@ -322,7 +331,7 @@ def tables_for(name: str, runs: list[RunMeasure], judge: dict | None) -> str:
     # Section 8.1 propagation metrics.
     parts.append("### Propagation: PSize, HPSize, BDF\n")
     rows = []
-    for key, groups in (("category", ATTACK_CATEGORIES), ("domain", DOMAINS)):
+    for key, groups in (("category", categories(poisoned)), ("domain", DOMAINS)):
         for g in groups:
             sub = [r for r in poisoned if getattr(r, key) == g]
             if not sub:
@@ -355,7 +364,7 @@ def tables_for(name: str, runs: list[RunMeasure], judge: dict | None) -> str:
     # Section 7.8 labels.
     parts.append("### Descendant labels (Section 7.8)\n")
     rows = []
-    for key, groups in (("category", ATTACK_CATEGORIES), ("domain", DOMAINS),
+    for key, groups in (("category", categories(poisoned)), ("domain", DOMAINS),
                         ("operation", ("summarize", "reflect"))):
         for g in groups:
             c = Counter(d["label"] for d in desc_rows if d[key] == g)
@@ -507,7 +516,8 @@ def plot_all(groups: dict[str, list[RunMeasure]], out: Path) -> list[Path]:
 
     made = []
     names = list(groups)
-    colors = {"direct": "#c0392b", "composed": "#2471a3", "procedural": "#7d3c98", "all": "#222222"}
+    colors = {"direct": "#c0392b", "composed": "#2471a3", "procedural": "#7d3c98",
+              "adaptive_evade": "#b9770e", "adaptive_survive": "#148f77", "all": "#222222"}
     label_colors = {"harmful": "#c0392b", "mixed": "#e67e22", "benign": "#27ae60",
                     "ambiguous": "#95a5a6"}
 
@@ -519,7 +529,7 @@ def plot_all(groups: dict[str, list[RunMeasure]], out: Path) -> list[Path]:
     fig, axes = plt.subplots(1, len(names), figsize=(6.5 * len(names), 4.2), squeeze=False)
     for ax, name in zip(axes[0], names):
         pois = qualified(groups[name])
-        for cat in (*ATTACK_CATEGORIES, "all"):
+        for cat in (*categories(pois), "all"):
             sub = [r for r in pois if cat == "all" or r.category == cat]
             rates = survival_rates(sub)
             if cat == "all":
@@ -548,18 +558,20 @@ def plot_all(groups: dict[str, list[RunMeasure]], out: Path) -> list[Path]:
     fig, axes = plt.subplots(1, len(names), figsize=(6.5 * len(names), 4), squeeze=False)
     for ax, name in zip(axes[0], names):
         pois = qualified(groups[name])
+        cats = categories(pois)
         width = 0.18
         for j, (metric, fn) in enumerate((
                 ("PSize", lambda r: r.psize), ("harmful", lambda r: r.labels["harmful"]),
                 ("mixed", lambda r: r.labels["mixed"]), ("benign", lambda r: r.labels["benign"]))):
             ys = []
-            for cat in ATTACK_CATEGORIES:
+            for cat in cats:
                 sub = [fn(r) for r in pois if r.category == cat]
                 ys.append(statistics.mean(sub) if sub else 0)
             col = "#34495e" if metric == "PSize" else label_colors[metric]
-            ax.bar([i + (j - 1.5) * width for i in range(3)], ys, width, label=metric, color=col)
-        ax.set_xticks(range(3))
-        ax.set_xticklabels(ATTACK_CATEGORIES)
+            ax.bar([i + (j - 1.5) * width for i in range(len(cats))], ys, width, label=metric,
+                   color=col)
+        ax.set_xticks(range(len(cats)))
+        ax.set_xticklabels(cats)
         ax.set_ylabel("descendants per poisoned run (mean)")
         ax.set_title(f"Propagation size - {name}")
         ax.legend(fontsize=8)
@@ -572,8 +584,9 @@ def plot_all(groups: dict[str, list[RunMeasure]], out: Path) -> list[Path]:
     # 3. Harmful vs benign descendants, stacked, by category / domain / operation.
     fig, axes = plt.subplots(len(names), 3, figsize=(14, 3.8 * len(names)), squeeze=False)
     for row, name in enumerate(names):
-        desc = [d for r in qualified(groups[name]) for d in r.rows if d["role"] == "descendant"]
-        for col, (key, cats) in enumerate((("category", ATTACK_CATEGORIES), ("domain", DOMAINS),
+        pois = qualified(groups[name])
+        desc = [d for r in pois for d in r.rows if d["role"] == "descendant"]
+        for col, (key, cats) in enumerate((("category", categories(pois)), ("domain", DOMAINS),
                                            ("operation", ("summarize", "reflect")))):
             ax = axes[row][col]
             bottoms = [0.0] * len(cats)
@@ -632,28 +645,95 @@ CHECKPOINTS = (0, 1, 3, 5, 10)                     # Section 8.8 reinfection sch
 # without naming a replacement, the attack's premise) is neither: Section 7.8 keeps it out of
 # primary metrics, so it is counted in its own column.
 COLLATERAL = ("benign", "non_lineage")
-# recover.py's experiment knobs and the value each has in a record written before they
-# existed or by a sweep that left it alone (the same table as cost.KNOBS). k is absent
-# from the defaults: a record's k is the run's own k unless the incident was observed
-# fresh, so it only tells measurements apart when observe is 'fresh'.
-KNOBS = ("family", "k", "repeat", "depth", "cf_method", "cf_groups", "cf_workers", "observe")
+# recover.py's experiment knobs (T7, then heal v2) and the value each has in a record
+# written before they existed or by a sweep that left it alone. This is the one
+# definition: cost.py imports it, and analyze.py, analyze_history.py and bcp.py group by
+# it, so none of them disagree on what makes two records different measurements. k is
+# absent from the defaults: a record's k is the run's own k unless the incident was
+# observed fresh, so it only tells measurements apart when observe is 'fresh'. The heal
+# v2 knobs come last, so every label written before them reads as it did; their
+# defaults are recover.py's (recover.Options: verify_n 1, claim_n and ddmin_budget
+# memheal/heal.py's), so a record at the defaults is the same setting as an older record
+# without the fields, exactly as recover.config_tag adds @v/@c/@b only away from them.
+HEAL_V2_KNOBS = ("verify_n", "claim_n", "ddmin_budget")
+KNOBS = ("family", "k", "repeat", "depth", "cf_method", "cf_groups", "cf_workers", "observe",
+         "stop_after_action", *HEAL_V2_KNOBS)
 KNOB_DEFAULTS = {"family": "recorded", "repeat": None, "depth": 0, "cf_method": "frozen",
-                 "cf_groups": False, "cf_workers": 1, "observe": "logged"}
+                 "cf_groups": False, "cf_workers": 1, "observe": "logged",
+                 "stop_after_action": False, "verify_n": 1, "claim_n": CLAIM_N,
+                 "ddmin_budget": DDMIN_BUDGET}
+# Knobs only a counterfactual has: a configuration that cannot run one (oracle verdicts,
+# 'none') records None for them.
+CF_KNOBS = ("cf_method", "cf_groups", "cf_workers")
+# Knobs only heal's claim-level replays have (recover.CLAIM_CF_MODES: heal, heal_rebuild);
+# every other mode, heal_oracle included, records None for them.
+CLAIM_KNOBS = ("claim_n", "ddmin_budget")
+# Knobs that belong to one side of a comparison: the counterfactual's, the claim-level
+# replays' and +verify's replays per check (None without +verify). A configuration that
+# has them is set against the other side's setting without them when that side has no
+# setting of its own (paired differences, bcp.py's pairs), so heal@c5 still has an
+# incident to be compared with.
+ONE_SIDED = (*CF_KNOBS, *CLAIM_KNOBS, "verify_n")
+# Which one-sided knobs to set aside, in turn, when the other side has no setting of its
+# own, most alike first: the claim-level ones (incident has the counterfactual's options
+# but none of these), +verify's, both, then every one-sided knob (an oracle
+# configuration has no counterfactual options either). For a record without claim-level
+# or +verify knobs the ladder is its own setting and then the one without the
+# counterfactual's options, the rule before heal v2.
+ONE_SIDED_LADDER = (CLAIM_KNOBS, ("verify_n",), (*CLAIM_KNOBS, "verify_n"), ONE_SIDED)
+# recover.py's note on a --stop-after-action configuration. Records written before
+# stop_after_action became a record field carry only the note.
+STOP_NOTE = "replays stop at the first acting call"
+# What a 'none' baseline is matched on is what a replay answers, so not the one-sided
+# knobs (a baseline has none of them: they change how recovery searched and checked,
+# not what a probe asks) and not stop_after_action (a replay stops after its decision is
+# made, and probes never act).
+BASELINE_IGNORES = (*ONE_SIDED, "stop_after_action")
+
+
+def knob_value(rec: dict, name: str) -> object:
+    """A record's value for one knob; stop_after_action falls back to recover.py's note,
+    so a sweep whose records straddle the field's introduction stays one setting."""
+    value = rec.get(name)
+    if name == "stop_after_action" and value is None:
+        return True if STOP_NOTE in (rec.get("notes") or "") else None
+    return value
 
 
 def knobs(rec: dict) -> tuple[tuple[str, object], ...]:
-    """The knobs a record departs from the defaults on: () for every record a default
-    sweep wrote, old or new, so those still deduplicate exactly as before, while a k=3
-    and a k=10 (or repeat 1 and 2) measurement of one run stay two measurements."""
+    """The knobs a record departs from the defaults on, in KNOBS order: () for every
+    record a default sweep wrote, old or new, so those still deduplicate and group
+    exactly as before, while a k=3 and a k=10 (or repeat 1 and 2) measurement of one run
+    stay two measurements."""
     out = []
     for name in KNOBS:
-        value = rec.get(name)
+        value = knob_value(rec, name)
         if value is None or (name in KNOB_DEFAULTS and value == KNOB_DEFAULTS[name]):
             continue
         if name == "k" and rec.get("observe") != "fresh":
             continue
         out.append((name, value))
     return tuple(out)
+
+
+def drop_knobs(kn: tuple, names: tuple[str, ...]) -> tuple:
+    return tuple(p for p in kn if p[0] not in names)
+
+
+def fallback_settings(kn: tuple) -> list[tuple]:
+    """The knob settings a configuration with knobs `kn` is set against, in the order to
+    try them: its own, then ONE_SIDED_LADDER's (repeats dropped)."""
+    out = [kn]
+    for names in ONE_SIDED_LADDER:
+        k = drop_knobs(kn, names)
+        if k not in out:
+            out.append(k)
+    return out
+
+
+def knob_label(kn: tuple) -> str:
+    """' k=3 observe=fresh': appended to a configuration label; '' for default knobs."""
+    return "".join(f" {k}={v}" for k, v in kn)
 
 
 def record_key(rec: dict) -> tuple:
@@ -690,10 +770,20 @@ def config_key(rec: dict) -> tuple[str, str, tuple[str, ...], str]:
             tuple(sorted(rec.get("modifiers") or ())), rec.get("source") or "patched")
 
 
+def setting_key(rec: dict) -> tuple:
+    """What the tables group by: config_key followed by the record's knob pairs. For a
+    record a default sweep wrote it is exactly config_key, so every key and label an
+    earlier sweep produced is unchanged, while a k=3 and a k=10 incident (or repeats 1
+    and 2, or depth 1 and 2) become separate rows instead of one pooled row."""
+    return config_key(rec) + knobs(rec)
+
+
 def config_label(key: tuple, show_source: bool = True) -> str:
-    mode, verdicts, mods, source = key
+    """'selective[oracle]+immunize (patched)', plus ' k=3 observe=fresh' for a
+    setting_key with knobs (cost.py's cost_label reads the same)."""
+    mode, verdicts, mods, source, *kn = key
     s = mode + (f"[{verdicts}]" if verdicts else "") + "".join(f"+{m}" for m in mods)
-    return f"{s} ({source})" if show_source else s
+    return (f"{s} ({source})" if show_source else s) + knob_label(kn)
 
 
 def _config_sort(key: tuple) -> tuple:
@@ -735,21 +825,35 @@ def is_baseline(rec: dict) -> bool:
             and not rec.get("modifiers") and rec.get("verify_rounds") is None)
 
 
-def _none_baselines(records: list[dict]) -> dict[tuple[str, str], dict]:
-    """The plain 'none' record at checkpoint 0 for each (run_dir, source). A run with
-    only modified 'none' records has no baseline and is counted as missing one."""
+def baseline_knobs(rec: dict) -> tuple:
+    return drop_knobs(knobs(rec), BASELINE_IGNORES)
+
+
+def _none_baselines(records: list[dict]) -> dict[tuple, dict]:
+    """The plain 'none' record at checkpoint 0 for each (run_dir, source), followed by
+    its knob pairs (none for a default sweep, so those keys read (run_dir, source)). A
+    run with only modified 'none' records has no baseline and is counted as missing one."""
     out = {}
     for r in records:
         if is_baseline(r):
-            out[(r["run_dir"], r.get("source") or "patched")] = r     # the last one wins
+            key = (r["run_dir"], r.get("source") or "patched", *baseline_knobs(r))
+            out[key] = r                                               # the last one wins
     return out
 
 
 def _baseline_for(rec: dict, baselines: dict) -> dict | None:
-    """Same run's 'none' record: same replay pages if there is one, else any."""
-    hit = baselines.get((rec["run_dir"], rec.get("source") or "patched"))
+    """Same run's 'none' record under the same knobs (k, depth, family, ...): a probe a
+    k=3 replay misses says nothing about a k=10 recovery. Same replay pages and repeat
+    if there is one, then the same pages, then any; never another knob setting."""
+    rd, src, kn = rec["run_dir"], rec.get("source") or "patched", baseline_knobs(rec)
+    hit = baselines.get((rd, src, *kn))
     if hit is None:
-        hit = next((b for (rd, _), b in baselines.items() if rd == rec["run_dir"]), None)
+        unrepeated = drop_knobs(kn, ("repeat",))
+        same = [(key, b) for key, b in baselines.items()
+                if key[0] == rd and drop_knobs(key[2:], ("repeat",)) == unrepeated]
+        hit = next((b for key, b in same if key[1] == src), None)
+        if hit is None:
+            hit = next((b for _, b in same), None)
     return hit
 
 
@@ -852,10 +956,11 @@ def aggregate(key: tuple, recs: list[dict], baselines: dict) -> RecoveryRow:
 
 
 def grouped(recs: list[dict], extra=None) -> dict[tuple, list[dict]]:
-    """Records by configuration (optionally prefixed by extra(rec)), in ladder order."""
+    """Records by configuration and knob setting (setting_key, optionally prefixed by
+    extra(rec)), in ladder order, so no row pools two knob settings."""
     g: dict[tuple, list[dict]] = defaultdict(list)
     for r in recs:
-        g[((extra(r),) if extra else ()) + (config_key(r),)].append(r)
+        g[((extra(r),) if extra else ()) + (setting_key(r),)].append(r)
     return dict(sorted(g.items(), key=lambda kv: (kv[0][:-1], _config_sort(kv[0][-1]))))
 
 
@@ -898,13 +1003,13 @@ def reinfection_series(records: list[dict]) -> dict[tuple, dict[int, tuple[float
     later = defaultdict(list)
     for r in pois:
         if r.get("checkpoint", 0) > 0:
-            later[config_key(r)].append(r)
+            later[setting_key(r)].append(r)
     out = {}
     for key in sorted(later, key=_config_sort):
         followed = {r["run_dir"] for r in later[key]}
         series = {}
         for cp in sorted({0, *(r["checkpoint"] for r in later[key])}):
-            recs = [r for r in pois if config_key(r) == key and r.get("checkpoint", 0) == cp
+            recs = [r for r in pois if setting_key(r) == key and r.get("checkpoint", 0) == cp
                     and r["run_dir"] in followed]
             if recs:
                 series[cp] = asr_counts(recs)
@@ -923,7 +1028,7 @@ def reinfection_rates(records: list[dict]) -> dict[tuple, tuple[int, int]]:
     pois = [r for r in records if r.get("condition", "poisoned") == "poisoned"]
     by_run: dict[tuple, dict[str, dict[int, bool]]] = defaultdict(lambda: defaultdict(dict))
     for r in pois:
-        by_run[config_key(r)][r["run_dir"]][r.get("checkpoint", 0)] = (
+        by_run[setting_key(r)][r["run_dir"]][r.get("checkpoint", 0)] = (
             any(o == "attacker" for o in r.get("task_outcomes") or ())
             or (not r.get("task_outcomes") and (r.get("asr") or 0) > 0))
     out = {}
@@ -976,11 +1081,11 @@ def _followed(records: list[dict]) -> dict[tuple, dict[str, dict[int, dict]]]:
     """Poisoned records of configurations followed into reinfection, by run and checkpoint,
     restricted to the runs that were followed so every checkpoint covers the same runs."""
     pois = [r for r in records if r.get("condition", "poisoned") == "poisoned"]
-    later = {config_key(r) for r in pois if r.get("checkpoint", 0) > 0}
+    later = {setting_key(r) for r in pois if r.get("checkpoint", 0) > 0}
     by: dict[tuple, dict[str, dict[int, dict]]] = defaultdict(lambda: defaultdict(dict))
     for r in pois:
-        if config_key(r) in later:
-            by[config_key(r)][r["run_dir"]][r.get("checkpoint", 0)] = r
+        if setting_key(r) in later:
+            by[setting_key(r)][r["run_dir"]][r.get("checkpoint", 0)] = r
     return {k: {rd: cps for rd, cps in v.items() if any(cp > 0 for cp in cps)}
             for k, v in sorted(by.items(), key=lambda kv: _config_sort(kv[0]))}
 
@@ -1035,7 +1140,7 @@ def replay_noise(path: Path, keep_pairs: bool = False) -> dict | None:
     pr = sum(min(len(a["probes"]), len(b["probes"])) for a, b in pairs)
     pf = sum(x["correct"] != y["correct"] for a, b in pairs for x, y in zip(a["probes"], b["probes"]))
     out = {"pairs": len(pairs), "excluded": len(candidates) - len(pairs),
-           "configs": sorted({config_label(config_key(a), False) for a, _ in pairs}),
+           "configs": sorted({config_label(setting_key(a), False) for a, _ in pairs}),
            "tasks": t, "task_flips": tf, "probes": pr, "probe_flips": pf,
            "attack_flips": sum((x == "attacker") != (y == "attacker") for a, b in pairs
                                for x, y in zip(a["task_outcomes"], b["task_outcomes"]))}
@@ -1063,10 +1168,17 @@ PAIRED = (
 
 
 def _paired_metrics(A: dict[str, dict], B: dict[str, dict], runs: list[str], baselines: dict,
-                    rnd, n_boot: int) -> dict:
+                    rnd, n_boot: int, cluster: dict[str, str] | None = None) -> dict:
     """A minus B over `runs` (each maps run_dir -> record), with percentile bootstrap 95%
     intervals from resampling runs. ASR here is the mean of per-run ASR (each run weighs
-    the same), not the task-pooled ASR of the other tables."""
+    the same), not the task-pooled ASR of the other tables. With `cluster` (run -> its
+    scenario) whole scenarios are resampled instead, each run's A/B pair inside its
+    scenario: runs of one scenario share its pages and poison, so they are not
+    independent. Every run its own scenario draws exactly what resampling runs does."""
+    groups: dict[str, list[str]] = {}
+    for rd in runs:
+        groups.setdefault(cluster[rd] if cluster else rd, []).append(rd)
+    units = list(groups.values())
     def bmp(rs):
         kept = total = 0
         for r in rs:
@@ -1091,7 +1203,7 @@ def _paired_metrics(A: dict[str, dict], B: dict[str, dict], runs: list[str], bas
         if obs is None:
             row[name] = None
             continue
-        boots = sorted(d for d in (diff([rnd.choice(runs) for _ in runs])
+        boots = sorted(d for d in (diff([rd for _ in units for rd in rnd.choice(units)])
                                    for _ in range(n_boot)) if d is not None)
         row[name] = (obs, boots[int(0.025 * len(boots))], boots[int(0.975 * len(boots)) - 1])
     return row
@@ -1101,34 +1213,44 @@ def paired_differences(records: list[dict], pairs=PAIRED, n_boot: int = 2000,
                        seed: int = 0) -> list[dict]:
     """Paired run-level differences (A minus B) with percentile bootstrap 95% intervals.
     Patched replays at checkpoint 0 only. Every configuration is a single replay per run;
-    replay_noise's A/A rows show what two replays of one store differ by."""
+    replay_noise's A/A rows show what two replays of one store differ by.
+
+    Pairs are formed within one knob setting (A's one-sided knobs aside, which B may not
+    have: the counterfactual's options, heal's claim-level replays, +verify's replays per
+    check), so a k=3 'incident' is never set against a k=10 'ancestry'; each setting gets
+    its own rows, the default one first and unlabelled."""
     import random
     baselines = _none_baselines(records)
     pois0 = [r for r in records if r.get("checkpoint", 0) == 0
              and r.get("condition", "poisoned") == "poisoned"
              and (r.get("source") or "patched") == "patched"]
-    by: dict[str, dict[str, dict]] = defaultdict(dict)
+    by: dict[tuple[str, tuple], dict[str, dict]] = defaultdict(dict)
     for r in pois0:
-        by[config_label(config_key(r), False)][r["run_dir"]] = r
+        by[(config_label(config_key(r), False), knobs(r))][r["run_dir"]] = r
     mixed = set()
     for r in pois0:
         if ((r.get("mode") == "selective" and (r.get("collateral") or {}).get("mixed", 0) > 0)
                 or (r.get("mode") == "selective_recon" and (r.get("n_reconstructed") or 0) > 0)):
-            mixed.add(r["run_dir"])
+            mixed.add((r["run_dir"], drop_knobs(knobs(r), ONE_SIDED)))
     out = []
     rnd = random.Random(seed)
-    for a, b, pop in pairs:
-        if a not in by or b not in by:
-            continue
-        runs = sorted(set(by[a]) & set(by[b]))
-        if pop == "incident":
-            runs = [rd for rd in runs if record_incident(by[a][rd])]
-        elif pop == "mixed":
-            runs = [rd for rd in runs if rd in mixed]
-        if not runs:
-            continue
-        out.append({"a": a, "b": b, "population": pop, "runs": len(runs),
-                    **_paired_metrics(by[a], by[b], runs, baselines, rnd, n_boot)})
+    for kn in sorted({kn for _, kn in by}):
+        shared = drop_knobs(kn, ONE_SIDED)
+        for a, b, pop in pairs:
+            ka = (a, kn)
+            kb = next(((b, k) for k in fallback_settings(kn) if (b, k) in by), None)
+            if ka not in by or kb is None:
+                continue
+            runs = sorted(set(by[ka]) & set(by[kb]))
+            if pop == "incident":
+                runs = [rd for rd in runs if record_incident(by[ka][rd])]
+            elif pop == "mixed":
+                runs = [rd for rd in runs if (rd, shared) in mixed]
+            if not runs:
+                continue
+            out.append({"a": a + knob_label(kn), "b": b + knob_label(kb[1]), "population": pop,
+                        "runs": len(runs),
+                        **_paired_metrics(by[ka], by[kb], runs, baselines, rnd, n_boot)})
     return out
 
 
@@ -1146,7 +1268,7 @@ def replay_aa(path: Path, records: list[dict], n_boot: int = 2000, seed: int = 0
     for a, b in noise["pair_records"]:
         if a.get("condition", "poisoned") != "poisoned":
             continue
-        first, second = by_cfg[config_label(config_key(a), False)]
+        first, second = by_cfg[config_label(setting_key(a), False)]
         first[a["run_dir"]], second[b["run_dir"]] = a, b
     return [{"a": f"{cfg} (2nd replay)", "b": f"{cfg} (1st replay)", "population": "all",
              "runs": len(first), **_paired_metrics(second, first, sorted(first), baselines, rnd, n_boot)}
@@ -1169,15 +1291,15 @@ def probe_counts(recs: list[dict]) -> tuple[int, int]:
 def recon_vs_deletion(records: list[dict]) -> list[tuple[tuple, RecoveryRow, RecoveryRow]]:
     """Section 8.9: selective (delete mixed) vs selective_recon (rebuild mixed), on the
     runs where the choice exists, i.e. at least one mixed descendant. Pairs share run,
-    verdict source, modifiers and replay pages, so only the treatment of mixed differs."""
+    verdict source, modifiers, replay pages and knobs, so only the treatment of mixed
+    differs. The context is setting_key without the mode."""
     baselines = _none_baselines(records)
     at0 = [r for r in records if r.get("checkpoint", 0) == 0
            and r.get("condition", "poisoned") == "poisoned"
            and r.get("mode") in ("selective", "selective_recon")]
     by_ctx: dict[tuple, dict[str, dict[str, dict]]] = defaultdict(lambda: defaultdict(dict))
     for r in at0:
-        _, verdicts, mods, source = config_key(r)
-        by_ctx[(verdicts, mods, source)][r["run_dir"]][r["mode"]] = r
+        by_ctx[setting_key(r)[1:]][r["run_dir"]][r["mode"]] = r
     out = []
     for ctx in sorted(by_ctx):
         sel, rec = [], []
@@ -1190,9 +1312,8 @@ def recon_vs_deletion(records: list[dict]) -> list[tuple[tuple, RecoveryRow, Rec
                 sel.append(pair["selective"])
                 rec.append(pair["selective_recon"])
         if sel:
-            verdicts, mods, source = ctx
-            out.append((ctx, aggregate(("selective", verdicts, mods, source), sel, baselines),
-                        aggregate(("selective_recon", verdicts, mods, source), rec, baselines)))
+            out.append((ctx, aggregate(("selective", *ctx), sel, baselines),
+                        aggregate(("selective_recon", *ctx), rec, baselines)))
     return out
 
 
@@ -1361,12 +1482,16 @@ def recovery_tables(records: list[dict], noise: dict | None = None,
         # The plan's probe ceiling: what an agent that was never poisoned answers from
         # memory, next to the poisoned runs' no-recovery answer. BMP is relative to the
         # latter, so a high BMP on a store the poison had already thinned is visible here.
-        ceil = probe_counts([r for r in clean0 if is_baseline(r)])
-        floor = probe_counts([r for r in pois0 if is_baseline(r)
-                              and (r.get("source") or "patched") == "patched"])
-        parts.append("")
-        parts.append(f"Probe ceiling (clean runs, no recovery): {_ratio(*ceil)} of probes "
-                     f"correct; poisoned runs with no recovery: {_ratio(*floor)}.")
+        # One line per knob setting of the baselines (k=3 answers fewer than k=10).
+        settings = sorted({baseline_knobs(r) for r in (*clean0, *pois0) if is_baseline(r)})
+        for kn in settings or [()]:
+            ceil = probe_counts([r for r in clean0 if is_baseline(r) and baseline_knobs(r) == kn])
+            floor = probe_counts([r for r in pois0 if is_baseline(r) and baseline_knobs(r) == kn
+                                  and (r.get("source") or "patched") == "patched"])
+            under = f",{knob_label(kn)}" if kn else ""
+            parts.append("")
+            parts.append(f"Probe ceiling (clean runs, no recovery{under}): {_ratio(*ceil)} of "
+                         f"probes correct; poisoned runs with no recovery: {_ratio(*floor)}.")
     else:
         parts.append("No clean-condition records.")
     parts.append("")
@@ -1404,9 +1529,14 @@ def plot_recovery(records: list[dict], out: Path) -> list[Path]:
 
     shown = [r for r in rows if r.asr is not None]
     ink, muted, grid = "#0b0b0b", "#52514e", "#e4e3df"
-    fig, (ax_a, ax_b) = plt.subplots(1, 2, figsize=(10, 0.42 * len(shown) + 1.8), sharey=True,
-                                     gridspec_kw={"wspace": 0.06})
+    # At least one row's height: a records file of clean-control records only (no
+    # poisoned row) would otherwise leave the margins below set past the top.
+    fig, (ax_a, ax_b) = plt.subplots(1, 2, figsize=(10, 0.42 * max(len(shown), 1) + 1.8),
+                                     sharey=True, gridspec_kw={"wspace": 0.06})
     fig.patch.set_facecolor("#fcfcfb")
+    if not shown:
+        ax_a.text(50, 0, "no poisoned records at checkpoint 0", ha="center", va="center",
+                  color=muted, fontsize=9)
     ys = list(range(len(shown)))[::-1]
     for y, row in zip(ys, shown):
         _, colour, marker = groups[group_of(row.key)]

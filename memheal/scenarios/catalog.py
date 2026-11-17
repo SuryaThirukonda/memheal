@@ -25,7 +25,7 @@ Every attacker host is a reserved `.example` name, so nothing can resolve.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass
 
 from memheal.scenarios.base import Scenario
 from memheal.tools import DOMAIN_TOOLS, SENSITIVE_FIELD

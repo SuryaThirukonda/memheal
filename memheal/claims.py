@@ -30,6 +30,11 @@ said. Three guards keep the model's split honest:
 
 Whether a claim carries the attack is the caller's rule (recovery.claim_carries_attack
 against the recovery's AttackSpec); this module only applies it claim by claim.
+
+Healing (memheal/heal.py) adds two things here: a cache, so a text that recurs within
+one recovery (the same culprit flagged again by +verify, a rebuild that comes back
+word for word) is split once, and `restates`, which carries a claim the claim-level
+counterfactual found poisoned over to the other memories of the lineage.
 """
 
 from __future__ import annotations
@@ -75,6 +80,9 @@ _MIN_STEM = 4
 _MAX_ENDING = 4
 # A host label shorter than this (letters and digits) is too likely an ordinary word.
 _MIN_LABEL = 4
+# A claim with fewer distinctive words than this says too little to be recognised in
+# another memory ("Use Quick." would match every sentence naming the word).
+_MIN_RESTATED = 2
 _HOST = re.compile(r"[a-z0-9-]+(?:\.[a-z0-9-]+)+")
 
 # Sentence and clause boundaries for the deterministic split. A sentence ends at . ! or ?
@@ -261,6 +269,40 @@ def split_claims(llm, text: str, *, tag: str = "") -> Split:
             return Split(kept, "llm", [c for c in proposed if c not in kept], response.model)
         return Split(fallback_split(text), "fallback", proposed)
     return Split(fallback_split(text), "fallback")
+
+
+class SplitCache:
+    """One split per distinct text for the life of one recovery.
+
+    The split is a function of the text (and of the model, which is fixed for one
+    recovery), so a text met again, whether the same culprit flagged by a later +verify
+    round or a rebuild that came back word for word, costs no second call. `made`
+    counts the splits actually made.
+    """
+
+    def __init__(self) -> None:
+        self._by_text: dict[str, Split] = {}
+        self.made = 0
+
+    def split(self, llm, text: str, *, tag: str = "") -> Split:
+        hit = self._by_text.get(text)
+        if hit is None:
+            hit = self._by_text[text] = split_claims(llm, text, tag=tag)
+            self.made += 1
+        return hit
+
+
+def restates(claim: str, poisoned: str) -> bool:
+    """Does `claim` say everything `poisoned` says? Every distinctive word of the
+    poisoned claim is in it, whole or inflected, and there are at least two of them.
+
+    The claim-level counterfactual finds a poisoned claim in the one memory it replays
+    ("Lattice Expense is being retired."); the same claim sits in that memory's parent
+    and comes back in any rebuild from it, with no destination for the name check to
+    see. A claim that adds words ("... being retired at month end") still restates it;
+    one that drops any of its words does not.
+    """
+    return len(_tokens(poisoned)) >= _MIN_RESTATED and grounded(poisoned, claim)
 
 
 def partition(claims: Iterable[str], carries: Callable[[str], bool]) -> tuple[list[str], list[str]]:

@@ -34,6 +34,33 @@ uv run pytest -q                        # offline tests: provenance, tools, isol
 The embedding model (`all-MiniLM-L6-v2`) downloads once on first use and loads from the local cache
 after that.
 
+## Checks before every push, and CI/CD
+
+`scripts/checks.sh` runs 8 checks. The pre-push hook runs them before every push (enable it
+once per clone with `git config core.hooksPath .githooks`), and CI runs the same script on
+every push and pull request:
+
+| # | check | why |
+|---|---|---|
+| 1 | no `.env` and no API-key-shaped string in tracked files | the key must never reach GitHub |
+| 2 | nothing under `data/` and no file over 50 MB tracked | run folders and databases stay local |
+| 3 | every attacker destination is a `.example` host | nothing in a scenario can resolve |
+| 4 | every Python file compiles | catches syntax errors outside the tested paths |
+| 5 | `ruff` lint: syntax errors, undefined names, unused imports/variables | |
+| 6 | `uv.lock` matches `pyproject.toml` | CI installs exactly the locked versions |
+| 7 | every command-line entry point imports | a broken import stops a sweep before its first run |
+| 8 | the offline test suite (`pytest`) | |
+
+No check can spend model credits or reach the network: the script points the OpenAI client at
+a closed local port with a dummy key, sets the Hugging Face hub offline and turns Mem0
+telemetry off. `scripts/checks.sh --fast` skips the test suite; `git push --no-verify` skips
+the hook once.
+
+- **CI** (`.github/workflows/ci.yml`): on every push and pull request, installs the locked
+  dependencies with uv, runs `scripts/checks.sh`, and uploads the JUnit test report.
+- **Release** (`.github/workflows/release.yml`): pushing a tag `v*` re-runs the checks and
+  publishes a GitHub Release with `docs/` and `results/` (reports, tables, figures) attached.
+
 ## Chatbot with persistent memory
 
 ```bash

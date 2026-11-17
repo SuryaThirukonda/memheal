@@ -24,7 +24,6 @@ import json
 import re
 import shutil
 import socket
-import sqlite3
 import threading
 from pathlib import Path
 

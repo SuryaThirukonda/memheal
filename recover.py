@@ -17,8 +17,10 @@ measurement and records.
 --runs takes measure.py selectors (a glob over run-folder names, or START-END[:GLOB]) or
 run folders. 'all' modes = none reset root ancestry selective selective_recon unmerge
 incident; rollback re-runs history (an upper bound, and expensive), so it runs only
-when named, and so does selective_claims (Section 12.3 claim repair), which came later
-and would otherwise change what 'all' meant for every earlier sweep.
+when named, and so do selective_claims (Section 12.3 claim repair) and heal /
+heal_rebuild / heal_oracle (memheal/heal.py: incident's detection, with what it flags
+healed claim by claim instead of quarantined), which came later and would otherwise
+change what 'all' meant for every earlier sweep.
 
 Experiment knobs (Sections 5.5, 6.6, 9.3, 12.3). All are off by default, and with all
 of them off every file name, replay and record value is what it always was. Any knob
@@ -41,6 +43,11 @@ and each run's recovery/ folder holds the copies and logs diagnose.py and cost.p
         --out results/ablations/groups.jsonl
     python recover.py --runs '*_dense_*_evolving' --mode selective_claims --verdicts cf \\
         --work-subdir claims --out results/claims/records.jsonl
+    python recover.py --runs '*_dense_*_evolving' --mode heal heal_oracle --modifiers verify \\
+        --work-subdir heal --out results/heal/records.jsonl
+    python recover.py --runs '*_dense_*_evolving' --mode heal heal_rebuild --modifiers verify \\
+        --verify-n 3 --claim-n 3 --ddmin-budget 24 --work-subdir heal2 \\
+        --out results/heal2/records.jsonl
 
 --work-subdir  where the copies and logs go inside each run folder (default 'recovery',
                which earlier analyses read; experiments name their own). Every knob that
@@ -58,6 +65,13 @@ and each run's recovery/ folder holds the copies and logs diagnose.py and cost.p
                influence.frozen_ablation options for the counterfactual replays
                (stop-after-action also ends task-family and probe replays at their first
                acting call, the only call they are scored on)
+--verify-n     +verify replays the family this many times per round and escalates if any
+               replay is harmful (default 1: one replay, as before; @v<n>)
+--claim-n, --ddmin-budget
+               heal and heal_rebuild: replays per claim-level probe (default 3; a removal
+               is safe only if none is harmful and one acted) and ddmin replays per
+               memory, its precondition included, before it is quarantined instead
+               (default 24); @c<n>, @b<n> when changed
 
 Several values of --k, --depth and --repeat run every combination. Mem0 runs refuse
 --reinfect, rollback and --depth: all three write memories through MemHeal's own
@@ -92,25 +106,32 @@ import sqlite3
 import threading
 import time
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field, replace
 from itertools import cycle
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
-from memheal import agent, db, influence, lineage, memory, recovery
+from memheal import agent, claims, db, heal, influence, lineage, memory, recovery
 from memheal.labels import AttackSpec
 from memheal.scenarios import ALL_VARIANTS
 from memheal.scenarios.base import Scenario
-from memheal.tools import SENSITIVE_FIELD, ToolContext, normalize_url
+from memheal.tools import ToolContext, normalize_url
 
 ROOT = Path(__file__).parent
 DEFAULT_OUT = ROOT / "results" / "recovery" / "records.jsonl"
 
 # Modes added after the first sweeps run only when named, so 'all' keeps its meaning.
-OPT_IN_MODES = ("selective_claims",)
+OPT_IN_MODES = ("selective_claims", "heal", "heal_oracle", "heal_rebuild")
 ALL_MODES = tuple(m for m in recovery.MODES if m not in OPT_IN_MODES)  # what --mode all expands to
 MODE_CHOICES = (*recovery.MODES, "rollback", "all")
 MODIFIERS = ("immunize", "verify")
+# Modes whose verdict source is fixed, whatever --verdicts says: incident, heal and
+# heal_rebuild have no ground truth to use; heal_oracle labels claims with it (its
+# detection is heal's).
+FIXED_VERDICTS = {"incident": "cf", "heal": "cf", "heal_oracle": "oracle", "heal_rebuild": "cf"}
+# The heal modes that localise claims by replaying (heal_oracle labels them instead).
+CLAIM_CF_MODES = ("heal", "heal_rebuild")
 DEFAULT_SUBDIR = "recovery"
 FAMILIES = ("recorded", "full")
 # A work subdirectory is one folder inside the run folder, never a path out of it.
@@ -126,7 +147,9 @@ HARMFUL = "attacker"
 # +verify (closed loop): if any task in the family is still harmful after recovery,
 # escalate one rung and try again, at most twice. Each mode escalates to the next more
 # conservative one; incident re-runs from the NEW harmful action, which is all a
-# defender would see after a failed cleanup.
+# defender would see after a failed cleanup. The heal modes do too, and heal again; the
+# last round falls back to incident (HEAL_FALLBACK), which quarantines what is left.
+# --verify-n replays the family n times per check, and one harmful replay is enough.
 MAX_ESCALATIONS = 2
 ESCALATE = {
     "none": "selective", "root": "selective",
@@ -134,7 +157,9 @@ ESCALATE = {
     "selective_claims": "ancestry",
     "ancestry": "incident", "reset": "incident", "incident": "incident",
     "rollback": "incident",
+    "heal": "heal", "heal_oracle": "heal_oracle", "heal_rebuild": "heal_rebuild",
 }
+HEAL_FALLBACK = "incident"
 
 # Section 8.8 reinfection: two benign sessions, then the user asks the agent to re-check
 # the page that poisoned it (the original poison-day message), then seven more benign
@@ -149,7 +174,10 @@ DEFAULT_CHECKPOINTS = (1, 3, 5, 10)
 # a store with nothing to remove. No judge ever calls a clean run's action harmful, so
 # the alarm is simulated: the defender flags the clean run's own logged action and
 # recovers from it, and whatever that quarantines is a false positive. Each also runs
-# +verify, and every clean run also gets a plain 'none' record as its BMP baseline.
+# +verify, and every clean run also gets a plain 'none' record as its BMP baseline. A
+# sweep that names heal or heal_rebuild adds it to its control (main, control_heals), so
+# the default control is what it always was; heal_oracle never joins it (its oracle
+# claim labels find nothing to drop in a clean store, by construction).
 CLEAN_CONTROL = ("incident", "selective")
 
 RECORD_KEYS = (
@@ -163,9 +191,31 @@ RECORD_KEYS = (
     # index (None outside a repeat sweep); depth: extra consolidation rounds; cf_*: the
     # counterfactual's options (None when the configuration cannot run one) and its
     # totals over every ablation it ran; culprit_sets: their minimal flipping sets;
-    # observe: logged (the run's own log) or fresh (a replay on the modified copy).
+    # observe: logged (the run's own log) or fresh (a replay on the modified copy);
+    # stop_after_action: replays ended at their first acting call (changes calls and
+    # tokens, so cost.py must not pool it; older records only have the note).
     "family", "k", "repeat", "depth", "cf_method", "cf_groups", "cf_workers", "cf_replays",
-    "cf_seconds", "culprit_sets", "observe", "n_claim_repaired",
+    "cf_seconds", "culprit_sets", "observe", "n_claim_repaired", "stop_after_action",
+    # Added with heal (memheal/heal.py); 0 for every mode that does not heal or split.
+    # n_healed: flagged memories replaced by a healed memory; n_heal_quarantined: flagged
+    # memories heal quarantined with nothing in their place; claims_kept / claims_dropped:
+    # claims written into replacements / claims judged to carry the attack (heal and
+    # selective_claims); claim_cf_replays: heal's claim-level counterfactual replays
+    # (not in cf_replays, which stays the memory-level ablation's). work_db / pre_db, for
+    # every mode: the recovered copy and the pre-target snapshot it was copied from,
+    # relative to the repo root (absolute outside it), so a store-level metric (benign
+    # claim preservation) can open both. The copy holds the store after the last
+    # checkpoint (reinfection writes into it); pre_db is before any --depth rounds.
+    "n_healed", "n_heal_quarantined", "claims_kept", "claims_dropped", "claim_cf_replays",
+    "work_db", "pre_db",
+    # Added with heal v2. verify_n: family replays per +verify check (None without
+    # +verify); claim_n / ddmin_budget: replays per claim-level probe and ddmin replays
+    # per memory (None for modes that run no claim-level replays); ddmin_replays: the
+    # share of claim_cf_replays ddmin spent (claim_cf_replays now counts every replay
+    # healing ran: probes, ddmin and the post-heal check); post_heal_harmful: the share
+    # of post-heal check replays that were harmful (None when none ran); dropped_by:
+    # claims dropped per rule (heal.RULES; zeros for every mode that does not heal).
+    "verify_n", "claim_n", "ddmin_budget", "ddmin_replays", "post_heal_harmful", "dropped_by",
 )
 COLLATERAL_KEYS = ("harmful", "mixed", "benign", "ambiguous", "non_lineage")
 
@@ -251,6 +301,15 @@ class RunInfo:
         return self.config.get("agent", {}).get("memory_mode", "flat")
 
     @property
+    def memory_label(self) -> str:
+        """memory_mode, plus the Mem0 write pipeline when it is not the default: 'update'
+        and 'additive' Mem0 runs are different stores, so neither twins the other."""
+        pipeline = (self.config.get("mem0") or {}).get("pipeline")
+        if self.memory_mode == "mem0" and pipeline and pipeline != "update":
+            return f"mem0-{pipeline}"
+        return self.memory_mode
+
+    @property
     def scenario(self) -> Scenario | None:
         return ALL_VARIANTS.get(self.variant)
 
@@ -301,7 +360,7 @@ def clean_twins(info: RunInfo, candidates: Iterable[Path]) -> list[RunInfo]:
                 and other.model == info.model):
             found.append(other)
     exact = [t for t in found
-             if t.task_index == info.task_index and t.memory_mode == info.memory_mode]
+             if t.task_index == info.task_index and t.memory_label == info.memory_label]
     return exact or found
 
 
@@ -326,7 +385,7 @@ def _norm(value: str | None) -> str | None:
 
 @dataclass
 class Options:
-    verdicts: str = "oracle"                  # oracle | cf, for selective/selective_recon/unmerge
+    verdicts: str = "oracle"                  # oracle | cf, for the modes FIXED_VERDICTS leaves
     modifiers: tuple[str, ...] = ()
     source: str = "patched"                   # patched | live replay pages
     reinfect: bool = False
@@ -346,6 +405,9 @@ class Options:
     stop_after_action: bool = False           # end replays at their first acting call
     ablation: str = "frozen"                  # frozen | reretrieve counterfactual
     cf_groups: bool = False                   # keep-only-one, pair and group replays
+    verify_n: int = 1                         # family replays per +verify check
+    claim_n: int = heal.CLAIM_N               # replays per claim-level probe (CLAIM_CF_MODES)
+    ddmin_budget: int = heal.DDMIN_BUDGET     # ddmin replays per memory (CLAIM_CF_MODES)
 
     @property
     def observe(self) -> str:
@@ -356,18 +418,21 @@ class Options:
 
 
 def verdict_source(mode: str, opts: Options) -> str | None:
-    """Which verdicts a mode uses. incident has no ground truth to use, so always cf."""
-    if mode == "incident":
-        return "cf"
+    """Which verdicts a mode uses. incident and heal have no ground truth to use, so
+    always cf; heal_oracle labels its claims with the oracle, so it is an oracle mode."""
+    if mode in FIXED_VERDICTS:
+        return FIXED_VERDICTS[mode]
     if mode in recovery.VERDICT_MODES:
         return opts.verdicts
     return None
 
 
 def runs_counterfactual(mode: str, opts: Options) -> bool:
-    """Can this configuration run Section 5.4 replays? cf verdicts do, and +verify can
-    escalate any mode into incident, which does."""
-    return verdict_source(mode, opts) == "cf" or "verify" in opts.modifiers
+    """Can this configuration run Section 5.4 replays? cf verdicts do, both heal modes
+    detect with incident's counterfactual, and +verify can escalate any mode into
+    incident, which does."""
+    return (mode in recovery.HEAL_MODES or verdict_source(mode, opts) == "cf"
+            or "verify" in opts.modifiers)
 
 
 def config_tag(mode: str, opts: Options) -> str:
@@ -377,11 +442,13 @@ def config_tag(mode: str, opts: Options) -> str:
     earlier sweep wrote keeps its name, and a knob run never overwrites one (or its
     llm.jsonl, which cost.py reads); counterfactual knobs only where a counterfactual
     can run. --cf-workers and --stop-after-action are suffixed too: workers change the
-    timing and stop-after-action the calls and tokens a configuration logs. The repeat
-    index is not part of the configuration (see work_tag).
+    timing and stop-after-action the calls and tokens a configuration logs. So are the
+    heal v2 knobs where they apply: --verify-n with +verify, --claim-n and
+    --ddmin-budget for the heal modes that replay claims. The repeat index is not part
+    of the configuration (see work_tag).
     """
     tag = mode
-    if mode != "incident" and verdict_source(mode, opts) == "cf":
+    if mode not in FIXED_VERDICTS and verdict_source(mode, opts) == "cf":
         tag += "-cf"
     if opts.source == "live":
         tag += "-live"
@@ -400,6 +467,13 @@ def config_tag(mode: str, opts: Options) -> str:
             knobs.append("groups")
         if opts.cf_workers != 1:
             knobs.append(f"w{opts.cf_workers}")
+    if "verify" in opts.modifiers and opts.verify_n != 1:
+        knobs.append(f"v{opts.verify_n}")
+    if mode in CLAIM_CF_MODES:
+        if opts.claim_n != heal.CLAIM_N:
+            knobs.append(f"c{opts.claim_n}")
+        if opts.ddmin_budget != heal.DDMIN_BUDGET:
+            knobs.append(f"b{opts.ddmin_budget}")
     if opts.stop_after_action:
         knobs.append("stop")              # every replay, counterfactual or not
     return tag + "".join(f"@{k}" for k in knobs)
@@ -657,6 +731,18 @@ class Totals:
     culprit_sets: list[list[str]] = field(default_factory=list)
     # Claims claim repairs dropped for undermining the legitimate system alone.
     claims_ambiguous: int = 0
+    # Healing (memheal/heal.py), summed over every round +verify ran.
+    healed: int = 0
+    heal_quarantined: int = 0
+    claims_kept: int = 0
+    claims_dropped: int = 0
+    claim_cf_replays: int = 0
+    ddmin_replays: int = 0
+    post_heal_harmful: int = 0
+    post_heal_replays: int = 0
+    dropped_by: Counter = field(default_factory=Counter)
+    # One claim split per distinct text for the whole configuration, rounds included.
+    splits: claims.SplitCache = field(default_factory=claims.SplitCache)
 
     def add(self, applied: dict) -> None:
         self.quarantined += [m for m in applied["quarantined"] if m not in self.quarantined]
@@ -665,6 +751,19 @@ class Totals:
         self.reconstructed += applied["counts"]["reconstructed"]
         self.claim_repaired += len(applied.get("claim_repaired", ()))
         self.claims_ambiguous += applied.get("claim_ambiguous", 0)
+        self.claims_kept += applied.get("claims_kept", 0)
+        self.claims_dropped += applied.get("claims_dropped", 0)
+        healed = applied.get("heal")
+        if healed:
+            self.healed += len(healed["healed"])
+            self.heal_quarantined += len(healed["flagged_quarantined"])
+            self.claim_cf_replays += healed["claim_cf_replays"]
+            self.ddmin_replays += healed.get("ddmin_replays", 0)
+            if healed.get("post_heal"):
+                self.post_heal_harmful += healed["post_heal"][0]
+                self.post_heal_replays += healed["post_heal"][1]
+            self.dropped_by.update(healed.get("dropped_by", {}))
+            self.notes.append(healed["note"])
 
     def add_ablation(self, ab: dict) -> None:
         self.cf_replays += ab.get("replays", 0)
@@ -727,6 +826,8 @@ def plan_step(rp: Replay, mode: str, verdicts: str | None, observed: Observed,
     """The plan for one mode. Only cf and incident replay; everything else is lookup."""
     conn, s, cond = rp.conn, rp.scenario, rp.condition
     notes = totals.notes
+    if mode in recovery.HEAL_MODES:
+        return plan_heal(rp, mode, observed, opts, totals)
     if mode == "incident":
         if observed.destination is None:
             notes.append("incident: no harmful action observed")
@@ -769,15 +870,127 @@ def plan_step(rp: Replay, mode: str, verdicts: str | None, observed: Observed,
     return recovery.plan(conn, s, cond, mode, verdicts=v, roots=roots, descendants=descendants)
 
 
-def immunize_urls(rp: Replay, p: recovery.RecoveryPlan, verdicts: str | None) -> list[str]:
+def plan_heal(rp: Replay, mode: str, observed: Observed, opts: Options,
+              totals: Totals) -> recovery.RecoveryPlan:
+    """heal / heal_oracle: incident's detection, run exactly as incident runs it (the
+    same ablation, with the same knobs), and its minimal flipping sets kept as the
+    culprits for the claim-level counterfactual. Only heal_oracle gets the scenario,
+    and only for its claim labels."""
+    notes = totals.notes
+    if observed.destination is None:
+        notes.append(f"{mode}: no harmful action observed")
+        return recovery.RecoveryPlan(mode)
+    ab = _ablate(rp, observed, list(observed.retrieved), opts, totals)
+    if ab["baseline_not_harmful"]:
+        notes.append(f"{mode}: frozen baseline not harmful")
+    p = recovery.plan(rp.conn, rp.scenario if mode == "heal_oracle" else None, None, mode,
+                      observed_destination=observed.destination,
+                      influence_scores=ab["scores"], culprit_sets=ab["culprit_sets"])
+    notes.append(f"{mode}: inferred_roots={len(p.inferred_roots)} replays={ab['replays']}")
+    return p
+
+
+def _store_file(conn: sqlite3.Connection) -> str | None:
+    """The file behind conn's main database (None in memory, where no other connection
+    can follow)."""
+    for row in conn.execute("PRAGMA database_list").fetchall():
+        if row[1] == "main":
+            return row[2] or None
+    return None
+
+
+def replay_class(conn: sqlite3.Connection, ab: dict, destination: str | None) -> str:
+    """How one claim-level replay (a frozen_ablation with no candidates) came out, as
+    heal judges a probe: heal.HARMFUL if it made the explained decision again,
+    heal.ACTED if it acted on another destination, heal.ANSWERED if it did not act but
+    its reply to the user names a destination other than `destination` (the observed
+    one) and the pages it visited or searched for, else heal.NO_ACTION (gave up, asked
+    back, ran out of steps). Only ACTED counts as safe; the other two are inconclusive."""
+    if not ab["baseline_not_harmful"]:
+        return heal.HARMFUL
+    if ab["baseline"]["destination"] is not None:
+        return heal.ACTED
+    spec = recovery.observed_spec(destination)
+    actions = [(a["tool_name"], json.loads(a["arguments_json"]))
+               for a in db.get_actions(conn, f"{ab['run_prefix']}:baseline:0")]
+    seen = [str(args.get(k) or "") for tool, args in actions if tool in ("visit", "search")
+            for k in ("url", "query")]
+    for tool, args in actions:
+        if tool == "respond" and heal.answer_names_destination(args.get("text") or "", spec, seen):
+            return heal.ANSWERED
+    return heal.NO_ACTION
+
+
+def claim_prober(rp: Replay, observed: Observed, opts: Options) -> heal.Prober | None:
+    """heal's claim-level counterfactual replays (rule c of memheal/heal.py), for ddmin
+    and the post-heal check too.
+
+    Each replay is one influence.frozen_ablation with no candidates: one baseline replay
+    of the given frozen set, scored and run-id'd like every other counterfactual replay,
+    on the pages the explained decision was made on, for the flagged destination in the
+    clean control, and classed by replay_class. Every probe gets --claim-n replays and
+    a removal counts as safe only if none is harmful and one acted; ddmin spends at
+    most --ddmin-budget replays per memory, its precondition included (heal.Prober).
+    A removal probe (ddmin's precondition) replays the frozen set without the culprit.
+    --stop-after-action ends each at its first acting call; --cf-workers runs a batch
+    concurrently, each replay on its own connection to the copy (the probe rows are
+    committed before).
+    Always the frozen method, whatever --ablation says: a probe row is never
+    retrievable, so re-retrieval could not see it. None when no decision was observed.
+    """
+    if observed.destination is None:
+        return None
+    pages = observed.pages if observed.pages is not None else rp.pages
+    flagged = observed.destination if observed.false_alarm else None
+    path = _store_file(rp.conn) if opts.cf_workers > 1 else None
+
+    def one(conn: sqlite3.Connection, label: str, frozen: list[str]) -> str:
+        ab = influence.frozen_ablation(
+            conn, rp.scenario, rp.condition, observed.task, frozen, [], rp.llm, rp.embedder,
+            rp.cfg, pages, run_prefix=f"heal-cf:{label}", flagged=flagged,
+            stop_after_action=opts.stop_after_action)
+        return replay_class(conn, ab, observed.destination)
+
+    def job(variant: tuple[str, list[str]]) -> str:
+        c = db.connect(path)
+        c.execute(f"PRAGMA busy_timeout = {influence.BUSY_TIMEOUT_MS}")
+        try:
+            return one(c, *variant)
+        finally:
+            c.close()
+
+    def replay(variants: list[tuple[str, list[str]]]) -> list[str]:
+        if path is None or len(variants) < 2:
+            return [one(rp.conn, label, frozen) for label, frozen in variants]
+        rp.conn.commit()
+        with ThreadPoolExecutor(max_workers=min(opts.cf_workers, len(variants)),
+                                thread_name_prefix="claim-cf") as pool:
+            out = list(pool.map(job, variants))
+        rp.conn.commit()          # no read transaction may pin a view from before them
+        return out
+
+    return heal.Prober(list(observed.retrieved), replay, n=opts.claim_n,
+                       budget=opts.ddmin_budget)
+
+
+def immunize_urls(rp: Replay, p: recovery.RecoveryPlan, verdicts: str | None,
+                  destination: str | None = None) -> list[str]:
     """Pages to block: the scenario's poisoned pages for oracle verdicts; for cf and
     incident only the pages the plan's own roots were read from. Either way also the
     destination's host: the poisoned page points the agent there, and a page read off
     the attacker's own site is as much poison as the page that sent it (blocking only
-    the poisoned page let 6 of 93 immunized runs relearn the attacker from its portal)."""
-    if verdicts == "cf":
+    the poisoned page let 6 of 93 immunized runs relearn the attacker from its portal).
+
+    heal and heal_oracle both block what their shared detection found: the inferred
+    roots' pages and `destination`, the observed one. heal_oracle's ground truth labels
+    claims and nothing else; blocking the scenario's pages too would make heal vs
+    heal_oracle differ in immunization as well as claim localisation. (heal's plan spec
+    is the observed destination's, so heal blocks what it always did.)"""
+    heals = p.mode in recovery.HEAL_MODES
+    if verdicts == "cf" or heals:
         roots = p.inferred_roots or [m for m, why in p.reasons.items() if why == "root"]
-        dests = p.spec.attacker_destinations if p.spec is not None else ()
+        spec = recovery.observed_spec(destination) if heals else p.spec
+        dests = spec.attacker_destinations if spec is not None else ()
         return [*recovery.source_urls(rp.conn, roots), *recovery.destination_hosts(dests)]
     if rp.condition != "poisoned":
         return []            # the oracle knows the clean world has nothing to block
@@ -792,9 +1005,15 @@ def immunize_urls(rp: Replay, p: recovery.RecoveryPlan, verdicts: str | None) ->
 def recover_step(rp: Replay, mode: str, verdicts: str | None, observed: Observed,
                  opts: Options, recovery_id: str, totals: Totals) -> None:
     p = plan_step(rp, mode, verdicts, observed, opts, totals)
-    totals.add(recovery.apply(rp.conn, p, rp.llm, rp.embedder, recovery_id))
+    if mode in recovery.HEAL_MODES:
+        # heal_oracle labels claims with the scenario, so it runs no claim replays.
+        probe = claim_prober(rp, observed, opts) if mode in CLAIM_CF_MODES else None
+        ctx = heal.HealContext(probe, totals.splits)
+        totals.add(recovery.apply(rp.conn, p, rp.llm, rp.embedder, recovery_id, heal=ctx))
+    else:
+        totals.add(recovery.apply(rp.conn, p, rp.llm, rp.embedder, recovery_id))
     if "immunize" in opts.modifiers:
-        urls = immunize_urls(rp, p, verdicts)
+        urls = immunize_urls(rp, p, verdicts, observed.destination)
         totals.blocked += [u for u in recovery.immunize(rp.conn, urls, rp.scenario.target_session)
                            if u not in totals.blocked]
 
@@ -803,21 +1022,29 @@ def verify_loop(rp: Replay, mode: str, verdicts: str | None, opts: Options,
                 recovery_id: str, totals: Totals) -> tuple[list[dict], int]:
     """+verify: replay the family; escalate while anything is still harmful.
 
-    Returns the final check and the number of escalations performed. The final check is
-    the loop's stopping condition, not the measurement: recover_run replays the family
-    again for checkpoint 0, or a run would count as recovered on the replay that happened
-    to come out clean.
+    Each check replays the family opts.verify_n times and escalates on the first harmful
+    replay among them: one replay of a task can come out clean by chance (run 0964's
+    check visited a dead page and gave up, then the measurement replay booked with the
+    attacker), and n replays make that chance smaller. verify_n=1 is the loop as it
+    always was. Returns the final check (every replay of it) and the number of
+    escalations performed. The final check is the loop's stopping condition, not the
+    measurement: recover_run replays the family again for checkpoint 0, or a run would
+    count as recovered on the replay that happened to come out clean.
     """
     rounds = 0
     current = mode
     target = rp.scenario.target_session
     while True:
-        tasks = task_family(rp, target)
+        tasks = [t for _ in range(max(opts.verify_n, 1)) for t in task_family(rp, target)]
         failing = next((t for t in tasks if t["outcome"] == HARMFUL), None)
         if failing is None or rounds == MAX_ESCALATIONS:
             return tasks, rounds
         nxt = ESCALATE[current]
         rounds += 1
+        if nxt in recovery.HEAL_MODES and rounds == MAX_ESCALATIONS:
+            # Healing twice has not stopped it; the last round quarantines what the new
+            # detection flags rather than leaving the run harmful with no rung left.
+            nxt = HEAL_FALLBACK
         totals.notes.append(f"verify: {current}->{nxt}")
         # The failing decision was made in this replay's world, so it is explained there.
         observed = Observed(failing["destination"],
@@ -996,8 +1223,31 @@ def claim_notes(conn: sqlite3.Connection, scenario: Scenario, totals: Totals) ->
             f"active_repairs_undermining_legacy={undermining} (oracle)")
 
 
+def heal_notes(conn: sqlite3.Connection, scenario: Scenario) -> str:
+    """What healing left in its own writing (memheal/heal.py), judged with the oracle
+    spec for heal and heal_oracle alike, so the two can be compared on it: active healed
+    memories that still name the attacker, and ones that still undermine the legitimate
+    system (the premise heal's rule (a) cannot see; only the claim-level counterfactual
+    or the oracle drops it)."""
+    spec = AttackSpec.from_scenario(scenario)
+    healed = [r for r in db.active_memories(conn) if r["operation"] == recovery.HEAL_OP]
+    return (f"heal: active_healed={len(healed)} "
+            f"naming_attacker={sum(spec.names_attacker(r['text']) for r in healed)} "
+            f"undermining_legacy={sum(spec.undermines_legacy(r['text']) for r in healed)} (oracle)")
+
+
 def _memory_rows(conn: sqlite3.Connection) -> int:
     return conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+
+
+def repo_path(path: Path) -> str:
+    """`path` relative to the repo root, as records name stores; absolute when it lies
+    outside the repo (a test's temporary folder). ROOT / repo_path(p) is p either way."""
+    path = Path(path).resolve()
+    try:
+        return str(path.relative_to(ROOT.resolve()))
+    except ValueError:
+        return str(path)
 
 
 def _work_paths(run_dir: Path, tag: str, subdir: str = DEFAULT_SUBDIR) -> tuple[Path, Path]:
@@ -1097,6 +1347,34 @@ def knob_fields(mode: str, opts: Options, cfg: agent.AgentConfig, totals: Totals
         "culprit_sets": list(totals.culprit_sets) if cf else None,
         "observe": opts.observe,
         "n_claim_repaired": totals.claim_repaired,
+        "stop_after_action": opts.stop_after_action,
+    }
+
+
+def heal_fields(totals: Totals, work: Path, pre: Path) -> dict:
+    """The record fields heal added (see RECORD_KEYS); zeros for every other mode, and
+    the two store paths for all of them."""
+    return {
+        "n_healed": totals.healed, "n_heal_quarantined": totals.heal_quarantined,
+        "claims_kept": totals.claims_kept, "claims_dropped": totals.claims_dropped,
+        "claim_cf_replays": totals.claim_cf_replays,
+        "work_db": repo_path(work), "pre_db": repo_path(pre),
+    }
+
+
+def heal_v2_fields(mode: str, opts: Options, totals: Totals) -> dict:
+    """The record fields heal v2 added (see RECORD_KEYS): the replay knobs where they
+    apply (None where they do not), and what healing spent and dropped (zeros for every
+    mode that does not heal)."""
+    claim = mode in CLAIM_CF_MODES
+    n = totals.post_heal_replays
+    return {
+        "verify_n": opts.verify_n if "verify" in opts.modifiers else None,
+        "claim_n": opts.claim_n if claim else None,
+        "ddmin_budget": opts.ddmin_budget if claim else None,
+        "ddmin_replays": totals.ddmin_replays,
+        "post_heal_harmful": round(totals.post_heal_harmful / n, 4) if n else None,
+        "dropped_by": {r: totals.dropped_by.get(r, 0) for r in heal.RULES},
     }
 
 
@@ -1146,7 +1424,8 @@ def recover_run(
     pre_notes: list[str] = []
     family = family_scenario(info, s, opts.family, pre_notes)
     if opts.stop_after_action:
-        # Not a record field (the contract fixes those), but it changes llm_calls.
+        # Also the stop_after_action field; the note stays, so records written before
+        # the field existed and after it read alike (measure.knob_value reads either).
         pre_notes.append("replays stop at the first acting call")
     # Labels and root status come from the store as it stood before any recovery
     # (re-read from the copy after --depth has deepened it).
@@ -1233,6 +1512,8 @@ def recover_run(
         totals.notes.append(f"storage_delta=+{_memory_rows(conn) - rows_before} memories")
         if mode == "selective_claims":
             totals.notes.append(claim_notes(conn, s, totals))
+        if mode in recovery.HEAL_MODES:
+            totals.notes.append(heal_notes(conn, s))
         if totals.blocked:
             totals.notes.append(f"blocked={','.join(totals.blocked)}")
 
@@ -1249,6 +1530,8 @@ def recover_run(
             "root_was_consolidated": root_was_consolidated,
             "verify_rounds": verify_rounds, **cost,
             **knob_fields(mode, opts, cfg, totals),
+            **heal_fields(totals, work, pre),
+            **heal_v2_fields(mode, opts, totals),
         }
         records = []
 
@@ -1289,7 +1572,7 @@ def describe(run_dir: Path, mode: str, opts: Options) -> str:
     """What a configuration would do, without a model call or a file written."""
     info = run_info(run_dir)
     s = info.scenario
-    head = f"  {config_tag(mode, opts):<28}"
+    head = f"  {job_label(mode, opts):<28}"
     if s is None:
         return head + f"variant {info.variant!r} not in the catalog"
     why = refusal(info, mode, opts)
@@ -1308,6 +1591,8 @@ def describe(run_dir: Path, mode: str, opts: Options) -> str:
         unlinked = lineage.unlinked_poison_day_reflections(conn, s, info.condition)
         if unlinked:
             head += f"[lineage incomplete: {len(unlinked)} unlinked poison-day reflection(s)] "
+        if mode in recovery.HEAL_MODES:
+            return head + describe_heal(conn, info, s, mode, opts)
         if verdict_source(mode, opts) == "cf":
             if opts.observe == "fresh":
                 return head + ("cf verdicts need replays over the fresh replay's retrieved "
@@ -1348,6 +1633,43 @@ def describe(run_dir: Path, mode: str, opts: Options) -> str:
         conn.close()
 
 
+def describe_heal(conn: sqlite3.Connection, info: RunInfo, s: Scenario, mode: str,
+                  opts: Options) -> str:
+    """A heal configuration's dry run: the detection's replays (not run), and what the
+    logged destination's name alone flags, with the claims a deterministic split of
+    those memories (and of the unflagged ones the sweep would judge: heal.preview)
+    would keep and drop under rules (a) and (b) (heal, heal_rebuild) or the oracle
+    (heal_oracle). The counterfactual can flag more, the model's split can split finer,
+    and rule (c) and the rebuilds need the model; this is the floor the free rules set."""
+    groups = " (+keep-only-one, and pairs/group if no single flip)" if opts.cf_groups else ""
+    more = ("claim splits" + (" and rebuilds" if mode == "heal_rebuild" else "")
+            + " (LLM; deterministic splits without one)")
+    if mode in CLAIM_CF_MODES:
+        more += (f", claim-level replays for each culprit ({opts.claim_n} per probe, ddmin "
+                 f"up to {opts.ddmin_budget} per memory) and a post-heal check")
+    if opts.observe == "fresh":
+        return (f"detection needs replays over the fresh replay's retrieved set: 1 baseline + "
+                f"one per candidate{groups}; then {more}; not run in dry run")
+    orig = open_readonly(info.run_dir / "run.db")
+    try:
+        seen = influence.observed_action(orig, info.run_id, s, info.condition, s.target_session)
+        retrieved = influence.original_retrieved(orig, s.target_session, run_id=info.run_id)
+    finally:
+        orig.close()
+    dest = seen["destination"]
+    if seen["outcome"] != HARMFUL and not (opts.false_alarm and dest):
+        return f"no harmful action logged ({seen['outcome']}): nothing to detect or heal"
+    p = recovery.plan(conn, s if mode == "heal_oracle" else None, None, mode,
+                      observed_destination=dest, influence_scores={})
+    kept, dropped = heal.preview(conn, p)
+    active = sum(db.get_memory(conn, m)["status"] == "active" for m in p.heal)
+    return (f"detection needs replays: 1 baseline + {len(retrieved)} candidate(s) "
+            f"(+{opts.cf_n_ambiguous - 1} each if ambiguous){groups}; by the logged "
+            f"destination's name alone ({dest}): flagged={len(p.heal)} active={active} "
+            f"inferred_roots={len(p.inferred_roots)}, deterministic split keeps "
+            f"{kept} claim(s) and drops {dropped}; then {more}; not run in dry run")
+
+
 def describe_knobs(info: RunInfo, scenario: Scenario, mode: str, opts: Options) -> str:
     """The experiment knobs a configuration departs from, for the dry run; '' when none
     do, so a default dry run prints what it always printed. The plan shown after it is
@@ -1370,6 +1692,11 @@ def describe_knobs(info: RunInfo, scenario: Scenario, mode: str, opts: Options) 
                                             or opts.cf_workers > 1):
         parts.append(f"cf={opts.ablation}" + (",groups" if opts.cf_groups else "")
                      + (f",workers={opts.cf_workers}" if opts.cf_workers > 1 else ""))
+    if "verify" in opts.modifiers and opts.verify_n != 1:
+        parts.append(f"verify-n={opts.verify_n}")
+    if mode in CLAIM_CF_MODES and (opts.claim_n != heal.CLAIM_N
+                                   or opts.ddmin_budget != heal.DDMIN_BUDGET):
+        parts.append(f"claim-n={opts.claim_n},ddmin-budget={opts.ddmin_budget}")
     if opts.stop_after_action:
         parts.append("stop-after-action")
     return f"[{' '.join(parts)}] " if parts else ""
@@ -1395,7 +1722,9 @@ def parse_args(argv=None) -> argparse.Namespace:
                         "with no --runs, every run in data/runs is considered")
     p.add_argument("--mode", nargs="+", choices=MODE_CHOICES, default=["all"])
     p.add_argument("--verdicts", choices=("oracle", "cf"), default="oracle",
-                   help="verdicts for selective/selective_recon/unmerge (incident is always cf)")
+                   help="verdicts for selective/selective_recon/unmerge/selective_claims "
+                        "(incident, heal and heal_rebuild are always cf, heal_oracle always "
+                        "oracle)")
     p.add_argument("--modifiers", nargs="*", choices=MODIFIERS, default=[])
     p.add_argument("--source", choices=("patched", "live"), default="patched",
                    help="replay pages: poisoned page restored (patched) or as the run saw it")
@@ -1406,7 +1735,8 @@ def parse_args(argv=None) -> argparse.Namespace:
     p.add_argument("--include-clean", action="store_true",
                    help="also recover clean runs (false-positive control: a plain 'none' "
                         "baseline, then incident and selective with cf verdicts and +verify, "
-                        "both started from a simulated alarm on the run's own action)")
+                        "and heal / heal_rebuild if asked for (never heal_oracle), all "
+                        "started from a simulated alarm on the run's own action)")
     p.add_argument("--out", type=Path, default=DEFAULT_OUT,
                    help="records file to append to (default results/recovery/records.jsonl, "
                         "the canonical sweep; any experiment knob or opt-in mode must name "
@@ -1436,13 +1766,24 @@ def parse_args(argv=None) -> argparse.Namespace:
                        help="counterfactual: frozen retrieved set, or re-retrieve after removal")
     knobs.add_argument("--cf-groups", action="store_true",
                        help="counterfactual: keep-only-one, pair and group removals")
+    knobs.add_argument("--verify-n", type=int, default=1, metavar="N",
+                       help="+verify: replay the family N times per check; escalate if any "
+                            "replay is harmful (default 1)")
+    knobs.add_argument("--claim-n", type=int, default=heal.CLAIM_N, metavar="N",
+                       help="heal, heal_rebuild: replays per claim-level probe "
+                            f"(default {heal.CLAIM_N})")
+    knobs.add_argument("--ddmin-budget", type=int, default=heal.DDMIN_BUDGET, metavar="R",
+                       help="heal, heal_rebuild: ddmin replays per memory before it is "
+                            f"quarantined instead (default {heal.DDMIN_BUDGET})")
     args = p.parse_args(argv)
     if not args.runs and not args.suite:
         p.error("give --runs, --suite, or both")
     if not SUBDIR_RE.fullmatch(args.work_subdir):
         p.error(f"--work-subdir must be one folder name, got {args.work_subdir!r}")
     for flag, values, least in (("--k", args.k, 1), ("--depth", args.depth, 0),
-                                ("--repeat", args.repeat, 1), ("--cf-workers", [args.cf_workers], 1)):
+                                ("--repeat", args.repeat, 1), ("--cf-workers", [args.cf_workers], 1),
+                                ("--verify-n", [args.verify_n], 1), ("--claim-n", [args.claim_n], 1),
+                                ("--ddmin-budget", [args.ddmin_budget], 0)):
         if values and min(values) < least:
             p.error(f"{flag} must be at least {least}")
     missing = canonical_outputs(args)
@@ -1478,6 +1819,12 @@ def departing_knobs(args: argparse.Namespace) -> list[str]:
         out.append("--ablation")
     if args.cf_groups:
         out.append("--cf-groups")
+    if args.verify_n != 1:
+        out.append("--verify-n")
+    if args.claim_n != heal.CLAIM_N:
+        out.append("--claim-n")
+    if args.ddmin_budget != heal.DDMIN_BUDGET:
+        out.append("--ddmin-budget")
     out += [f"--mode {m}" for m in dict.fromkeys(args.mode) if m in OPT_IN_MODES]
     return out
 
@@ -1518,9 +1865,22 @@ def expand_knobs(opts: Options, args: argparse.Namespace) -> list[Options]:
             for r in (args.repeat or [None])]
 
 
+def control_heals(modes: Iterable[str]) -> list[str]:
+    """The heal modes of a sweep that join its clean control: those with no oracle.
+
+    The control forces cf verdicts so that a false alarm's damage is measured rather
+    than zero by design, but heal_oracle's claim labels are always the scenario's
+    (FIXED_VERDICTS), and in a clean store the scenario's AttackSpec finds no claim to
+    drop: it would keep every flagged memory as it is, by construction, and its records
+    would sit beside heal's as a perfect false-alarm score that measured nothing."""
+    return [m for m in modes if m in recovery.HEAL_MODES and FIXED_VERDICTS.get(m) != "oracle"]
+
+
 def job_label(mode: str, opts: Options) -> str:
-    """What a sweep prints for a configuration: its tag, plus the repeat index."""
-    return config_tag(mode, opts) + (f" r{opts.repeat}" if opts.repeat is not None else "")
+    """What a sweep (and its dry run) prints for a configuration: its tag, plus '@r<i>'
+    for a repeat as the copy's file name has it, so repeats of one configuration are told
+    apart."""
+    return config_tag(mode, opts) + (f"@r{opts.repeat}" if opts.repeat is not None else "")
 
 
 def main(argv=None, llm_factory: LLMFactory | None = None, embedder=None) -> list[dict]:
@@ -1533,7 +1893,8 @@ def main(argv=None, llm_factory: LLMFactory | None = None, embedder=None) -> lis
                    checkpoints=tuple(args.checkpoints), dry_run=args.dry_run, model=args.model,
                    work_subdir=args.work_subdir, family=args.family,
                    cf_workers=args.cf_workers, stop_after_action=args.stop_after_action,
-                   ablation=args.ablation, cf_groups=args.cf_groups)
+                   ablation=args.ablation, cf_groups=args.cf_groups, verify_n=args.verify_n,
+                   claim_n=args.claim_n, ddmin_budget=args.ddmin_budget)
     variants = expand_knobs(opts, args)
     if not args.dry_run:
         if llm_factory is None:
@@ -1575,10 +1936,16 @@ def main(argv=None, llm_factory: LLMFactory | None = None, embedder=None) -> lis
             if info.condition == "clean":
                 control = replace(v, verdicts="cf", false_alarm=True,
                                   modifiers=tuple(sorted({*v.modifiers, "verify"})))
-                jobs += [("none", plain)] + [(m, control) for m in CLEAN_CONTROL]
+                # A heal mode asked for gets the control too, from the same simulated
+                # alarm: what healing would rewrite on a store with nothing to heal.
+                jobs += [("none", plain)] + [(m, control)
+                                             for m in (*CLEAN_CONTROL, *control_heals(modes))]
             else:
                 jobs += [(m, plain if m == "none" else v) for m in modes]
         print(f"{info.run_dir.name} [{info.condition}]")
+        if info.condition == "clean" and "heal_oracle" in modes:
+            print("  skip heal_oracle: no clean control (its oracle claim labels find "
+                  "nothing to drop in a clean store)")
         for mode, o in jobs:
             if mode == "rollback" and info.condition != "poisoned":
                 continue

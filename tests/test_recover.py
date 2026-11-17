@@ -237,6 +237,7 @@ def test_records_match_the_record_schema(runs, emb):
         assert tuple(rec) == recover.RECORD_KEYS
         assert set(rec["collateral"]) == set(recover.COLLATERAL_KEYS)
         assert rec["checkpoint"] == 0 and rec["mode"] == mode
+        assert rec["stop_after_action"] is False                   # the default, recorded
         assert len(rec["task_outcomes"]) == len(RECORDED) == len(rec["task_destinations"])
         assert {"question", "expected", "correct"} == set(rec["probes"][0])
         json.dumps(rec)   # one JSON object per line
@@ -829,6 +830,7 @@ def test_stop_after_action_reaches_every_store_free_replay(runs, emb, monkeypatc
     assert any(rid.startswith("cf:") for rid, _ in replays)
     assert all(stop is True for _, stop in replays)
     assert "replays stop at the first acting call" in rec["notes"]
+    assert rec["stop_after_action"] is True
     assert rec["asr"] == 0.0 and rec["culprit_sets"]
 
 
@@ -946,6 +948,20 @@ def test_dry_run_describes_every_knob_and_writes_nothing(runs, tmp_path, capsys)
         assert needle in text, needle
     assert not (poisoned / "knobs").exists() and not out.exists()
     assert _hashes(poisoned) == before
+
+
+def test_dry_run_labels_each_repeat_like_its_copy(runs, tmp_path, capsys):
+    """Repeats of one configuration print as '<tag>@r<i>', not as one label twice."""
+    poisoned, clean, _ = runs
+    recover.main(["--runs", str(poisoned), str(clean), "--dry-run", "--mode", "none", "selective",
+                  "--repeat", "1", "2", "--work-subdir", "rep", "--out", str(tmp_path / "x.jsonl")],
+                 llm_factory=_never)
+    heads = [line.split()[0] for line in capsys.readouterr().out.splitlines()
+             if line.startswith("  ")]
+    assert heads == ["none@r1", "selective@r1", "none@r2", "selective@r2"]
+    o = recover.Options(repeat=2, k=3, work_subdir="rep")
+    assert recover.job_label("incident", o) == "incident@k3@r2" == recover.work_tag("incident", o)
+    assert recover.job_label("incident", recover.Options()) == "incident"
 
 
 @pytest.mark.parametrize("bad", [["--work-subdir", "../up"], ["--work-subdir", "a/b"],
